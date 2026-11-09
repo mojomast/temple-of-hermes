@@ -199,7 +199,7 @@ class Serial:
             chunk = self.read_some(timeout=min(1.0, max(0.05, deadline - time.time())))
             if chunk:
                 self.buf += chunk
-        raise TimeoutError(f"timeout waiting for {needle!r}, have {self.buf[-200]!r}")
+        raise TimeoutError(f"timeout waiting for {needle!r}, have {self.buf[-200:]!r}")
 
     def drain(self, seconds: float = 0.3) -> bytes:
         deadline = time.time() + seconds
@@ -241,7 +241,7 @@ def wait_for_text(
             last = glyph_text(dest)
         except Exception as e:
             last = f"<ocr error: {e}>"
-        print(f"[wait] {prefix} #{n} needle={needle!r} got={last[:120]!r}", flush=True)
+        print(f"[wait] {prefix} #{n} needle={needle!r} got={last[:240]!r}", flush=True)
         if needle_l in last.lower():
             return last
         time.sleep(interval)

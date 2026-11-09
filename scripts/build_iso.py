@@ -117,7 +117,7 @@ def overlay_files() -> list[tuple[str, bytes]]:
         for dest in dest_paths(rel):
             items.append((dest, data))
             dels.extend(z_siblings(dest))
-    script_lines = ["// AfterOverlay — remove compressed twins of patched files.\n"]
+    script_lines = ["// AfterOverlay - remove compressed twins of patched files.\n"]
     for z in dels:
         script_lines.append(f'Del("{z}");\n')
     items.append(("C:/Tmp/AfterOverlay.HC", "".join(script_lines).encode("ascii")))
