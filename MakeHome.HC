@@ -63,5 +63,6 @@ else {
 MapFileLoad("::/Kernel/Kernel");
 MapFileLoad("::/Compiler/Compiler");
 #include "~/HomeKeyPlugIns"
+#include "/Adam/Hermes/Load"
 #include "~/HomeSys"
 Cd("..");;

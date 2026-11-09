@@ -33,5 +33,5 @@ U0 StartUpTasks()
 
 StartUpTasks;
 
-"\nTinkerOS V%5.3f\t%D %T\n\n"
+"\nTHE TEMPLE OF HERMES  (TinkerOS V%5.3f)\t%D %T\n\n"
 ,sys_os_version,sys_compile_time,sys_compile_time;

@@ -90,6 +90,8 @@ U0 Fmt(I64 drv_let,Bool quick=TRUE,Bool confirm=TRUE,I64 type=FSt_FAT32)
   //You don't format a CD/DVD with this.
   CDrv *dv=Let2Drv(drv_let);
   Bool old_silent=IsSilent;
+  if (fp_input_gate && !(*fp_input_gate)("Fmt"))
+    return;
   if (confirm && !AreYouSure)
     return;
   if (!dv)

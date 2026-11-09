@@ -26,6 +26,8 @@ public U0 BootHDIns(U8 drv_let=0)
 {//Install new parition boot-loader
   //$LK,"MakeAll",A="MN:MakeAll"$ and install new boot-loader.
   CDrv *dv;
+  if (fp_input_gate && !(*fp_input_gate)("BootHDIns"))
+    return;
   CFAT32Boot br;
   CDirEntry de;
   I64 i;

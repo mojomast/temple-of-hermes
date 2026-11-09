@@ -907,6 +907,8 @@ Bool DoInstall(Bool pmt_reboot)
 
 Bool OSInstall(Bool pmt_reboot=TRUE)
 {
+  if (fp_input_gate && !(*fp_input_gate)("OSInstall"))
+    return FALSE;
   DoInstructions;
   return DoInstall(pmt_reboot);
 }

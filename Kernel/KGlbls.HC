@@ -54,6 +54,8 @@ U32 hype_info[4];
 
 I64 MCFGTableAddr=NULL;
 
+public Bool (*fp_input_gate)(U8 *what)=NULL;
+
 Bool (*fp_serial_blkdev_init)()=NULL;
 Bool (*fp_serial_blkdev_deinit)()=NULL;
 Bool (*fp_serial_blkdev_read)(U8* buf, I64 blk, I64 cnt)=NULL;

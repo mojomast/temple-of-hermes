@@ -11,6 +11,11 @@ I64 ToLower(I64 ch)
 Bool YorN(I64 enter_default=0)
 {//Wait for user to answer Y or N.
   I64 ch;
+  if (fp_input_gate && !(*fp_input_gate)("YorN"))
+  {
+    "NO (blocked)\n";
+    return FALSE;
+  }
   if (ToLower(enter_default)=='y' || ToLower(enter_default)=='n')
     "(y or n, default: %c)? ",ToLower(enter_default);
   else
@@ -35,6 +40,11 @@ Bool YorN(I64 enter_default=0)
 
 Bool AreYouSure()
 {//Print "Are you sure" and waits for Y or N.
+  if (fp_input_gate && !(*fp_input_gate)("AreYouSure"))
+  {
+    "ARE YOU SURE NO (blocked)\n";
+    return FALSE;
+  }
   "ARE YOU SURE ";
   return YorN;
 }

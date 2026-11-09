@@ -927,6 +927,9 @@ public extern U64 BitFieldGet(U8 *bit_field, U8 offset, U8 size);
 public extern U8 *HypeInfo();
 public extern Bool IsHypervisorPresent();
 
+#help_index "Misc"
+public extern Bool (*fp_input_gate)(U8 *what); // Return FALSE to refuse YorN/Fmt/install.
+
 #help_index "Serial Block Device"
 public extern Bool (*fp_serial_blkdev_init)();
 public extern Bool (*fp_serial_blkdev_deinit)();

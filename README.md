@@ -1,3 +1,116 @@
+# THE TEMPLE OF HERMES
+
+A public-domain fork of [TinkerOS](https://github.com/tinkeros/TinkerOS) 5.20-rc10
+(itself a fork of [TempleOS](https://templeos.org/) by Terry A. Davis) built so an
+AI agent and a human can share one virtual machine, with **ground-truth** guest
+state instead of screenshot OCR.
+
+This branch is `hermes/v0`. The official bootable image is
+`TempleOfHermes-0.1.0.ISO`, produced by TinkerOS's own `BootDVDIns` + `RedSeaISO`
+path (see [`scripts/build_iso.py`](scripts/build_iso.py)).
+
+> TempleOS is the work of Terry A. Davis and is public domain. TinkerOS is the
+> work of its authors and is released under the Unlicense (public domain). This
+> fork keeps those notices, keeps the Unlicense, and adds the Hermes guest
+> daemon and co-use features. It is not affiliated with Terry's estate, the
+> TinkerOS authors, or Nous Research.
+
+## Why this exists
+
+The [hermes-templeos](https://github.com/mojomast/hermes-templeos) plugin already
+drives a stock TinkerOS VM over QMP (screen grabs, absolute mouse via VMMouse,
+key injection) and a glyph OCR for `read_text`. That works, but the agent is
+guessing: it cannot see the actual DolDoc text, does not know when a prompt is
+waiting, shares one cursor with the user, and can wander into `Fmt` or
+`OSInstall`. THE TEMPLE OF HERMES is a guest image that closes those gaps.
+
+## What's new (never done in TempleOS / TinkerOS / ZealOS)
+
+These were researched against stock TempleOS 5.03, TinkerOS 5.20-rc10, ZealOS,
+TOSClient, Spirit (und3f/temple-os-apps), and temple-cua. Closest prior art is
+**Spirit**, a boot-time guest agent that can exec HolyC and get/set the clipboard
+over serial. Spirit does **not** export window text, stream window/task/prompt
+events, show who is driving, skip the first-boot install/tour, or refuse
+format/install while an agent is at the wheel.
+
+Shipped in v0.1.0:
+
+1. **Hermes agent daemon (HRPC)** — a structured request/reply/event channel on
+   COM1 (115200 8n1) so the host can ping, eval HolyC, list tasks and windows,
+   get or set focus and mouse state, dump text, switch driver mode, transfer
+   files, and drain events, without OCR.
+2. **Exact screen-text export** — dump the DolDoc *plain text* of the focused
+   window or every visible window, with cursor coordinates, over serial. This
+   is ground truth, not a glyph guess.
+3. **Presence banner and a distinct agent cursor** — the wallpaper shows
+   `THE TEMPLE OF HERMES [user|shared|agent]`. In AGENT or SHARED mode a second
+   cyan/yellow crosshair marks the agent's pointer, separate from the user's
+   black arrow.
+4. **Event stream** — `ready`, `task_spawned`, `window_opened`,
+   `prompt_waiting`, `compile_error`, `mode_changed`, `danger_blocked`, emitted
+   as `HEVT` frames so the agent knows when the screen is idle or a prompt is
+   up.
+5. **Boot straight to the Hermes-ready state** — the live CD no longer asks to
+   install or take the tour. Branding, wallpaper title, the daemon, and a
+   serial `HBEACON TempleOfHermes/0.1.0` are there at first prompt.
+6. **Safe-mode guards** — in AGENT mode, `YorN`, `AreYouSure`, `Fmt`,
+   `OSInstall`, and `BootHDIns` refuse and emit `danger_blocked`. SHARED still
+   allows ordinary `YorN` (the human can answer) but not format/install.
+
+Implemented as part of the daemon but **not** claimed as a first: host/guest
+clipboard (`clip_get` / `clip_set`). Spirit and TinkerOS TOSClient already did
+clipboard over serial.
+
+## Protocol (short)
+
+On COM1, 115200 8n1, length-prefixed ASCII frames:
+
+```
+HBEACON TempleOfHermes/0.1.0
+HREQ <id> <op> <len>\n + <len bytes of payload>
+HRPL <id> <ok|err> <len>\n + <len bytes>
+HEVT <seq> <kind> <len>\n + <len bytes of JSON>
+```
+
+Ops: `ping`, `eval`, `tasks`, `focus`, `mouse`, `text`, `mode`, `clip_get`,
+`clip_set`, `list`, `pull`, `push`, `events`, `idle`, `help`.
+
+Full research notes, comparisons, and the frame spec:
+[docs/HERMES-FEATURES.md](docs/HERMES-FEATURES.md).
+
+How the hermes-templeos plugin should grow a `hermes` flavor without adding a
+fifth tool: [PLUGIN-INTEGRATION.md](PLUGIN-INTEGRATION.md).
+
+## Build the ISO
+
+QEMU and a copy of `TinkerOS_5.20-rc10.ISO` are required. Networking stays off.
+The builder uses TinkerOS's own distro process inside the guest (`BootDVDIns`,
+then `RedSeaISO`). On this project the box has no usable `/dev/kvm`, so the
+build runs in TCG and takes a while.
+
+```
+# default stock ISO path used by hermes-templeos:
+#   ~/.hermes/plugin-data/templeos/isos/TinkerOS_5.20-rc10.ISO
+python3 scripts/build_iso.py
+# writes dist/TempleOfHermes-0.1.0.ISO and dist/SHA256SUMS
+
+python3 scripts/smoke.py
+# screenshots + serial transcript in shots/
+```
+
+## Credits and license
+
+See [LICENSE](LICENSE) (Unlicense / public domain) and [CREDITS.md](CREDITS.md).
+Work in `Adam/Hermes`, the startup and branding changes, the kernel
+`fp_input_gate` hook, and the host scripts are new in this fork.
+
+---
+
+# Upstream TinkerOS README
+
+The text below is the upstream TinkerOS README, kept for credit and context.
+
+
 <p align="center">
   <a href="https://tinkeros.github.io">
   <img src="https://tinkeros.github.io/Images/theme.gif" /></a>
