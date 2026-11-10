@@ -1,0 +1,23 @@
+$WW,1$$FG,14$$TX+CX,"Codex of Nous"$$FG$
+
+$TX+CX,"A browser for the lore of the temple"$
+
+The left pane lists entries.  The right pane shows the selected entry,
+word-wrapped to the window.
+
+$FG,10$Controls$FG$
+  $FG,11$Up / Down$FG$   - Select an entry
+  $FG,11$PgUp / PgDn$FG$ - Scroll the entry
+  $FG,11$Home / End$FG$  - Jump to the top or bottom
+  $FG,11$Tab$FG$         - Select the next entry
+  $FG,11$Enter$FG$       - Reload the lore directory
+  $FG,11$Esc$FG$         - Quit
+
+$FG,10$Lore sources$FG$
+If $FG,11$::/Hermes/Lore$FG$ exists, Codex reads every $FG,11$*.DD$FG$
+and $FG,11$*.TXT$FG$ beneath it and shows the plain text.  When that
+directory is absent it opens a short bundled sample instead.
+
+$FG,10$Art$FG$
+The header uses $FG,11$Hermes/Art/Icons/32/codex-of-nous$FG$ in the
+standard sixteen-color temple palette.
