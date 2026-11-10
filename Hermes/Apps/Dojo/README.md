@@ -67,9 +67,9 @@ is already loaded, call `DojoCli` directly; otherwise include `ChalN.HC`.
 
 - `header-dojo-plate.GR` is a 640x64 header plate (not a 640x480
   wallpaper), so at most one full-size 640x480 GR is ever resident.
-- `teknium-icon.GR` is a 64x64 game-character icon: helmet, shoulders and an
+- `teknium-icon.GR` is a 64x64 icon of a character from the Nous universe: helmet, shoulders and an
   energy blade. It is not a likeness of any real person.
-- Teknium appears only as Kyle's game character. The trainer voice line
+- Teknium appears only as Kyle's character from the Nous universe. The trainer voice line
   `"Ship first, patch later."` is game dialogue, not a real quote.
 - The wall plaque points at
   https://nousresearch.com/nouscoder-14b-a-competitive-olympiad-programming-model

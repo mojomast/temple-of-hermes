@@ -12,7 +12,7 @@ U0 ThresholdStatus(U8 *out_file=NULL)
   p=CatPrint(p,"THRESHOLD STATUS\n"); p+=StrLen(p);
   p=CatPrint(p,"status=ready\n"); p+=StrLen(p);
   p=CatPrint(p,"mode=human+agent\n"); p+=StrLen(p);
-  p=CatPrint(p,"host=%s (fictional game-character host)\n",TH_HOST);
+  p=CatPrint(p,"host=%s (fictional host from the Nous universe)\n",TH_HOST);
   p+=StrLen(p);
   p=CatPrint(p,"announcer=Southpaw\n"); p+=StrLen(p);
   p=CatPrint(p,"date=%04d-%02d-%02d\n",ds.year,ds.mon,ds.day_of_mon);

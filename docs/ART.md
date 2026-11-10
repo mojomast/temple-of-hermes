@@ -14,7 +14,7 @@ Iconography used here is symbolic / original pixel art only:
 
 - **Hermes the messenger** — caduceus, talaria (winged sandals), temple facade
 - **Classical / cyber-occult** — Greek key meander, marble columns, VGA dither, starfield
-- **Nous Girl** — fictional game character from AGENT ARMEGEDDON: CLAWPOCALYPSE NOW (not a likeness of any real person and not an official Nous Research mascot). The cine v3 portrait is the default likeness; the earlier generated badge remains in git history of this file's previous revision.
+- **Nous Girl** — character from the Nous universe, from AGENT ARMEGEDDON: CLAWPOCALYPSE NOW (not a likeness of any real person and not an official Nous Research mascot). The cine v3 portrait is the default likeness; the earlier generated badge remains in git history of this file's previous revision.
 - **Capybara** — pet mascot poses
 - **Psyche** — neural-flower / decentralized-training motif (visual metaphor only)
 - **WorldSim** — globe with orbiting agent nodes (visual metaphor only)
@@ -136,7 +136,7 @@ the `main` branch, copied into `art/source/cine/`:
 | Guest name | In-tree source | Origin path in clawpocalypse-now | Notes |
 |---|---|---|---|
 | Nous Girl | `art/source/cine/nous_girl.png` | `assets/cine/v3/portraits/nous_girl.png` | Flipped horizontally on the splash, wallpaper, and threshold header so she faces the temple. Also used for the 16/32/64 `nous-girl` badge. |
-| Teknium | `art/source/cine/teknium.png` | `assets/cine/v3/portraits/teknium.png` | Game character only, not a likeness of the real person. Dojo header, right side. |
+| Teknium | `art/source/cine/teknium.png` | `assets/cine/v3/portraits/teknium.png` | Character from the Nous universe only, not a likeness of the real person. Dojo header, right side. |
 | Don Piedro | `art/source/cine/don_piedro.png` | `assets/cine/v3/portraits/don_piedro.png` | Offerings header, right side. |
 | Southpaw | `art/source/cine/southpaw.png` | `assets/cine/v3/portraits/turbofit.png` | Same still Hermagotchi maps as Southpaw (`assets/source/cine_v3_southpaw.png`). The in-tree file is named `southpaw.png`. Stage header, left side. |
 

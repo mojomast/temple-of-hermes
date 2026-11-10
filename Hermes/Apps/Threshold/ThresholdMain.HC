@@ -24,7 +24,7 @@ U0 ThresholdDraw(CTask *task,CDC *dc)
   dc->color=YELLOW;
   GrPrint(dc,x,46,"%s",TH_TITLE);
   dc->color=LTCYAN;
-  GrPrint(dc,x,58,"%s - fictional game-character host",TH_HOST);
+  GrPrint(dc,x,58,"%s - fictional host from the Nous universe",TH_HOST);
   y=76;
   dc->color=WHITE;
   GrPrint(dc,x,y,"NEW: Human, welcome back to the Threshold."); y+=10;
