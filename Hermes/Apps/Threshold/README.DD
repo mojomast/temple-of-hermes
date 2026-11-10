@@ -1,0 +1,39 @@
+$$PURPLE$$THE THRESHOLD$$FG$$
+=================
+
+Threshold is the pinned-style host window for THE TEMPLE OF HERMES.
+Nous Girl is a fictional game-character host, not an official Nous
+mascot.  New spoken host lines are marked NEW.
+
+Run
+---
+  Cd("::/Hermes/Apps/Threshold");;
+  #include "Run.HC";
+
+Or compile once, then launch again:
+  Cd("::/Hermes/Apps/Threshold");;
+  #include "Load.HC";
+  Threshold;
+
+Agent hook
+----------
+  ThresholdStatus;
+
+Writes ThresholdStatus.TXT next to the app.  The file contains the
+MOTD, the pinned app list, the door list, the art paths, and simple
+status.  No bitmap scraping is needed.
+
+Keys
+----
+  S    view the cinematic toh-boot-splash.GR (one 640x480 GR at a time)
+  1-5  show the listed door command
+  ESC  return to the shell
+
+Art
+---
+  Hermes/Art/Splash/toh-boot-splash.GR
+  Hermes/Art/UI/pane-header.GR
+  Hermes/Art/Icons/64/nous-girl.GR
+
+The header-threshold-plate asset named in the brief is not present in
+this worktree, so the existing pane-header plate is used unchanged.

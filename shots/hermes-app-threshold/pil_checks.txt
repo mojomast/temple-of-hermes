@@ -1,0 +1,27 @@
+Hermes/Art/Splash/toh-boot-splash.GR
+  file_bytes=307232 width=640 width_internal=640 height=480 flags=0
+  palette_index_min=0 max=15 unique=14 all_0_15=True
+Hermes/Art/UI/pane-header.GR
+  file_bytes=25632 width=640 width_internal=640 height=40 flags=0
+  palette_index_min=0 max=15 unique=11 all_0_15=True
+Hermes/Art/Icons/64/nous-girl.GR
+  file_bytes=4128 width=64 width_internal=64 height=64 flags=0
+  palette_index_min=0 max=15 unique=11 all_0_15=True
+
+shots/hermes-app-threshold/threshold-host-window.png
+  size=640x480 unique_colors=13 non_palette_colors=0
+shots/hermes-app-threshold/threshold-splash-view.png
+  size=640x480 unique_colors=14 non_palette_colors=0
+shots/hermes-app-threshold/threshold-host-second-run.png
+  size=640x480 unique_colors=13 non_palette_colors=0
+
+header_match_score=3200 y0=8 samples=3200
+icon_match_score=256 x0=568 y0=52 samples=256
+splash_clipped_match_score=73317 y0=8 samples=75520 ratio=0.971
+splash_row_band_ratios=[1.0, 1.0, 0.998, 1.0, 1.0, 0.998, 0.998, 1.0, 1.0, 1.0, 1.0, 0.579]
+
+header_band_nonblack=10884
+greeting_motd_band_nonblack=5465
+doors_band_nonblack=3074
+pinned_new_band_nonblack=2749
+footer_band_nonblack=10240
