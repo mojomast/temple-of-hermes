@@ -1,0 +1,14 @@
+{
+  "iso": "TinkerOS_5.20-rc10.ISO",
+  "label": "run-official",
+  "disk": "hermes-art-overlay.img",
+  "guest": {
+    "R_WALLPAPER_OK": "GRRead non-NULL ptr=31562278 width=640 winternal=640 height=480",
+    "R_ICON_OK": "GRRead non-NULL ptr=31562278 width=32 winternal=32 height=32",
+    "R_SPLASH_OK": "GRRead non-NULL ptr=31562278 width=640 winternal=640 height=480",
+    "R_ALL_OK": "3/3 assets loaded and blitted",
+    "HERMES_ART_STAGED": "ok"
+  },
+  "done_marker": "R_ALL_OK",
+  "ok": true
+}
