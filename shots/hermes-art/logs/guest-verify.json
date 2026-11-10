@@ -1,0 +1,29 @@
+{
+  "Wallpaper/toh-temple-night.GR": {
+    "guest_size": 307232,
+    "source_size": 307232,
+    "guest_sha256": "acd947fa0a0ec8ea488315c06e1037a395cf20fc27e3c4a6482c7b1908779222",
+    "source_sha256": "acd947fa0a0ec8ea488315c06e1037a395cf20fc27e3c4a6482c7b1908779222",
+    "match": true
+  },
+  "Splash/toh-boot-splash.GR": {
+    "guest_size": 307232,
+    "source_size": 307232,
+    "guest_sha256": "6d9f71dfafaeffcff7102f3ea8835547ab1ad4a4ddd2849befb0ceba8c3ed2f3",
+    "source_sha256": "6d9f71dfafaeffcff7102f3ea8835547ab1ad4a4ddd2849befb0ceba8c3ed2f3",
+    "match": true
+  },
+  "Icons/32/hermes-chat.GR": {
+    "guest_size": 1056,
+    "source_size": 1056,
+    "guest_sha256": "bdfb6d3c6de4287fac3978c6e6ba3e15c25724b1c70ccbca6ba3d92c84084dc6",
+    "source_sha256": "bdfb6d3c6de4287fac3978c6e6ba3e15c25724b1c70ccbca6ba3d92c84084dc6",
+    "match": true
+  },
+  "R_WALLPAPER_OK": "GRRead non-NULL ptr=31562278 width=640 winternal=640 height=480",
+  "R_ICON_OK": "GRRead non-NULL ptr=31562278 width=32 winternal=32 height=32",
+  "R_SPLASH_OK": "GRRead non-NULL ptr=31562278 width=640 winternal=640 height=480",
+  "R_ALL_OK": "3/3 assets loaded and blitted",
+  "HERMES_ART_STAGED": "ok",
+  "guest_art_file_count": 123
+}

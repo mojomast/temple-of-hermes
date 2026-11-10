@@ -1,0 +1,17 @@
+23:58:58 qemu pid 13810
+23:58:59 booting live CD
+23:59:34 stage + verify
+23:59:38 frame 10
+23:59:40 frame 20
+23:59:43 frame 30
+23:59:46 frame 40
+23:59:49 frame 50
+23:59:51 frame 60
+23:59:54 frame 70
+23:59:57 frame 80
+00:00:00 frame 90
+00:00:03 frame 100
+00:00:06 frame 110
+00:00:08 frame 120
+00:00:11 frame 130
+00:00:13 guest results: {"R_WALLPAPER_OK": "GRRead non-NULL ptr=31562278 width=640 winternal=640 height=480", "R_ICON_OK": "GRRead non-NULL ptr=31562278 width=32 winternal=32 height=32", "R_SPLASH_OK": "GRRead non-NULL ptr=31562278 width=640 winternal=640 height=480", "R_ALL_OK": "3/3 assets loaded and blitted", "HERMES_ART_STAGED": "ok"}
