@@ -714,20 +714,26 @@ class BBS1Service:
         if account == "sysop":
             raise _error("invalid_field", field="args.account")
         display_name = _display_name(args.get("display_name"), "args.display_name")
+        auto_mode = self.config.signup_mode == "auto"
         owner = args.get("owner_account")
         if kind == "agent":
             if owner is None:
-                raise _error("owner_required", field="args.owner_account")
-            owner = _account_id(owner, "args.owner_account")
+                if not auto_mode:
+                    raise _error("owner_required", field="args.owner_account")
+            else:
+                owner = _account_id(owner, "args.owner_account")
         elif owner is not None:
             raise _error("invalid_field", field="args.owner_account")
-        if self.config.signup_mode != "open":
+        if self.config.signup_mode == "closed":
             raise _error("forbidden", field="args.account")
         self._check_auth_rate(peer, account)
+        auto_kind = auto_mode and kind in self.config.auto_approve_kinds
         now = self._now()
         with self.db.transaction() as conn:
             existing = self._account(conn, account)
             if existing is not None:
+                if auto_mode and existing["status"] == "banned":
+                    raise _error("account_banned", field="args.account")
                 if existing["status"] == "pending":
                     raise _error("account_pending", field="args.account")
                 if existing["status"] == "rejected":
@@ -739,58 +745,133 @@ class BBS1Service:
             ).fetchone()
             if pending is not None:
                 raise _error("account_pending", field="args.account")
+            owner_eligible = True
             if kind == "agent":
-                owner_row = self._account(conn, owner)
-                if owner_row is None or owner_row["kind"] != "human" or owner_row["status"] != "active" or owner_row["role"] not in {"human", "sysop"}:
+                owner_row = self._account(conn, owner) if owner is not None else None
+                owner_eligible = (
+                    owner_row is not None
+                    and owner_row["kind"] == "human"
+                    and owner_row["status"] == "active"
+                    and owner_row["role"] in {"human", "sysop"}
+                )
+                if not owner_eligible and not auto_mode:
                     raise _error("owner_not_eligible", field="args.owner_account")
-            queue_position = int(
-                conn.execute(
-                    "SELECT COUNT(*) AS n FROM hbbs1_applications WHERE status = 'pending_moderation'"
-                ).fetchone()["n"]
-            ) + 1
+            approve_now = bool(auto_kind and owner_eligible)
             application_id = _new_id("app_")
             claim = new_token()
             claim_expires = now + CLAIM_TOKEN_TTL
-            conn.execute(
-                "INSERT INTO hbbs1_applications(application_id, account, display_name, kind, owner_account, status, "
-                "claim_digest, claim_expires_at, queue_position, created_at) "
-                "VALUES (?, ?, ?, ?, ?, 'pending_moderation', ?, ?, ?, ?)",
-                (
-                    application_id,
-                    account,
-                    display_name,
-                    kind,
-                    owner if kind == "agent" else None,
-                    token_digest(claim),
-                    claim_expires,
-                    queue_position,
-                    now,
-                ),
-            )
-            self._audit(
-                conn,
-                None,
-                "account.signup",
-                target_type="application",
-                target_id=application_id,
-                detail={"kind": kind, "owner_required": kind == "agent"},
-            )
-            data = {
-                "application": self._application_public(
-                    {
-                        "application_id": application_id,
-                        "account": account,
-                        "display_name": display_name,
-                        "kind": kind,
-                        "owner_account": owner if kind == "agent" else None,
-                        "status": "pending_moderation",
-                        "queue_position": queue_position,
-                        "created_at": now,
-                    }
-                ),
-                "claim_token": claim,
-                "claim_expires_at": _iso(claim_expires),
-            }
+            if approve_now:
+                conn.execute(
+                    "INSERT INTO hbbs1_applications(application_id, account, display_name, kind, owner_account, status, "
+                    "claim_digest, claim_expires_at, queue_position, created_at, decided_at, decided_by) "
+                    "VALUES (?, ?, ?, ?, ?, 'approved', ?, ?, 0, ?, ?, 'system:auto')",
+                    (
+                        application_id,
+                        account,
+                        display_name,
+                        kind,
+                        owner if kind == "agent" else None,
+                        token_digest(claim),
+                        claim_expires,
+                        now,
+                        now,
+                    ),
+                )
+                conn.execute(
+                    "INSERT INTO hbbs1_accounts(account, display_name, kind, role, owner_account, status, attestation_id, created_at, approved_at) "
+                    "VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?)",
+                    (
+                        account,
+                        display_name,
+                        kind,
+                        kind,
+                        owner if kind == "agent" else None,
+                        _new_id("att_"),
+                        now,
+                        now,
+                    ),
+                )
+                self._audit(
+                    conn,
+                    None,
+                    "account.signup",
+                    target_type="application",
+                    target_id=application_id,
+                    detail={"kind": kind, "owner_required": kind == "agent", "auto_approved": True},
+                )
+                self._audit(
+                    conn,
+                    "system:auto",
+                    "account.approve",
+                    target_type="application",
+                    target_id=application_id,
+                    detail={"auto": True, "kind": kind},
+                )
+                application_row = conn.execute(
+                    "SELECT * FROM hbbs1_applications WHERE application_id = ?", (application_id,)
+                ).fetchone()
+                account_row = self._account(conn, account)
+                access = self._issue_token(conn, account, "access", ACCESS_TOKEN_TTL, now)
+                refresh = self._issue_token(conn, account, "refresh", REFRESH_TOKEN_TTL, now)
+                access_row = conn.execute(
+                    "SELECT * FROM hbbs1_tokens WHERE digest = ?", (token_digest(access),)
+                ).fetchone()
+                session = self._new_session(account_row, access_row)
+                data = {
+                    "grant": "signup",
+                    "application": self._application_public(application_row),
+                    **self._session_data(account_row, session),
+                    "access_token": access,
+                    "refresh_token": refresh,
+                }
+            else:
+                queue_position = int(
+                    conn.execute(
+                        "SELECT COUNT(*) AS n FROM hbbs1_applications WHERE status = 'pending_moderation'"
+                    ).fetchone()["n"]
+                ) + 1
+                conn.execute(
+                    "INSERT INTO hbbs1_applications(application_id, account, display_name, kind, owner_account, status, "
+                    "claim_digest, claim_expires_at, queue_position, created_at) "
+                    "VALUES (?, ?, ?, ?, ?, 'pending_moderation', ?, ?, ?, ?)",
+                    (
+                        application_id,
+                        account,
+                        display_name,
+                        kind,
+                        owner if kind == "agent" else None,
+                        token_digest(claim),
+                        claim_expires,
+                        queue_position,
+                        now,
+                    ),
+                )
+                self._audit(
+                    conn,
+                    None,
+                    "account.signup",
+                    target_type="application",
+                    target_id=application_id,
+                    detail={"kind": kind, "owner_required": kind == "agent"},
+                )
+                data = {
+                    "application": self._application_public(
+                        {
+                            "application_id": application_id,
+                            "account": account,
+                            "display_name": display_name,
+                            "kind": kind,
+                            "owner_account": owner if kind == "agent" else None,
+                            "status": "pending_moderation",
+                            "queue_position": queue_position,
+                            "created_at": now,
+                        }
+                    ),
+                    "claim_token": claim,
+                    "claim_expires_at": _iso(claim_expires),
+                }
+        if approve_now:
+            return AuthResult(data, session, False)
         return AuthResult(data, None, True)
 
     def _application_public(self, row: Mapping[str, Any]) -> dict[str, Any]:
