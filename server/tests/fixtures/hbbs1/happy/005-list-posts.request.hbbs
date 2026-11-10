@@ -1,0 +1,2 @@
+HBBS/1 REQ r-005 LIST 113
+{"v":1,"command":"LIST","args":{"action":"posts","board":"general","thread_id":"thr_1000000000000001","limit":2}}

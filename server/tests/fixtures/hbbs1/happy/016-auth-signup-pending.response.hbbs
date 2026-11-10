@@ -1,0 +1,2 @@
+HBBS/1 RSP r-016 AUTH 314
+{"v":1,"ok":true,"command":"AUTH","data":{"application":{"application_id":"app_1000000000000001","account":"new_human_2","display_name":"New Human 2","kind":"human","status":"pending_moderation","queue_position":2,"created_at":"2026-11-10T00:00:00Z","trust":"untrusted"},"claim_expires_at":"2026-11-11T00:00:00Z"}}

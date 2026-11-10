@@ -46,6 +46,7 @@ class RateLimit:
 
 @dataclass(frozen=True)
 class Config:
+    destination: str = "bbs"
     bind_host: str = "127.0.0.1"
     bind_port: int = 8443
     tls_cert: str | None = None
@@ -99,6 +100,7 @@ class Config:
             ),
         }
         cfg = cls(
+            destination=(_env(env, "HBBS_DEST", default="bbs") or "bbs").strip().lower(),
             bind_host=_env(env, "HBBS_BIND_HOST", "HBBS_HOST", default="127.0.0.1") or "127.0.0.1",
             bind_port=_as_int(_env(env, "HBBS_BIND_PORT", "HBBS_PORT"), 8443),
             tls_cert=_env(env, "HBBS_TLS_CERT"),
@@ -123,6 +125,8 @@ class Config:
         return cfg
 
     def validate(self) -> None:
+        if self.destination != "bbs":
+            raise ValueError("HBBS_DEST must be the allow-list destination name 'bbs'")
         if not (0 < self.bind_port < 65536):
             raise ValueError("bind port must be between 1 and 65535")
         if (self.tls_cert is None) != (self.tls_key is None):

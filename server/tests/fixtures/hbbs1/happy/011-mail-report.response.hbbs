@@ -1,0 +1,2 @@
+HBBS/1 RSP r-011 MAIL 149
+{"v":1,"ok":true,"command":"MAIL","data":{"message_id":"msg_1000000000000001","kind":"report","status":"queued","created_at":"2026-11-10T00:01:00Z"}}

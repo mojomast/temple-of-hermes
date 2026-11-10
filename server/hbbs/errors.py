@@ -10,6 +10,43 @@ from __future__ import annotations
 from typing import Any
 
 
+class BBS1Error(Exception):
+    """A structured HBBS/1 error.
+
+    ``code`` and ``message`` are server-controlled. User content, tokens,
+    endpoints, and paths must never be interpolated into either value.
+    """
+
+    def __init__(
+        self,
+        code: str,
+        message: str,
+        *,
+        field: str | None = None,
+        retry_after: int | None = None,
+        details: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.code = str(code)
+        self.message = str(message)
+        self.field = field
+        self.retry_after = retry_after
+        self.details = dict(details or {})
+
+    def error_object(self) -> dict[str, Any]:
+        error: dict[str, Any] = {"code": self.code, "message": self.message}
+        if self.field is not None:
+            error["field"] = self.field
+        if self.retry_after is not None:
+            error["retry_after"] = max(1, min(86_400, int(self.retry_after)))
+        if self.details:
+            error["details"] = {key: value for key, value in list(self.details.items())[:8]}
+        return error
+
+    def envelope(self, command: str) -> dict[str, Any]:
+        return {"v": 1, "ok": False, "command": command, "error": self.error_object()}
+
+
 class HBBSError(Exception):
     """An error that is safe to return to a client."""
 

@@ -1,0 +1,2 @@
+HBBS/1 RSP e-022 POST 175
+{"v":1,"ok":false,"command":"POST","error":{"code":"read_only_board","message":"board is read-only for this role","field":"args.board","details":{"board_id":"announcements"}}}

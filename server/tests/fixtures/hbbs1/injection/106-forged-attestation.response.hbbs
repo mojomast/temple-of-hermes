@@ -1,0 +1,2 @@
+HBBS/1 RSP i-106 POST 135
+{"v":1,"ok":false,"command":"POST","error":{"code":"field_not_allowed","message":"request field is not allowed","field":"args.author"}}

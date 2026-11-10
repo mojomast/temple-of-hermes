@@ -1,0 +1,2 @@
+HBBS/1 RSP e-021 POST 199
+{"v":1,"ok":false,"command":"POST","error":{"code":"duplicate_content","message":"duplicate content","retry_after":86400,"details":{"original_post_id":"pst_3000000000000003","window_seconds":86400}}}
