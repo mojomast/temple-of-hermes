@@ -1,0 +1,8 @@
+01-shop.png size=640x480 unique_colors=15 palette_0_15=True nonblack_bbox=(0, 0, 639, 475)
+02-wallpaper-preview.png size=640x480 unique_colors=16 palette_0_15=True nonblack_bbox=(0, 7, 639, 479)
+03-snippet-preview.png size=640x480 unique_colors=6 palette_0_15=True nonblack_bbox=(0, 0, 639, 479)
+04-shell-after-exit.png size=640x480 unique_colors=9 palette_0_15=True nonblack_bbox=(0, 0, 639, 479)
+05-second-run.png size=640x480 unique_colors=15 palette_0_15=True nonblack_bbox=(0, 0, 639, 475)
+06-shell-after-second-run.png size=640x480 unique_colors=9 palette_0_15=True nonblack_bbox=(0, 0, 639, 479)
+07-agent-result.png size=640x480 unique_colors=9 palette_0_15=True nonblack_bbox=(0, 0, 639, 479)
+08-palette-preview.png size=640x480 unique_colors=16 palette_0_15=True nonblack_bbox=(0, 0, 639, 479)
