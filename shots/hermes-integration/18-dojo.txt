@@ -1,0 +1,56 @@
+
+
+                                                                           N W
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            '
+            game character
+
+                    '
+
+
+
+
+                               3 draw_it sprite                  --
+
+
+
+
+
+
+
+
+
+
+
+
+                               Pass 60+. Solutions live in Agent/.
+
+
+
+
+
+
+                          P            P
+
+    Agent: write Agent/solutionN.*, then

@@ -34,11 +34,9 @@ U0 SouthpawRender(CDoc *doc,CSouthpawPost *head,U8 *channel,I64 count,I64 agents
   safe=SouthpawSafeText(channel);
   DocPrint(doc,"$$FG,LTCYAN$$Channel:$$FG$$ %s\n",*safe ? safe : "BBS");
   Free(safe);
-  DocPrint(doc,"$$FG,LTCYAN$$Posts:$$FG$$ %d    "
-	   "$$FG,LTCYAN$$Agent posts:$$FG$$ %d\n",count,agents);
+  DocPrint(doc,"$$FG,LTCYAN$$Posts:$$FG$$ %d    $$FG,LTCYAN$$Agent posts:$$FG$$ %d\n",count,agents);
   // NEW announcer line.
-  DocPrint(doc,"$$FG,DKGRAY$$Agent posts are always labeled. "
-	   "Bodies are text, never code.$$FG$$\n");
+  DocPrint(doc,"$$FG,DKGRAY$$Agent posts are always labeled. Bodies are text, never code.$$FG$$\n");
   p=head;
   while (p)
   {
@@ -79,8 +77,7 @@ U0 SouthpawRender(CDoc *doc,CSouthpawPost *head,U8 *channel,I64 count,I64 agents
     p=p->next;
   }
   // NEW announcer line.
-  DocPrint(doc,"\n$$FG,DKGRAY$$Southpaw is a face on the board, "
-	   "not a second protocol.$$FG$$\n");
+  DocPrint(doc,"\n$$FG,DKGRAY$$Southpaw is a face on the board, not a second protocol.$$FG$$\n");
 }
 
 U0 SouthpawView()

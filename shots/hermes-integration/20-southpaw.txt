@@ -1,0 +1,60 @@
+ HERMES/user   :13 FPS: 30 CPU99                                           ENTER
+ MENU                        6D55D628[X] MENU                       6D4B7428[X]
+TDirectory of T:/Home                                TinkerOS V5.20
+eDATE_ TIME_ SIZE
+r11/10 13:20 0200 ,                          Public Domain Operating System
+m11/10 13:20 0000 ,,                     TempleOS / TinkerOS fork for agent and
+ 11/29 00:00 06AC DoDistro,HC                            human
+ 11/29 00:00 02A6 HomeSys,HC                             co-use
+ 11/29 00:00 06EC MakeHome,HC             Version 0.1.0 - TinkerOS 5.200 base
+ 11/29 00:00 0734 Once,HC
+ T:/Home>Cd;#include "Once";             Help & Index,
+                                         About THE TEMPLE OF HERMES,
+   THE TEMPLE OF HERMES  v0.1.0          Quick Start: Cmd line
+   (TinkerOS 5.200 base)
+                                         TempleOS by Terry A. Davis. TinkerOS
+ A TempleOS / TinkerOS fork for an AI    by its authors. Public domain /
+ agent and a human                       Unlicense.
+ sharing one machine. The Hermes daemon
+ is already on COM1                      Directory of T:/Home
+ at 115200 8n1. Presence banner shows    DATE_ TIME_ SIZE
+ who is driving:                         11/10 13:20 0200 ,
+ USER, SHARED, or AGENT.                 11/10 13:20 0000 ,,
+                                         11/29 00:00 06AC DoDistro,HC
+ Host protocol: HBEACON / HREQ / HRPL /  11/29 00:00 02A6 HomeSys,HC
+ HEVT  (see /Adam/Hermes)                11/29 00:00 06EC MakeHome,HC
+ Start page: /Doc/Start.DD. Help: F1.    11/29 00:00 0734 Once,HC
+ Agent guide is on the host              T:/Home>
+ at docs/USING-WITH-HERMES-AGENTS.md.
+
+ TempleOS by Terry A. Davis. TinkerOS by
+ its authors.
+ Public domain / Unlicense; both
+ upstream credits are kept.
+
+ Install is not started automatically.
+ To install later, run OSInstall;
+ from USER mode only.
+
+ 0.292001s
+ T:/Hermes/Apps/Launcher>Cd("::/Hermes/A
+ pps/Southpaw");
+ 0.005641s ans=0x00000001=1
+ T:/Hermes/Apps/Southpaw>#include
+ "Run.HC";
+ &LexExcept &Lex PrsExpression2
+ PrsExpression ERROR: Char const limited
+ to 8 chars at "T:10B"
+ T:/Hermes/Apps/Southpaw/Load,HC,0006
+ #include "View.HC"
+ &LexExcept PrsExpression PrsIf PrsStmt
+ ERROR: Compiler Parse Error at "T:10B"
+ T:/Hermes/Apps/Southpaw/Load,HC,0006
+ #include "View.HC"
+ Except:Compiler:&LexExcept+0x00A8:
+ PrsExpression+0x00E7:PrsIf+0x0042:
+ PrsStmt+0x022E:PrsStmt+0x00A6:
+ PrsFor+0x0104
+ 0.006626s ans=0x00000001=1
+ T:/Hermes/Apps/Southpaw>
+                           EOF                                    EOF

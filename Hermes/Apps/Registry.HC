@@ -72,8 +72,8 @@ U0 HermesAppsRegistryInit()
                         "Don Piedro's Offerings.",
                         "::/Hermes/Apps/Offerings/Run.HC", FALSE);
   HermesAppsRegistryAdd("southpaw",      "Southpaw",    "southpaw",
-                        "Southpaw (accepted app not merged yet).",
-                        "::/Hermes/Apps/Southpaw/Run.HC", TRUE);
+                        "Southpaw: an announcer-fronted view of BBS highlights.",
+                        "::/Hermes/Apps/Southpaw/Run.HC", FALSE);
   HermesAppsRegistryAdd("modem-net",     "Modem / Net", "modem-net",
                         "Serial and network tools.",
                         "::/Hermes/Apps/Net/Run.HC", TRUE);

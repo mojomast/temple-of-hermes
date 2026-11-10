@@ -17,3 +17,16 @@ legacy `RedSeaISO` path could not complete the expanded staged tree on the
 live RAM drive. A booted-image screenshot of `toast`, `windows`, `guards`, and
 `sysinfo` is therefore not present here; those RPCs are covered by the host
 client suite and the contract in `docs/HERMES-TOOLS.md`.
+
+## Integration refresh (Temple of Hermes 0.1.0)
+
+`20-tools-toast.png`, `21-tools-windows.png`, `22-tools-guards.png`, and
+`23-tools-sysinfo.png` were captured from a fully booted integrated guest.
+The exact RPC JSON is in `tools.json`. The COM1 socket is drained from boot
+in a reader thread; without that, QEMU's serial buffer can back up and the
+daemon stops after its first events.
+
+- toast: `{"ok":1,"toast":"Hermes says: B5 toast: guest tools are live"}`
+- windows: launcher + DocTerm tasks, focus address returned
+- guards: agent mode, `Fmt` `allow=0`, blocked Fmt/AreYouSure/OSInstall/BootHDIns
+- sysinfo: version 0.1.0, 640x480, 7 tasks, 5 windows, COM1 115200

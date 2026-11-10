@@ -108,10 +108,21 @@ U0 HermesPollTasks()
     if (!found && TaskValidate(now[i](CTask *)))
     {
       task=now[i](CTask *);
-      StrPrint(buf,"0x%X %s",task,task->task_title);
+      try
+        StrPrint(buf,"0x%X %s",task,task->task_title);
+      catch
+      {
+        Fs->catch_except=TRUE;
+        StrPrint(buf,"0x%X",task);
+      }
       HermesEventPush("task_spawned",buf);
-      if (HermesTaskIsWindow(task))
-        HermesEventPush("window_opened",buf);
+      try
+      {
+        if (HermesTaskIsWindow(task))
+          HermesEventPush("window_opened",buf);
+      }
+      catch
+        Fs->catch_except=TRUE;
     }
   }
   for (i=0; i<n; i++)

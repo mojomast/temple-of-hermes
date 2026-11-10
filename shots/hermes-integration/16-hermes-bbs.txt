@@ -1,0 +1,60 @@
+ HERMES/user   :08 FPS: 30 CPU99                                           ENTER
+ MENU                        6D55D428[X] MENU                       6D4B7028[X]
+Tat docs/USING-WITH-HERMES-AGENTS.md.                TinkerOS V5.20
+e
+rTempleOS by Terry A. Davis. TinkerOS by     Public Domain Operating System
+mits authors.                            TempleOS / TinkerOS fork for agent and
+ Public domain / Unlicense; both                         human
+ upstream credits are kept.                              co-use
+                                          Version 0.1.0 - TinkerOS 5.200 base
+ Install is not started automatically.
+ To install later, run OSInstall;        Help & Index,
+ from USER mode only.                    About THE TEMPLE OF HERMES,
+                                         Quick Start: Cmd line
+ 0.540403s
+ T:/Hermes/Apps/Launcher>Cd("::/Hermes/  TempleOS by Terry A. Davis. TinkerOS
+ Apps/HermesBBS");                       by its authors. Public domain /
+ 0.013080s ans=0x00000001=1              Unlicense.
+ T:/Hermes/Apps/HermesBBS>#include "Run
+ .HC";                                   Directory of T:/Home
+ OptPass3 COCCompile PrsFun              DATE_ TIME_ SIZE
+ PrsGlblVarLst WARNING: Using 64-bit reg 11/10 13:05 0200 ,
+ var.                                    11/10 13:05 0000 ,,
+                                         11/29 00:00 06AC DoDistro,HC
+ FL:T:/Hermes/Apps/HermesBBS/BBS,HC,Z,21 11/29 00:00 02A6 HomeSys,HC
+  'c' in 'HbbsJsonQuote'                 11/29 00:00 06EC MakeHome,HC
+ PrsFun PrsGlblVarLst PrsStmt            11/29 00:00 0734 Once,HC
+ &LexStmt2Bin WARNING: Unused var        T:/Home>
+
+ FL:T:/Hermes/Apps/HermesBBS/BBS,HC,Z,21
+  'i' in 'HbbsJsonQuote'
+ OptPass3 COCCompile PrsFun
+ PrsGlblVarLst WARNING: Using 64-bit reg
+ var.
+
+ FL:T:/Hermes/Apps/HermesBBS/BBS,HC,Z,40
+  'c' in 'HbbsNextObject'
+ OptPass3 COCCompile PrsFun
+ PrsGlblVarLst WARNING: Using 64-bit reg
+ var.
+
+ FL:T:/Hermes/Apps/HermesBBS/BBS,HC,Z,42
+  'c' in 'HbbsSafe'
+ PrsFun PrsGlblVarLst PrsStmt
+ &LexStmt2Bin WARNING: Unused var
+
+ FL:T:/Hermes/Apps/HermesBBS/BBS,HC,Z,66
+  'n' in 'HbbsExchange'
+ PrsFun PrsGlblVarLst PrsStmt
+ &LexStmt2Bin WARNING: Unused var
+
+ FL:T:/Hermes/Apps/HermesBBS/BBS,HC,Z,11
+  'rest' in 'HermesBBSCommand'
+ PrsFun PrsGlblVarLst PrsStmt
+ &LexStmt2Bin WARNING: Unused var
+
+ FL:T:/Hermes/Apps/HermesBBS/BBS,HC,Z,14
+  'unused' in 'HbbsUiTask'
+ 0.000107s
+ T:/Hermes/Apps>
+                           EOF                                    EOF

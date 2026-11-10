@@ -47,10 +47,11 @@ The current table registers the accepted apps as real entries
 - The Threshold (`Threshold`)
 - Teknium's Dojo (`Dojo`)
 - Don Piedro's Offerings (`Offerings`)
+- Southpaw (`Southpaw`)
 
 `home-temple` and `nous-girl` open the launcher's home/about status instead
-of a separate app. `southpaw` and `modem-net` remain `planned = TRUE` until
-their branches land with a `Run.HC`; selecting them shows the planned status.
+of a separate app. `modem-net` remains `planned = TRUE` until it has a
+`Run.HC`; selecting it shows the planned status.
 
 ## Launcher
 
@@ -78,9 +79,10 @@ If an icon is missing the launcher falls back to a labelled grey tile and
 the footer count drops, so a missing overlay is visible rather than a
 crash.  `HermesAppsIcon()` also retries the basename in upper case, which
 covers FAT 8.3 entries that were written without a long-name record.  If
-a future app's `run` path exists, the launcher spawns
-`HermesAppsRunFile()` to `ExeFile` it in its own task; today those paths
-do not exist.
+an app's `run` path exists, the launcher spawns
+`HermesAppsRunFile()` to `ExeFile` it in its own task.  Every accepted app
+now has a real `Run.HC`; only the planned Southpaw and Modem/Net rows do
+not.
 
 `HermesAppsOpen(id)` is the menu-friendly entry point.  It opens the
 launcher with the matching row selected.

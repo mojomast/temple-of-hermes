@@ -16,10 +16,9 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 RUN = ROOT / "run"
 SHOTS = ROOT / "shots"
-STOCK_ISO = Path.home() / ".hermes/plugin-data/templeos/isos/TinkerOS_5.20-rc10.ISO"
+STOCK_ISO = Path(os.environ.get("TOH_TINKEROS_ISO") or (Path.home() / ".hermes/plugin-data/templeos/isos/TinkerOS_5.20-rc10.ISO"))
 QEMU = "qemu-system-x86_64"
 
-sys.path.insert(0, "/workspace/hermes-templeos")
 
 
 class QMP:
@@ -280,7 +279,7 @@ def start_vm(
         "-serial", f"unix:{com},server=on,wait=off",
         "-cdrom", str(iso),
         "-boot", f"order={boot},menu=on",
-        "-drive", f"file={disk},format=qcow2,if=ide,index=1,media=disk",
+        "-drive", f"file={disk},format=qcow2,if=ide,index=0,media=disk",
     ]
     if extra:
         cmd += extra

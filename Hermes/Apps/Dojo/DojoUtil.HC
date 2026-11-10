@@ -5,7 +5,11 @@
 U8 *DojoPath(U8 *rel)
 {//Look for the official art-nous asset first, then the app directory.
   I64 i;
-  U8 *st,*roots[4]={"::/Hermes/Art/","T:/Hermes/Art/","C:/Hermes/Art/","~/Hermes/Art/"};
+  U8 *st,*roots[4];
+  roots[0]="::/Hermes/Art/";
+  roots[1]="T:/Hermes/Art/";
+  roots[2]="C:/Hermes/Art/";
+  roots[3]="~/Hermes/Art/";
   for (i=0;i<4;i++)
   {
     st=MStrPrint("%s%s",roots[i],rel);
