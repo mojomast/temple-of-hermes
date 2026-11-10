@@ -1,0 +1,8 @@
+iso=TinkerOS_5.20-rc10.ISO
+guest=live CD, writable B: RAM drive
+ack=R/D/W per file
+pushed demo/DEMO1.HC -> B:/Home/D1.HC (1531 bytes)
+pushed demo/DEMO2.HC -> B:/Home/D2.HC (700 bytes)
+pushed demo/DEMO3.HC -> B:/Home/D3.HC (984 bytes)
+includes=D1.HC D2.HC D3.HC
+shots=00-boot .. 10-aletheia
