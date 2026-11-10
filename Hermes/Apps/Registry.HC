@@ -6,7 +6,7 @@
 //this tree yet.  Icons are the existing files under ::/Hermes/Art/Icons/32
 //(16 for the PersonalMenu sprites); no art is generated here.
 
-#define HERMES_APPS_MAX 16
+#define HERMES_APPS_MAX 24
 
 class CHermesApp
 {
@@ -77,6 +77,18 @@ U0 HermesAppsRegistryInit()
   HermesAppsRegistryAdd("modem-net",     "Modem / Net", "modem-net",
                         "COM2 serial modem status and loopback tools.",
                         "::/Hermes/Apps/Net/Run.HC", FALSE);
+  HermesAppsRegistryAdd("caduceus",      "Caduceus",    "capy-caduceus",
+                        "Caduceus: guide the temple serpent.",
+                        "::/Hermes/Apps/Caduceus/Run.HC", FALSE);
+  HermesAppsRegistryAdd("token-rain",    "Token Rain",  "nous-girl",
+                        "Token Rain: Nous Girl at the Threshold.",
+                        "::/Hermes/Apps/TokenRain/Run.HC", FALSE);
+  HermesAppsRegistryAdd("spoon",         "Spoon",       "don-piedro",
+                        "Spoon: Don Piedro's catch arcade.",
+                        "::/Hermes/Apps/Spoon/Run.HC", FALSE);
+  HermesAppsRegistryAdd("dojo-duel",     "Dojo Duel",   "teknium",
+                        "Dojo Duel: Teknium's challenge mode.",
+                        "::/Hermes/Apps/DojoDuel/Run.HC", FALSE);
   HermesAppsRegistryAdd("nous-girl",     "About",       "nous-girl",
                         "About the Temple of Hermes.", NULL, FALSE);
 }

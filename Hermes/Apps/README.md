@@ -53,11 +53,21 @@ The current table registers the accepted apps as real entries
 - Don Piedro's Offerings (`Offerings`)
 - Southpaw (`Southpaw`)
 - Modem / Net (`Net`)
+- Caduceus (`Caduceus`)
+- Token Rain (`TokenRain`)
+- Spoon (`Spoon`)
+- Dojo Duel (`DojoDuel`)
 
 `home-temple` and `nous-girl` open the launcher's home/about status instead
 of a separate app. `modem-net` is now a real entry (`planned = FALSE`) with
 `::/Hermes/Apps/Net/Run.HC`; its CLI reports COM2 port, baud, connected/idle
 state, and offers the `HermesNetEchoTest` loopback check.
+
+The four accepted games from this tree (Caduceus, Token Rain, Spoon, and
+Dojo Duel) are also real entries (`planned = FALSE`). Their launcher icons
+reuse official art already in `Hermes/Art/Icons` (`capy-caduceus`,
+`nous-girl`, `don-piedro`, and `teknium`). Teknium, Don Piedro, Southpaw,
+and Nous Girl are characters from the Nous universe.
 
 ## Launcher
 
@@ -87,7 +97,7 @@ crash.  `HermesAppsIcon()` also retries the basename in upper case, which
 covers FAT 8.3 entries that were written without a long-name record.  If
 an app's `run` path exists, the launcher spawns
 `HermesAppsRunFile()` to `ExeFile` it in its own task.  Every accepted app
-now has a real `Run.HC`, including Modem / Net.
+now has a real `Run.HC`, including Modem / Net and the four games.
 
 `HermesAppsOpen(id)` is the menu-friendly entry point.  It opens the
 launcher with the matching row selected.
