@@ -1,174 +1,243 @@
-# THE TEMPLE OF HERMES — Lore Codex
+# The Codex of Nous - lore index (November 2026 refresh)
 
-The **Codex of Nous** is the in-guest lore layer for THE TEMPLE OF HERMES:
-a small HolyC codex, a message of the day, a parlor-game oracle, and a few
-temple easter eggs. It is original flavor for this fork, with every factual
-claim about the outside world carrying a public URL.
+`Hermes/Lore/` is the guest-side Codex of Nous: a scrollable HolyC reader that
+runs inside TinkerOS / THE TEMPLE OF HERMES. This file is the host-side index
+for the same cards. It is the place to check a claim, a date, or a URL without
+opening the guest.
 
-It is **not** an official Nous Research artifact. THE TEMPLE OF HERMES is an
-unaffiliated fork of TinkerOS / TempleOS. Nothing here is a statement, quote,
-or endorsement by Nous Research, the TinkerOS authors, Terry A. Davis, or
-Terry A. Davis' family.
+The refresh is **2026-first**. Entries are paraphrases of first-party Nous
+Research pages or first-party Nous Research posts on X. There are no fabricated
+quotes, no invented dates, and no photoreal likenesses. The Temple of Hermes
+itself is original flavor, not a Nous product and not a Nous claim.
 
-## Canon rules
+Legend:
 
-1. **Sourced claims have URLs.** The Codex prints the URL with the claim; the
-   table below repeats them. URLs were checked on 2026-11-09.
-2. **Original flavor is marked as new.** Entries tagged `ORIGINAL` are fiction
-   written for this fork. They are never presented as research findings.
-3. **No fabricated quotes.** No sentence is attributed to a real person. The
-   only quoted material is website copy, explicitly attributed to the website,
-   and paraphrased wherever possible.
-4. **Fiction stays in the temple.** The Oracle is a parlor game, not
-   divination, advice, or a prediction about any real person.
+- **ORIGINAL** - Temple of Hermes flavor written for this project.
+- **NEW** - added in the November 2026 refresh.
+- **UPDATED** - an older card whose stale tense or missing source was fixed.
+- **SOURCE** - first-party URL printed by the guest card.
 
-## Sourced claims
+## Cards in the guest Codex
 
-| # | Claim in the Codex | Source URL |
-|---|---|---|
-| 1 | Nous Research describes itself as a pioneer in open AI training and research, with a mission paraphrased here as proliferating open access to intelligence. | <https://nousresearch.com/> |
-| 2 | Hermes 3 is described by Nous Research as the latest version of its flagship Hermes series; the 8B model card lists Meta Llama 3.1 8B as its base model and ChatML as its prompt format, and emphasizes alignment to the user. | <https://huggingface.co/NousResearch/Hermes-3-Llama-3.1-8B> |
-| 3 | Nous Research published the Hermes 4 Technical Report as arXiv:2508.18255. | <https://arxiv.org/abs/2508.18255> |
-| 4 | Hermes 4.3 was announced in December 2025 with context up to 512K, based on ByteDance Seed-OSS-36B-Base; Nous Research calls it the first production model post-trained entirely on the Psyche network. | <https://nousresearch.com/introducing-hermes-4-3/> |
-| 5 | Psyche is described as a distributed training network using the DisTrO optimizer, communicating between nodes over the open internet, with consensus state managed on Solana. The Hermes 4.3 run averaged 144k tokens per second across 24 Psyche nodes. | <https://nousresearch.com/introducing-hermes-4-3/> |
-| 6 | Nous Research maintains public organizations on GitHub and Hugging Face under the name `NousResearch`. | <https://github.com/NousResearch> · <https://huggingface.co/NousResearch> |
-| 7 | In Greek myth, Hermes is the herald of the gods and a protector of heralds, travelers, thieves, merchants, and orators; winged sandals let him move between mortal and divine worlds, and he serves as a psychopomp. | <https://en.wikipedia.org/wiki/Hermes> |
-| 8 | Psyche is a figure of classical mythology, the immortal wife of Cupid, often represented as a beautiful woman with butterfly wings. | <https://en.wikipedia.org/wiki/Psyche_(mythology)> |
-| 9 | *Nous* is a Greek-derived word used in philosophy for the mind or intellect, the faculty of rationality or reason. | <https://en.wiktionary.org/wiki/nous> |
-| 10 | The capybara is the largest living rodent, native to South American countries except Chile; it is a semiaquatic herbivore that lives near freshwater and feeds mainly on grasses and aquatic plants. | <https://en.wikipedia.org/wiki/Capybara> |
-| 11 | THE TEMPLE OF HERMES is built on TinkerOS 5.20-rc10, a public-domain fork of TempleOS; TempleOS is public-domain work by Terry A. Davis. | <https://github.com/tinkeros/TinkerOS> · <https://templeos.org/> |
+### ORIGINAL - The Temple and the Codex
 
-The Nous Research facts are deliberately narrow: the organization's own
-self-description, the Hermes 3 model card, the Hermes 4 technical report, and
-the Hermes 4.3 / Psyche announcement. Nothing here guesses at private
-information, invents a quotation, or puts words in anyone's mouth.
+The Temple of Hermes is a public-domain TinkerOS fork built so a human and an
+AI agent can share one virtual machine. The Codex is its reading room: a
+guest-side index that keeps the temple's stories next to their sources. The
+temple is not a Nous product and does not speak for Nous Research.
 
-## Original flavor (new for this fork)
+Guest file: `Hermes/Lore/Codex00.HC`.
 
-Everything in this section is **ORIGINAL** and was written for THE TEMPLE OF
-HERMES. It is not sourced from Nous Research or from any person.
+### NEW - Arete-27B (6 Nov 2026)
 
-- **The Temple of Hermes framing** — the temple, the columns, the messenger,
-  the threshold, and the two-driver presence banner.
-- **The Codex of Nous** — the in-guest index and its `ORIGINAL` entries.
-- **The Oracle of the Threshold** — a parlor-game verse generator. Fiction
-  only; not divination and not advice.
-- **The Message of the Day** — twelve original lines rotated by the local date.
-- **Cappy the capybara acolyte** — an original mascot character. The animal
-  facts are sourced; the character is not a Nous Research mascot.
-- **The Nous Girl badge** — an original fictional character, not a likeness of
-  any real person and not an official Nous Research mascot.
-- **The hidden latch (`Aletheia`)** — a small easter egg with no secret claim.
+Nous post-trained Alibaba's Qwen3.8-27B to reinforce Western values on a
+Chinese-trained model. On an 803-prompt evaluation across seven value
+categories, Arete-27B raised its fact score from 2.32 to 2.98 out of 5 and cut
+answers containing propaganda from 22% to 1%, while staying close to base Qwen
+on agentic benchmarks. The weights and the evaluation are open.
 
-Visual counterparts live in `Hermes/Art/` (see `docs/ART.md`). The Psyche
-neural-flower motif and the WorldSim globe are visual metaphors; the sourced
-Psyche *network* facts are separate and appear above with their URL.
+SOURCE: https://nousresearch.com/arete
 
-## Guest files
+Guest file: `Hermes/Lore/Codex01.HC`.
 
-| Path | Role |
-|---|---|
-| `Hermes/Lore/Glbls.HC` | Shared banner, version, repository URL |
-| `Hermes/Lore/Codex.HC` | `CLoreEntry` table, `Codex`, `CodexAll` |
-| `Hermes/Lore/MOTD.HC` | `MOTD` and the original daily lines |
-| `Hermes/Lore/Oracle.HC` | `Oracle` parlor game |
-| `Hermes/Lore/Eggs.HC` | `Caduceus`, `Capybara`, `HermesFlight`, `NousGirl`, `Aletheia`, `LoreCommands` |
-| `Hermes/Lore/Load.HC` | Include this to load the whole codex |
-| `Hermes/Lore/Install.HC` | Copy hook; installs to `~/Lore` |
-| `Hermes/Lore/README.TXT` | Plain-text guest readme |
+### NEW - A Note on Our Fundraise (7 Oct 2026)
 
-## Commands
+Nous raised $90 million with NVIDIA, Microsoft's M12, Samsung, Robot Ventures,
+Union Square Ventures, Y Combinator, and Menlo Ventures among others. The note
+says the capital goes toward open, auditable AI and toward building Hermes for
+Businesses.
 
-From a Temple of Hermes shell, after loading:
+SOURCE: https://nousresearch.com/a-note-on-our-fundraise
 
-```holyc
-Codex;                // index of every entry
-Codex("hermes");      // one entry, with its source URL
-CodexAll;             // print every entry
-MOTD;                 // message of the day
-Oracle;               // one parlor-game verse
-Oracle("what now?");  // same, with the question echoed
-Caduceus;             // messenger-staff ASCII
-Capybara;             // Cappy and a sourced animal fact
-HermesFlight;         // a small original scene
-NousGirl;             // original badge notice
-Aletheia;             // hidden latch
-LoreCommands;         // command list
-```
+Guest file: `Hermes/Lore/Codex01.HC`.
 
-## Install hook (Once.HC is untouched)
+### NEW - Refactoring Hermes with 1,393 agents (15 Sep 2026)
 
-The repository's `Once.HC` is **not modified** by this work. The lore ships a
-separate `Install.HC` hook instead.
+In a Teknium-bylined blog post, Hermes Agent refactored its own codebase: 1,393
+subagents over about nineteen active hours cut non-test Python by 34.4%
+(1,063,826 to 698,363 lines), for roughly $19,300 in model spend against a
+$150k-$1.8M estimate for doing it by hand. The guest card is a paraphrase of
+the blog post. It is **not** in-game Teknium dialogue and must not be read as
+speech by an NPC.
 
-Load without installing (works from the source tree):
+SOURCE: https://nousresearch.com/refactoring-hermes-with-1393-agents
 
-```holyc
-#include "/Hermes/Lore/Load";
-```
+Guest file: `Hermes/Lore/Codex02.HC`.
 
-Install into the guest home directory, then load:
+### NEW - Hermes Agent (MIT release, February 2026)
 
-```holyc
-#include "/Hermes/Lore/Install";
-#include "~/Lore/Load";
-```
+Nous released Hermes Agent under the MIT license in February 2026; the Releases
+page dates the release 25 Feb 2026. It runs where the user chooses, remembers
+projects, writes reusable skills as it works, and carries that knowledge across
+sessions. The October fundraise note says it has been cloned over 24 million
+times.
 
-Persistence without touching `Once.HC`: add one line to `~/HomeSys.HC` inside
-`StartUpTasks` (or at the end of `~/Once.HC` if you choose to edit your own
-guest copy):
+SOURCES:
 
-```holyc
-#include "~/Lore/Load";
-```
+- https://nousresearch.com/releases
+- https://hermes-agent.nousresearch.com/
 
-The hook copies `Glbls.HC`, `Codex.HC`, `MOTD.HC`, `Oracle.HC`, `Eggs.HC`,
-`Load.HC`, `Install.HC`, and `README.TXT` into `~/Lore`. It does not edit any
-startup file.
+Guest file: `Hermes/Lore/Codex02.HC`.
 
-## QEMU proof
+### NEW - Hermes Agent v0.23.0: The Hearth Release (5 Nov 2026)
 
-The screenshots in `shots/hermes-lore/` were produced in this sandbox with
-QEMU **TCG only** (`-accel tcg -display none -nic none -machine
-pc,kernel-irqchip=off`). They use the public TinkerOS 5.20-rc10 live ISO and
-QMP `screendump` PNGs; nothing is installed to a hard disk and `Once.HC` is
-never touched.
+The Hearth release brings the desktop into a browser tab, one gateway for every
+conversation, `/Rewind`, group chats with automatic routing, spend limits for
+paid tools, and a lighter, faster build.
 
-- ISO: `TinkerOS_5.20-rc10.ISO` from
-  <https://github.com/tinkeros/TinkerOS/releases/tag/5.20-rc10>
-- SHA-256:
-  `feb5cb570a79fefbefeb7d7a7133e3eac0e3b4ffcd6adf8a0fd29049476a1cc4`
-- Guest path: the harness pushes three compact demo sources over COM1 into the
-  live CD's writable `B:` RAM drive, then runs `#include "D1.HC";`,
-  `#include "D2.HC";`, and `#include "D3.HC";`.
+SOURCE: https://x.com/NousResearch/status/2118479744979079669
 
-The canonical, full lore is `Hermes/Lore/*` and `Load.HC`. The live CD's
-compiler heap is small, so the harness uses `shots/hermes-lore/demo/DEMO1..3.HC`
-as compact on-screen renderings of the same entries: each include stays under
-about 1.6 KB. The demo keeps the sourced URLs and marks original lines as new.
+Guest file: `Hermes/Lore/Codex03.HC`.
 
-| Shot | Shows |
-|---|---|
-| `00-boot.png` | first-boot live CD before answering the installer |
-| `01-after-install-prompt.png` | installer answered `NO` |
-| `02-live-cd.png` | live CD shell, no install |
-| `03-codex-index.png` | `Codex;` index with SOURCED / ORIGINAL tags |
-| `04-codex-hermes.png` | Hermes entry with its Wikipedia URL |
-| `05-codex-nous.png` | Nous Research entry with nousresearch.com |
-| `06-motd.png` | `MOTD;` message of the day |
-| `07-oracle.png` | `Oracle;` parlor-game verse |
-| `08-capybara.png` | `Capybara;` and the sourced animal fact |
-| `09-caduceus.png` | `Caduceus;` ASCII and the Hermes source URL |
-| `10-aletheia.png` | `Aletheia;` hidden latch |
+### NEW - Hermes Cloud agents in a browser tab (9 Nov 2026)
 
-The harness `shots/hermes-lore/run_qemu.py` is self-contained and accepts
-`TOH_TINKEROS_ISO` instead of a hard-coded host ISO path. It writes
-`shots/hermes-lore/serial-transcript.txt` with the pushed sizes and acks.
+Hermes Cloud agents open in a browser tab with the same interface as Hermes
+Desktop. Pick a name and a model in Nous Portal; Nous hosts the agent 24/7 in
+its own container, so scheduled jobs and replies on any channel continue while
+your laptop is closed. Plus, Super, and Ultra plans each include one Cloud
+agent out of the box.
 
-## Licensing and credit
+SOURCE: https://x.com/NousResearch/status/2119851439904510217
 
-TempleOS is public domain by Terry A. Davis. TinkerOS is public domain under
-the Unlicense. This fork keeps those notices. The lore source in
-`Hermes/Lore/` is released with the rest of this repository under the same
-public-domain terms; the sourced facts remain the property of their respective
-publishers and are cited, not relicensed.
+Guest file: `Hermes/Lore/Codex03.HC`.
+
+### NEW - NousCoder-14B (6 Jan 2026)
+
+A competitive olympiad programming model post-trained on Qwen3-14B via
+reinforcement learning. Nous released the weights, an open RL environment and
+eval harness, and W&B logs, and documented the pipelined verification setup and
+parallelization.
+
+SOURCES:
+
+- https://nousresearch.com/nouscoder-14b-a-competitive-olympiad-programming-model
+- https://huggingface.co/NousResearch/NousCoder-14B
+
+Guest file: `Hermes/Lore/Codex04.HC`.
+
+### NEW - Psyche: architecture and next phase (2025)
+
+Psyche is open infrastructure for decentralized training across underutilized
+hardware. Building on DisTrO and DeMo, it cuts data transfer by orders of
+magnitude; the next phase coordinates work on Solana and aims to make
+distributed training practical.
+
+SOURCES:
+
+- https://nousresearch.com/nous-psyche
+- https://nousresearch.com/the-next-phase-of-psyche
+
+Guest file: `Hermes/Lore/Codex04.HC`.
+
+### NEW - Forge Reasoning API beta and Nous Chat (2025)
+
+Nous launched the Forge Reasoning API beta and Nous Chat, a simple chat
+platform featuring the Hermes language model. Forge packages Nous's
+inference-time reasoning research.
+
+SOURCE: https://nousresearch.com/introducing-the-forge-reasoning-api-beta-and-nous-chat-an-evolution-in-llm-inference
+
+Guest file: `Hermes/Lore/Codex05.HC`.
+
+### NEW - Atropos (2025)
+
+Atropos is an RL environment framework designed to coordinate generation tasks
+across potentially thousands of distributed workers, integrating with standard
+inference APIs.
+
+SOURCES:
+
+- https://nousresearch.com/introducing-atropos
+- https://github.com/NousResearch/atropos
+
+Guest file: `Hermes/Lore/Codex05.HC`.
+
+### UPDATED - Hermes 3 (August 2024)
+
+Hermes 3 launched in August 2024 as the flagship of its generation: a 405B
+model, smaller siblings, an open technical report, and a dataset. Later Hermes
+4 and 4.3 followed, so Hermes 3 is not the current flagship. This card replaces
+the stale "latest flagship" present-tense wording with a dated 2024 statement.
+
+SOURCES:
+
+- https://nousresearch.com/freedom-at-the-frontier-hermes-3
+- https://nousresearch.com/releases
+
+Guest file: `Hermes/Lore/Codex05.HC`.
+
+## Deliberately not included
+
+**No WorldSim origin card.** The only available recap was a LinkedIn post, and
+that is not a first-party source. The Codex will add a WorldSim origin card
+only when Nous publishes a first-party page for it. The existing WorldSim art
+and icon remain art, not lore.
+
+## Guest layout and heap budget
+
+The live-CD compiler heap is small, so the reader is split into small includes.
+Every `.HC` file in `Hermes/Lore/` stays well under the ~1.6 KB per-include
+budget:
+
+| File | Role | Bytes |
+| --- | --- | --- |
+| `Load.HC` | `Cd(__DIR__);;` + `#include "Codex";`; no side effects | 68 |
+| `Run.HC` | includes `Load`, calls `CodexRun` | 41 |
+| `Codex.HC` | includes the parts and the UI, defines `CodexRun` | 336 |
+| `Codex00.HC` | title, reading key, ORIGINAL temple card | 1005 |
+| `Codex01.HC` | Arete-27B, fundraise | 1075 |
+| `Codex02.HC` | 1,393-agent refactor, Hermes Agent MIT card | 1243 |
+| `Codex03.HC` | Hearth v0.23, Cloud agents in a browser tab | 1055 |
+| `Codex04.HC` | NousCoder-14B, Psyche | 1141 |
+| `Codex05.HC` | Forge, Atropos, Hermes 3 | 1367 |
+| `Codex06.HC` | sources note + `LORE-RESULT.TXT` | 876 |
+| `CodexUI.HC` | window, scroll bars, menu, read-only key loop | 615 |
+
+`Load.HC` has no side effects. `Run.HC` is the only entry point that opens a
+window. The reader runs in the caller task (so the window is already focused),
+uses `SettingsPush` / `SettingsPop`, `MenuPush` / `MenuPop`, `DocScroll(TRUE)`
+for scroll bars, and `DocTop` to start at the top. Arrow and page keys are
+forwarded to the DolDoc cursor; printable keys are ignored, so the Codex stays
+a reader. No child tasks are spawned, so there is nothing to `Kill` on exit;
+`SettingsPop` restores the terminal when the reader closes.
+
+The guest spells money as `USD 90 million`, `USD 19,300`, and `USD 150k-1.8M`.
+A bare `$` in HolyC source starts a DolDoc command when the compiler reads the
+file, so `USD` keeps the prose safe. The host copy below keeps the familiar
+`$` glyphs.
+
+The guest writes `::/Hermes/Lore/LORE-RESULT.TXT` (the boot drive's app
+directory) with the card IDs it emitted. That is the agent-facing result file;
+the verification never scrapes the bitmap for text.
+
+## Verification (QEMU TCG)
+
+Verified on TinkerOS 5.20-rc10 under QEMU TCG with
+`-accel tcg -display none -nic none -machine pc,kernel-irqchip=off`:
+
+- ISO SHA-256: `feb5cb570a79fefbefeb7d7a7133e3eac0e3b4ffcd6adf8a0fd29049476a1cc4`.
+- The guest compiled `Hermes/Lore/Load.HC`, ran `CodexRun`, and wrote the
+  result file with all card IDs (`original` through `hermes3-2024`).
+- Screenshots live in `shots/hermes-lore/` (`01-codex-top.png` through
+  `05-after-exit.png`).
+- Checks are Python/PIL only: PNG size, palette indices 0-15, and a
+  non-background bounding box. No screenshot is opened in-model.
+
+## Source index
+
+| Date | Card | Tag | Source |
+| --- | --- | --- | --- |
+| 9 Nov 2026 | Cloud agents in a browser tab | NEW | https://x.com/NousResearch/status/2119851439904510217 |
+| 6 Nov 2026 | Arete-27B | NEW | https://nousresearch.com/arete |
+| 5 Nov 2026 | Hearth v0.23 | NEW | https://x.com/NousResearch/status/2118479744979079669 |
+| 7 Oct 2026 | A Note on Our Fundraise | NEW | https://nousresearch.com/a-note-on-our-fundraise |
+| 15 Sep 2026 | Refactoring Hermes with 1,393 agents | NEW | https://nousresearch.com/refactoring-hermes-with-1393-agents |
+| 25 Feb 2026 | Hermes Agent MIT release | NEW | https://nousresearch.com/releases |
+| 6 Jan 2026 | NousCoder-14B | NEW | https://nousresearch.com/nouscoder-14b-a-competitive-olympiad-programming-model |
+| 2025 | Psyche architecture / next phase | NEW | https://nousresearch.com/the-next-phase-of-psyche |
+| 2025 | Forge Reasoning API beta / Nous Chat | NEW | https://nousresearch.com/introducing-the-forge-reasoning-api-beta-and-nous-chat-an-evolution-in-llm-inference |
+| 2025 | Atropos | NEW | https://nousresearch.com/introducing-atropos |
+| Aug 2024 | Hermes 3 | UPDATED | https://nousresearch.com/freedom-at-the-frontier-hermes-3 |
+
+Checked 10 Nov 2026. All links are first-party Nous Research pages or Nous
+Research posts on X.
