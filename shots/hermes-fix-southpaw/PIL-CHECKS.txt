@@ -1,0 +1,4 @@
+PIL checks (no image viewing)
+01-southpaw-digest.png: size=[640, 480] mode=P unique_colors=14 unique_indices=14 min_index=0 max_index=15 off_palette=0 bbox=[0, 0, 640, 480] colored_bbox=[0, 0, 640, 480]
+02-southpaw-second-run.png: size=[640, 480] mode=P unique_colors=14 unique_indices=14 min_index=0 max_index=15 off_palette=0 bbox=[0, 0, 640, 480] colored_bbox=[0, 0, 640, 480]
+03-shell-return.png: size=[640, 480] mode=P unique_colors=10 unique_indices=10 min_index=0 max_index=15 off_palette=0 bbox=[0, 0, 640, 480] colored_bbox=[0, 0, 640, 480]

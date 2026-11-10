@@ -1,0 +1,80 @@
+[
+  {
+    "file": "01-southpaw-digest.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "unique_colors": 14,
+    "unique_indices": 14,
+    "min_index": 0,
+    "max_index": 15,
+    "off_palette": 0,
+    "bbox": [
+      0,
+      0,
+      640,
+      480
+    ],
+    "colored_bbox": [
+      0,
+      0,
+      640,
+      480
+    ],
+    "sha256": "fe4cd6a6aefcfcb421a4c3de9c23ca597c9a03268ddf33d24ef653123068bd2f"
+  },
+  {
+    "file": "02-southpaw-second-run.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "unique_colors": 14,
+    "unique_indices": 14,
+    "min_index": 0,
+    "max_index": 15,
+    "off_palette": 0,
+    "bbox": [
+      0,
+      0,
+      640,
+      480
+    ],
+    "colored_bbox": [
+      0,
+      0,
+      640,
+      480
+    ],
+    "sha256": "34225366a2de95d9493b7821b765f79e1262a5f7a9a8f7096e7477016c58fef4"
+  },
+  {
+    "file": "03-shell-return.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "unique_colors": 10,
+    "unique_indices": 10,
+    "min_index": 0,
+    "max_index": 15,
+    "off_palette": 0,
+    "bbox": [
+      0,
+      0,
+      640,
+      480
+    ],
+    "colored_bbox": [
+      0,
+      0,
+      640,
+      480
+    ],
+    "sha256": "81b671805f1d03a8935766c00d9cef4d2922ece800976c8167f02f55eb0f1427"
+  }
+]
