@@ -16,7 +16,7 @@ U0 DojoPlaque()
   CTask *pu=NULL;
   U8 *st=
   "$$WW,1$$$$YELLOW$$HERMES DOJO WALL PLAQUE$$FG$$\n\n"
-  "Teknium appears only as Kyle's game character.\n"
+  "Teknium appears only as Kyle's character from the Nous universe.\n"
   "Trainer voice from the game: \"Ship first, patch later.\"\n\n"
   "NousCoder-14B:\n"
   "$$TX,\"https://nousresearch.com/nouscoder-14b-a-competitive-olympiad-programming-model\","

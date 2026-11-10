@@ -12,11 +12,11 @@ U0 DojoDrawIt(CTask *,CDC *dc)
   dc->color=BLACK;
   if (dojo_tek) GrBlot(dc,24,96,dojo_tek);
   dc->color=WHITE; GrPrint(dc,96,100,"TEKNIUM");
-  dc->color=LTGRAY; GrPrint(dc,96,112,"game character");
+  dc->color=LTGRAY; GrPrint(dc,96,112,"Nous universe");
   dc->color=LTCYAN; GrPrint(dc,96,124,"energy blade");
   DojoPanel(dc,24,168,192,64,"TRAINER VOICE",BROWN);
   dc->color=YELLOW; GrPrint(dc,32,186,"\"%s\"",DOJO_LINE);
-  dc->color=LTGRAY; GrPrint(dc,32,202,"- game character");
+  dc->color=LTGRAY; GrPrint(dc,32,202,"- Nous universe");
   DojoCaduceus(dc,596,292,18);
   DojoPanel(dc,232,80,392,296,"SCORED CHALLENGES",LTGREEN);
   for (i=0;i<4;i++)
