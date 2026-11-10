@@ -1,0 +1,106 @@
+{
+  "01-dojo-window.png": {
+    "size": [
+      640,
+      480
+    ],
+    "unique_colors": 12,
+    "palette_ok": true,
+    "bbox": [
+      0,
+      8,
+      639,
+      471
+    ]
+  },
+  "02-challenge-result.png": {
+    "size": [
+      392,
+      296
+    ],
+    "unique_colors": 5,
+    "palette_ok": true,
+    "bbox": [
+      0,
+      8,
+      391,
+      295
+    ]
+  },
+  "03-dojo-second.png": {
+    "size": [
+      640,
+      480
+    ],
+    "unique_colors": 12,
+    "palette_ok": true,
+    "bbox": [
+      0,
+      8,
+      639,
+      471
+    ]
+  },
+  "04-final-shell.png": {
+    "size": [
+      640,
+      480
+    ],
+    "unique_colors": 9,
+    "palette_ok": true,
+    "bbox": [
+      0,
+      0,
+      639,
+      479
+    ]
+  },
+  "header_plate": {
+    "dx": 0,
+    "dy": 8,
+    "match_pct": 99.78,
+    "size": [
+      640,
+      64
+    ]
+  },
+  "teknium_icon": {
+    "dx": 0,
+    "dy": 8,
+    "match_pct": 100.0,
+    "size": [
+      64,
+      64
+    ]
+  },
+  "scoreboard_colors": {
+    "0": 3567,
+    "7": 585,
+    "10": 110525,
+    "14": 408,
+    "15": 947
+  },
+  "final_shell_text": {
+    "has_C_Home": true,
+    "has_public_domain": true
+  },
+  "challenge_result_text": {
+    "has_PASS_100": true,
+    "has_DolDoc": true
+  },
+  "result1": {
+    "exists": true,
+    "pass": true,
+    "score100": true
+  },
+  "result2": {
+    "exists": true,
+    "pass": true,
+    "score100": true
+  },
+  "result4": {
+    "exists": true,
+    "pass": true,
+    "score100": true
+  }
+}

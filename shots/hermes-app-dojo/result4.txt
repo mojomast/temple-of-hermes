@@ -1,0 +1,4 @@
+CHALLENGE: file echo
+STATUS: PASS
+SCORE: 100
+DETAIL: bytes=76 token=1

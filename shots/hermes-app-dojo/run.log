@@ -1,0 +1,11 @@
+Hermes Dojo QEMU TCG smoke run
+Host: Linux, qemu-system-x86_64 -accel tcg -machine pc,kernel-irqchip=off -display none -nic none
+Guest: TinkerOS 5.20-rc10, installed to a 512M qcow2, C: FAT32
+Overlay: app copied to C:/Hermes/Apps/Dojo; Home/Once.HC ran the demo harness
+Demo: dojo_demo=TRUE; Dojo; Dojo; (two runs, 15s each), then the stock Once desktop
+Markers: C:/Tmp/DOJO.START=1, C:/Tmp/DOJO.DONE=1
+Results: result1 caduceus PASS 100, result2 DolDoc form PASS 100, result4 file echo PASS 100
+CLI: DojoCli("4") printed score=100 and wrote result4.txt; Chal1.HC + DojoChal1 wrote result1.txt
+Assets: header-dojo-plate.GR 99.78% (NEW badge overlay), teknium-icon.GR 100%
+Final: 04-final-shell.png is the usable TinkerOS desktop after the second run
+Challenge shot: 02-challenge-result.png / .txt reads "2 DolDoc form  PASS 100"

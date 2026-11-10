@@ -1,0 +1,4 @@
+CHALLENGE: DolDoc form
+STATUS: PASS
+SCORE: 100
+DETAIL: bytes=137 tags=100
