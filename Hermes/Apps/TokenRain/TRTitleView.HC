@@ -33,5 +33,5 @@ U0 TRTitle(CDC *dc,CTask *task)
   }
   TRGirl(dc,480,280);
   dc->color=DKGRAY;
-  GrPrint(dc,120,440,"FICTIONAL GAME CHARACTER / 16-COLOR");
+  GrPrint(dc,120,440,"NOUS UNIVERSE CHARACTER / 16-COLOR");
 }
