@@ -1,0 +1,11 @@
+I32 cad_sx[CAD_MAX],cad_sy[CAD_MAX];
+I32 cad_len,cad_dx,cad_dy,cad_ndx,cad_ndy;
+I32 cad_fx[CAD_FOOD],cad_fy[CAD_FOOD];
+Bool cad_food[CAD_FOOD];
+I32 cad_score,cad_state,cad_ticks,cad_delay,cad_hi;
+Bool cad_alive,cad_sound,cad_auto;
+U32 cad_seed;
+U8 cad_msg[96];
+CDC *cad_wall;
+CDC *cad_logo;
+CDC *cad_sp;

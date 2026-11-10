@@ -1,0 +1,12 @@
+#define CAD_COLS	36
+#define CAD_ROWS	22
+#define CAD_CELL	16
+#define CAD_X		32
+#define CAD_Y		56
+#define CAD_MAX		400
+#define CAD_FOOD	3
+#define CAD_TITLE	0
+#define CAD_PLAY	1
+#define CAD_OVER	2
+#define CAD_SCORE	"C:/Tmp/CaduceusScore.TXT"
+#define CAD_RESULT	"C:/Tmp/CaduceusResult.TXT"
