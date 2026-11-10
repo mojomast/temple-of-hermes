@@ -1,0 +1,27 @@
+THE TEMPLE OF HERMES — expected boot/banner strings
+Status: expected text, NOT a captured screenshot or guest transcript.
+
+Kernel boot banner (Kernel/KMain.HC):
+  THE TEMPLE OF HERMES 0.1.0 (TinkerOS V5.200 base)
+
+Once welcome (Once.HC):
+  THE TEMPLE OF HERMES  v0.1.0
+  (TinkerOS 5.200 base)
+  A TempleOS / TinkerOS fork for an AI agent and a human
+  TempleOS by Terry A. Davis. TinkerOS by its authors.
+  Public domain / Unlicense; both upstream credits are kept.
+
+Start page (Doc/Start.DD):
+  THE TEMPLE OF HERMES
+  Public Domain Operating System
+  A TempleOS / TinkerOS fork for agent and human co-use
+  Version 0.1.0 — TinkerOS 5.200 base
+
+Debugger (Kernel/KDbg.HC):
+  THE TEMPLE OF HERMES Debugger
+
+Serial beacon:
+  HBEACON TempleOfHermes/0.1.0
+
+Capture the real screens into this directory with the recipe in README.md.
+Do not present this expected-text file as a screenshot.

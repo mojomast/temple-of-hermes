@@ -1,39 +1,76 @@
-# Installing TempleOS or TinkerOS on Linux using QEMU
+# Running THE TEMPLE OF HERMES on Linux with QEMU
 
-## Setup Steps:
-1) Enable Virtualization in your BIOS (this step may not be necessary)
-	- Steps vary by manufacturer
+THE TEMPLE OF HERMES is a TempleOS-family system based on TinkerOS 5.20-rc10.
+It uses the same QEMU device model as TinkerOS: a PC machine with legacy boot,
+PS/2 input (or VMMouse), and an IDE CD-ROM. Networking is optional and is off
+for the agent image.
 
-2) Enable KVM if available for your CPU
+The original upstream TinkerOS/TempleOS guide is preserved at
+[`docs/upstream/LinuxQEMU.md`](docs/upstream/LinuxQEMU.md).
 
-3) Install 64-bit QEMU using package manager or compile from source.
- 
-4) Download TempleOS and/or TinkerOS ISO
-	- TempleOS: http://templeos.org/Downloads/TOS_Distro.ISO
-	- TinkerOS: https://github.com/tinkeros/TinkerOS/releases
+## Setup
 
-## Test run from CD:
+1. Enable virtualization in the BIOS if you have it.
+2. Enable KVM if your CPU and host support it. In a sandbox without
+   `/dev/kvm`, use `-accel tcg`; it is slower but works.
+3. Install 64-bit QEMU from your package manager.
+4. Get a bootable image:
+   - THE TEMPLE OF HERMES: build `TempleOfHermes-0.1.0.ISO` with
+     `scripts/build_iso.py`, or use a verified release image.
+   - Stock TinkerOS: <https://github.com/tinkeros/TinkerOS/releases>
+   - TempleOS: <http://templeos.org/Downloads/TOS_Distro.ISO>
 
-### Run TempleOS (with PC speaker sound) from CD only (no install)
-	qemu-system-x86_64 -m 2g -accel kvm,kernel-irqchip=off -smp 4 -audiodev sdl,id=snd0 -machine pc,pcspk-audiodev=snd0 -display sdl -cdrom TOS_Distro.ISO
-	
-### Run TinkerOS (with Adlib sound) from CD only (no install)
-	qemu-system-x86_64 -m 2g -accel kvm,kernel-irqchip=off -smp 4 -audiodev sdl,id=snd0 -machine pc -device adlib,audiodev=snd0 -display sdl -cdrom TinkerOS_5.14.ISO
+## Test run from CD
 
-## Install to virtual hard drive:
+### THE TEMPLE OF HERMES (TCG, no network, serial on a socket)
 
-### Create a virtual hard drive with desired name/format/size
-	qemu-img create tos.qcow2 512M
+```bash
+qemu-system-x86_64 \
+  -m 2G \
+  -accel tcg \
+  -machine pc,kernel-irqchip=off \
+  -smp 1 -vga std \
+  -display sdl -nic none \
+  -cdrom TempleOfHermes-0.1.0.ISO \
+  -serial unix:/tmp/toh-com1.sock,server=on,wait=off
+```
 
-### Run TempleOS (with PC speaker sound) to install from CD to virtual hard disk
-	qemu-system-x86_64 -m 2g -accel kvm,kernel-irqchip=off -smp 4 -audiodev sdl,id=snd0 -machine pc,pcspk-audiodev=snd0 -display sdl -cdrom TOS_Distro.ISO -hda tos.qcow2
+With KVM available, replace `-accel tcg` with `-accel kvm,kernel-irqchip=off`.
+For a headless probe, use `-display none` and QMP screendumps; see
+[`docs/QEMU-SANDBOX-PROBE.md`](docs/QEMU-SANDBOX-PROBE.md).
 
-### Run TinkerOS (with Adlib sound) to install from CD to virtual hard disk
-	qemu-system-x86_64 -m 2g -accel kvm,kernel-irqchip=off -smp 4 -audiodev sdl,id=snd0 -machine pc -device adlib,audiodev=snd0 -display sdl -cdrom TinkerOS_5.14.ISO -hda tos.qcow2
+### Upstream TinkerOS / TempleOS
 
-### Notes
-  - QEMU has a poorly emulated PC speaker sound might not be good with TempleOS
-  - If you use TinkerOS instead you can use Adlib sound instead and as an added bonus you can [roll your own 64-bit randomly generated instrument with RandInst to go with your randomly generated GodSong or use PickInst to select from a list of available instruments](https://youtu.be/d0J1Jbhxsv0)!
-  - You can run without KVM, but it will be slower.
+```bash
+qemu-system-x86_64 -m 2G -accel kvm,kernel-irqchip=off -smp 4 \
+  -audiodev sdl,id=snd0 -machine pc,pcspk-audiodev=snd0 \
+  -display sdl -cdrom TOS_Distro.ISO
 
- 
+qemu-system-x86_64 -m 2G -accel kvm,kernel-irqchip=off -smp 4 \
+  -audiodev sdl,id=snd0 -machine pc -device adlib,audiodev=snd0 \
+  -display sdl -cdrom TinkerOS_5.14.ISO
+```
+
+## Install to a virtual hard drive
+
+```bash
+qemu-img create toh.qcow2 512M
+qemu-system-x86_64 -m 2G -accel tcg -machine pc,kernel-irqchip=off \
+  -smp 1 -display sdl -nic none \
+  -cdrom TempleOfHermes-0.1.0.ISO -hda toh.qcow2
+```
+
+On the Hermes image, the live CD does not start the installer automatically.
+Run `OSInstall` from USER mode when you want to install. In AGENT mode the
+input gate refuses install and format operations by design.
+
+## Notes
+
+- QEMU's PC-speaker emulation is rough. TinkerOS's Adlib/OPL path sounds better
+  where it is available.
+- Without KVM the guest is slow; the agent should prefer the serial `text` and
+  `idle` operations over screenshot polling.
+- The Hermes image expects COM1 for the guest daemon. Attach a socket or PTY and
+  wait for `HBEACON TempleOfHermes/0.1.0` before sending requests.
+- Networking stays off for the agent image. See
+  [`docs/HERMES-FEATURES.md`](docs/HERMES-FEATURES.md) for the serial protocol.
