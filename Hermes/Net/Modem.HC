@@ -1,11 +1,8 @@
-#ifndef HERMES_NET_MODEM_HC
-#define HERMES_NET_MODEM_HC
-
 // Guest-side Hayes modem client for THE TEMPLE OF HERMES.
 //
-// The host runs host/hermes_chat_relay.py on the other end of COM2.  Networking
-// is off there by default; Dial() succeeds only for destinations on the host
-// allow-list (for example "hermes").  See docs/HERMES-CHAT-PROTOCOL.md.
+// The host runs host/hermes_modem.py on the other end of COM2.  Networking is
+// off there by default; Dial() succeeds only for destinations on the host
+// allow-list (for example "hermes").  See docs/NETWORKING.md.
 
 // Bring up COM2.  CommInit is only called when the port table is still empty,
 // so loading this after the COM1 Hermes daemon does not disturb COM1.
@@ -123,5 +120,3 @@ U0 HermesNetStatus()
   else
     "HERMES/NET COM%d idle (host modem off by default)\n",HERMES_NET_COM;
 }
-
-#endif

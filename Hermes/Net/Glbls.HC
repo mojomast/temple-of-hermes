@@ -1,6 +1,3 @@
-#ifndef HERMES_NET_GLBLS_HC
-#define HERMES_NET_GLBLS_HC
-
 // THE TEMPLE OF HERMES - COM2 networking globals.
 // Public-domain work, with credit to Terry A. Davis (TempleOS)
 // and the TinkerOS authors (tinkeros/TinkerOS).
@@ -28,5 +25,3 @@ U8 *HermesNetStateName()
     return "connected";
   return "idle";
 }
-
-#endif

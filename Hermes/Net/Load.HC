@@ -1,6 +1,3 @@
-#ifndef HERMES_NET_LOAD_HC
-#define HERMES_NET_LOAD_HC
-
 // THE TEMPLE OF HERMES - guest COM2 networking.
 //
 //   #include "/Hermes/Net/Load"
@@ -16,5 +13,3 @@ Cd(__DIR__);;
 #include "Protocol"
 #include "Modem"
 Cd("..");;
-
-#endif

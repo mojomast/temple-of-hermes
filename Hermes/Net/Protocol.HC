@@ -1,6 +1,3 @@
-#ifndef HERMES_NET_PROTOCOL_HC
-#define HERMES_NET_PROTOCOL_HC
-
 // Low-level COM2 byte and line helpers for the Hermes modem client.
 
 U0 HermesNetPutChar(U8 ch)
@@ -74,5 +71,3 @@ I64 HermesNetReadBlk(U8 *buf,I64 count,I64 timeout_ms=1000)
   }
   return n;
 }
-
-#endif
