@@ -23,4 +23,25 @@ U0 Tmp()
   "from USER mode only.\n\n";
 }
 
+U0 HermesStartApps()
+{//Autostart the Hermes app launcher when its files are present.
+  U8 *st;
+  if (IsFile("::/Hermes/Apps/Launcher/Run.HC"))
+    st=StrNew("::/Hermes/Apps/Launcher/Run.HC");
+  else if (IsFile("T:/Hermes/Apps/Launcher/Run.HC"))
+    st=StrNew("T:/Hermes/Apps/Launcher/Run.HC");
+  else if (IsFile("C:/Hermes/Apps/Launcher/Run.HC"))
+    st=StrNew("C:/Hermes/Apps/Launcher/Run.HC");
+  else if (IsFile("~/Hermes/Apps/Launcher/Run.HC"))
+    st=StrNew("~/Hermes/Apps/Launcher/Run.HC");
+  else
+    st=NULL;
+  if (st)
+  {
+    ExeFile(st);
+    Free(st);
+  }
+}
+
 Tmp;
+HermesStartApps;
