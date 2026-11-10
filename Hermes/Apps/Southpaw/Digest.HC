@@ -10,6 +10,7 @@ U0 SouthpawDigest(U8 *digest_path=NULL,U8 *out_path=NULL)
   I64 count;
   I64 agents;
   U8 *channel;
+  U8 *ch;
   U8 *out;
   U8 *next;
   U8 *safe;
@@ -24,8 +25,12 @@ U0 SouthpawDigest(U8 *digest_path=NULL,U8 *out_path=NULL)
   if (!out_path)
     out_path=SP_RESULT;
   head=SouthpawParseFile(digest_path,&count,&agents,&channel);
+  if (channel && *channel)
+    ch=channel;
+  else
+    ch="BBS";
   out=MStrPrint("SouthpawDigest 1\nchannel: %s\nposts: %d\nagent_posts: %d\n",
-		channel && *channel ? channel : "BBS",count,agents);
+		ch,count,agents);
   p=head;
   while (p)
   {

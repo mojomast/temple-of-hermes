@@ -9,7 +9,6 @@ U0 SouthpawRender(CDoc *doc,CSouthpawPost *head,U8 *channel,I64 count,I64 agents
 {
   CSouthpawPost *p;
   U8 *safe;
-  U8 *path;
   U8 *last_section;
   last_section=NULL;
 
@@ -32,7 +31,7 @@ U0 SouthpawRender(CDoc *doc,CSouthpawPost *head,U8 *channel,I64 count,I64 agents
   // NEW announcer line.
   DocPrint(doc,"$$FG,LTGREEN$$Run it locally! Here is the board, distilled.$$FG$$\n\n");
   safe=SouthpawSafeText(channel);
-  DocPrint(doc,"$$FG,LTCYAN$$Channel:$$FG$$ %s\n",*safe ? safe : "BBS");
+  DocPrint(doc,"$$FG,LTCYAN$$Channel:$$FG$$ %s\n",SouthpawDft(safe,"BBS"));
   Free(safe);
   DocPrint(doc,"$$FG,LTCYAN$$Posts:$$FG$$ %d    $$FG,LTCYAN$$Agent posts:$$FG$$ %d\n",count,agents);
   // NEW announcer line.
@@ -44,13 +43,13 @@ U0 SouthpawRender(CDoc *doc,CSouthpawPost *head,U8 *channel,I64 count,I64 agents
     {
       safe=SouthpawSafeText(p->section);
       DocPrint(doc,"\n$$FG,WHITE$$== %s ==$$FG$$\n",
-	       *safe ? safe : "Highlights");
+	       SouthpawDft(safe,"Highlights"));
       Free(safe);
       last_section=p->section;
     }
     safe=SouthpawSafeText(p->subject);
     DocPrint(doc,"\n$$FG,YELLOW$$--- %s ---$$FG$$\n",
-	     *safe ? safe : "(no subject)");
+	     SouthpawDft(safe,"(no subject)"));
     Free(safe);
     if (FileFind(SP_ICON16,,FUF_JUST_FILES))
     {
@@ -62,11 +61,11 @@ U0 SouthpawRender(CDoc *doc,CSouthpawPost *head,U8 *channel,I64 count,I64 agents
     else
     {
       safe=SouthpawSafeText(p->kind);
-      DocPrint(doc,"$$FG,LTBLUE$$[%s]$$FG$$ ",*safe ? safe : "POST");
+      DocPrint(doc,"$$FG,LTBLUE$$[%s]$$FG$$ ",SouthpawDft(safe,"POST"));
       Free(safe);
     }
     safe=SouthpawSafeText(p->author);
-    DocPrint(doc,"$$FG,LTGREEN$$%s$$FG$$",*safe ? safe : "unknown");
+    DocPrint(doc,"$$FG,LTGREEN$$%s$$FG$$",SouthpawDft(safe,"unknown"));
     Free(safe);
     safe=SouthpawSafeText(p->when);
     DocPrint(doc,"$$FG,DKGRAY$$  %s$$FG$$\n",safe);
@@ -99,7 +98,7 @@ U0 SouthpawView()
   SouthpawRender(doc,head,channel,count,agents);
   SouthpawPostsDel(head);
   Free(channel);
-  PopUpViewDoc(doc);
+  PopUpViewDoc(doc,DOF_WIN_MAX);
 }
 
 

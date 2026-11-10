@@ -8,10 +8,10 @@
 U8 *SouthpawTrim(U8 *st)
 {
   U8 *end;
-  while (*st==' ' || *st=='\t')
+  while (*st==32 || *st==9)
     st++;
   end=st+StrLen(st);
-  while (end>st && (end[-1]==' ' || end[-1]=='\t' || end[-1]=='\r'))
+  while (end>st && (end[-1]==32 || end[-1]==9 || end[-1]==13))
   {
     end--;
     *end=0;
@@ -33,17 +33,24 @@ U8 *SouthpawSafeText(U8 *src)
   for (i=0; i<len; i++)
   {
     c=src[i];
-    if (c=='$')
+    if (c==36)
       c=39; // Keep DolDoc tags out of untrusted text.
-    else if (c=='\n' || c=='\t')
+    else if (c==10 || c==9)
     {
     }
     else if (c<32 || c>=127)
-      c=' ';
+      c=32;
     *d++=c;
   }
   *d=0;
   return res;
+}
+
+U8 *SouthpawDft(U8 *st,U8 *dft)
+{
+  if (st && *st)
+    return st;
+  return dft;
 }
 
 U8 *SouthpawCatField(U8 *out,U8 *label,U8 *val)
@@ -115,7 +122,7 @@ U0 SouthpawAppendBody(U8 *bodybuf,I64 *bodylen,I64 bodymax,U8 *line)
   {
     MemCpy(bodybuf+bl,line,ll);
     bl+=ll;
-    bodybuf[bl]='\n';
+    bodybuf[bl]=10;
     bl++;
     bodybuf[bl]=0;
     bodylen[0]=bl;
@@ -173,14 +180,14 @@ CSouthpawPost *SouthpawParseFile(U8 *filename,I64 *count,I64 *agents,U8 **channe
   while (*p)
   {
     line=p;
-    while (*p && *p!='\n' && *p!='\r')
+    while (*p && *p!=10 && *p!=13)
       p++;
     if (*p)
     {
       c=*p;
       *p=0;
       p++;
-      if (c=='\r' && *p=='\n')
+      if (c==13 && *p==10)
         p++;
     }
     line=SouthpawTrim(line);
