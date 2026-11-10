@@ -19,7 +19,11 @@ U0 TRAgentView(CDC *dc,CTask *task)
   dc->color=LTGREEN;
   GrPrint(dc,x,176,"FRAMES  %04d",tr_frames);
   dc->color=LTPURPLE;
-  GrPrint(dc,x,204,"RESULT C:/Tmp/TokenRainResult.TXT");
+  {
+    U8 *rp=TRResultPath();
+    GrPrint(dc,x,204,"RESULT %s",rp);
+    Free(rp);
+  }
   dc->color=LTGRAY;
   GrPrint(dc,x,240,"ENTER / ESC EXIT");
 }

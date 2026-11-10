@@ -3,17 +3,31 @@
 #include "DuelText.HC"
 U0 DuelSaveBest()
 {
-  U8 *s;
-  if (!FileFind("C:/Tmp")) DirMk("C:/Tmp");
+  U8 *s,*path;
   s=MStrPrint("DOJO DUEL HIGH SCORE\nBEST: %d\nSTREAK: %d\nRUNS: %d\n",
     duel_best,duel_beststreak,duel_runs);
-  FileWrite("C:/Tmp/DojoDuelScore.TXT",s,StrLen(s));
+  path=DuelScorePath();
+  if (path && *path)
+  {
+    try
+    {
+      FileWrite(path,s,StrLen(s));
+    }
+    catch
+      Fs->catch_except=TRUE;
+  }
+  Free(path);
   Free(s);
 }
 U0 DuelLoadBest()
 {
-  U8 *b=FileRead("C:/Tmp/DojoDuelScore.TXT"),*p;
+  U8 *path,*b,*p;
   duel_best=0; duel_beststreak=0; duel_runs=0;
+  path=DuelScorePath();
+  b=NULL;
+  if (path && *path && FileFind(path))
+    b=FileRead(path);
+  Free(path);
   if (b)
   {
     p=StrFind("BEST: ",b);    if (p) duel_best=Str2I64(p+6);

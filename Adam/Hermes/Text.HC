@@ -101,7 +101,7 @@ U8 *HermesTextAll()
 {
   CTask *task;
   U8 *out,*one,*tmp;
-  I64 first=TRUE;
+  I64 first=TRUE,it=0;
   out=StrNew("{\"windows\":[");
   if (adam_task)
   {
@@ -120,9 +120,11 @@ U8 *HermesTextAll()
         Free(one);
         out=tmp;
       }
+      Yield;
+      it++;
       task=task->next_task;
     }
-    while (task!=adam_task && TaskValidate(task));
+    while (task!=adam_task && TaskValidate(task) && it<HERMES_MAX_TASKS);
   }
   tmp=MStrPrint("%s]}",out);
   Free(out);
@@ -132,7 +134,7 @@ U8 *HermesTextAll()
 I64 HermesCountTasks()
 {
   CTask *task;
-  I64 n=0;
+  I64 n=0,it=0;
   if (adam_task)
   {
     task=adam_task;
@@ -140,9 +142,11 @@ I64 HermesCountTasks()
     {
       if (TaskValidate(task))
         n++;
+      Yield;
+      it++;
       task=task->next_task;
     }
-    while (task!=adam_task && TaskValidate(task));
+    while (task!=adam_task && TaskValidate(task) && it<HERMES_MAX_TASKS);
   }
   return n;
 }
@@ -150,7 +154,7 @@ I64 HermesCountTasks()
 I64 HermesCountWindows()
 {
   CTask *task;
-  I64 n=0;
+  I64 n=0,it=0;
   if (adam_task)
   {
     task=adam_task;
@@ -158,9 +162,11 @@ I64 HermesCountWindows()
     {
       if (HermesTaskIsWindow(task))
         n++;
+      Yield;
+      it++;
       task=task->next_task;
     }
-    while (task!=adam_task && TaskValidate(task));
+    while (task!=adam_task && TaskValidate(task) && it<HERMES_MAX_TASKS);
   }
   return n;
 }
@@ -200,7 +206,7 @@ U8 *HermesWindowsJSON()
 {
   CTask *task;
   U8 *out,*one,*tmp;
-  I64 first=TRUE;
+  I64 first=TRUE,it=0;
   out=StrNew("{\"focus\":\"0x%X\",\"windows\":[");
   tmp=MStrPrint(out,sys_focus_task);
   Free(out);
@@ -222,9 +228,11 @@ U8 *HermesWindowsJSON()
         Free(one);
         out=tmp;
       }
+      Yield;
+      it++;
       task=task->next_task;
     }
-    while (task!=adam_task && TaskValidate(task));
+    while (task!=adam_task && TaskValidate(task) && it<HERMES_MAX_TASKS);
   }
   tmp=MStrPrint("%s]}",out);
   Free(out);
@@ -235,7 +243,7 @@ U8 *HermesTasksJSON()
 {
   CTask *task;
   U8 *out,*tmp,*title,*name;
-  I64 first=TRUE;
+  I64 first=TRUE,it=0;
   out=StrNew("{\"focus\":\"0x%X\",\"tasks\":[");
   tmp=MStrPrint(out,sys_focus_task);
   Free(out);
@@ -271,9 +279,11 @@ U8 *HermesTasksJSON()
         Free(name);
         out=tmp;
       }
+      Yield;
+      it++;
       task=task->next_task;
     }
-    while (task!=adam_task && TaskValidate(task));
+    while (task!=adam_task && TaskValidate(task) && it<HERMES_MAX_TASKS);
   }
   tmp=MStrPrint("%s]}",out);
   Free(out);

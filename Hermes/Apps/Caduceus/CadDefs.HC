@@ -8,5 +8,3 @@
 #define CAD_TITLE	0
 #define CAD_PLAY	1
 #define CAD_OVER	2
-#define CAD_SCORE	"C:/Tmp/CaduceusScore.TXT"
-#define CAD_RESULT	"C:/Tmp/CaduceusResult.TXT"

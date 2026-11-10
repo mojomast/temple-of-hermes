@@ -68,7 +68,11 @@ U0 DuelDrawTitle(CDC *dc)
   GrPrint(dc,40,364,"ENTER start   ESC shell   P wall plaque");
   GrPrint(dc,40,380,"Each strike adds time bonus and streak.");
   dc->color=LTCYAN;
-  GrPrint(dc,40,404,"Agent: DojoDuel(TRUE) writes C:/Tmp/DojoDuelResult.TXT");
+  {
+    U8 *rp=DuelResultPath();
+    GrPrint(dc,40,404,"Agent: DojoDuel(TRUE) writes %s",rp);
+    Free(rp);
+  }
   dc->color=LTGRAY;
   GrPrint(dc,40,424,"https://nousresearch.com/");
   GrPrint(dc,40,436,"nouscoder-14b-a-competitive-olympiad-programming-model");
@@ -156,7 +160,11 @@ U0 DuelDrawPlay(CDC *dc)
   GrPrint(dc,264,344,"AGENT HOOK");
   dc->color=LTGRAY;
   GrPrint(dc,264,360,"DojoDuel(TRUE) writes");
-  GrPrint(dc,264,372,"C:/Tmp/DojoDuelResult.TXT");
+  {
+    U8 *rp=DuelResultPath();
+    GrPrint(dc,264,372,"%s",rp);
+    Free(rp);
+  }
   dc->color=YELLOW;
   GrPrint(dc,264,396,"BEST %d  RUNS %d",duel_best,duel_runs);
   dc->color=LTGRAY;
@@ -192,7 +200,11 @@ U0 DuelDrawDone(CDC *dc)
   dc->color=LTGREEN;
   GrPrint(dc,40,220,"ENTER = duel again     ESC = shell");
   dc->color=LTCYAN;
-  GrPrint(dc,40,240,"Agent result: C:/Tmp/DojoDuelResult.TXT");
+  {
+    U8 *rp=DuelResultPath();
+    GrPrint(dc,40,240,"Agent result: %s",rp);
+    Free(rp);
+  }
   dc->color=LTGRAY;
   GrPrint(dc,40,272,"https://nousresearch.com/");
   GrPrint(dc,40,284,"nouscoder-14b-a-competitive-olympiad-programming-model");

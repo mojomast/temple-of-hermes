@@ -16,8 +16,16 @@ U0 SpMkdir(U8 *path)
 
 U8 *SpHome()
 {
-  SpMkdir("C:/Tmp");
-  return "C:/Tmp/";
+  U8 *dir=HermesStateDir("Spoon"),*st;
+  if (!dir || !*dir)
+  {
+    if (dir)
+      Free(dir);
+    return StrNew("");
+  }
+  st=MStrPrint("%s/",dir);
+  Free(dir);
+  return st;
 }
 
 U8 *SpFind(U8 *rel)
@@ -64,9 +72,20 @@ CDC *SpLoadPiedro(I64 size=64)
 
 I64 SpReadHigh()
 {
-  U8 *path=MStrPrint("%sSpoonScore.TXT",SpHome());
+  U8 *home=SpHome(),*path;
   I64 n=0,v=0;
-  U8 *b=FileRead(path,&n);
+  U8 *b;
+  if (!home || !*home)
+  {
+    if (home)
+      Free(home);
+    return 0;
+  }
+  path=MStrPrint("%sSpoonScore.TXT",home);
+  Free(home);
+  b=NULL;
+  if (FileFind(path))
+    b=FileRead(path,&n);
   if (b)
   {
     v=Str2I64(b);
@@ -79,9 +98,22 @@ I64 SpReadHigh()
 U0 SpWriteHigh(I64 high)
 {
   U8 buf[64];
-  U8 *path=MStrPrint("%sSpoonScore.TXT",SpHome());
+  U8 *home=SpHome(),*path;
+  if (!home || !*home)
+  {
+    if (home)
+      Free(home);
+    return;
+  }
+  path=MStrPrint("%sSpoonScore.TXT",home);
+  Free(home);
   StrPrint(buf,"%d\n",high);
-  FileWrite(path,buf,StrLen(buf));
+  try
+  {
+    FileWrite(path,buf,StrLen(buf));
+  }
+  catch
+    Fs->catch_except=TRUE;
   Free(path);
 }
 

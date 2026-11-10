@@ -1,6 +1,16 @@
 #ifndef DUEL_TEXT_HC_V5
 #define DUEL_TEXT_HC_V5
 #include "DuelGlobals.HC"
+
+U8 *DuelScorePath()
+{
+  return HermesStateFile("DojoDuel","DojoDuelScore.TXT");
+}
+
+U8 *DuelResultPath()
+{
+  return HermesStateFile("DojoDuel","DojoDuelResult.TXT");
+}
 U8 *duel_tokens[DUEL_NCH]={
  "U0","I64","MAlloc","Free","while","GrLine","Sleep","Fs->draw_it"};
 U8 *duel_hints[DUEL_NCH]={

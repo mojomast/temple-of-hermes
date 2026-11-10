@@ -25,9 +25,16 @@ U0 DuelWriteAgentResult(U8 *out_file=NULL)
   DuelAppend(&b,line);
   Free(line);
   if (out_file && *out_file) path=StrNew(out_file);
-  else path=StrNew("C:/Tmp/DojoDuelResult.TXT");
-  if (!FileFind("C:/Tmp")) DirMk("C:/Tmp");
-  FileWrite(path,b,StrLen(b));
+  else path=DuelResultPath();
+  if (path && *path)
+  {
+    try
+    {
+      FileWrite(path,b,StrLen(b));
+    }
+    catch
+      Fs->catch_except=TRUE;
+  }
   "DOJO DUEL AGENT: %d/%d score %d -> %s\n",nok,DUEL_NCH,sc,path;
   Free(path);
   Free(b);
@@ -35,16 +42,20 @@ U0 DuelWriteAgentResult(U8 *out_file=NULL)
 U0 DuelPlaque()
 {
   CTask *pu=NULL;
-  U8 *st=
+  U8 *sp=DuelScorePath(),*rp=DuelResultPath();
+  U8 *st=MStrPrint(
   "$$WW,1$$$$YELLOW$$DOJO DUEL WALL PLAQUE$$FG$$\n\n"
   "Teknium appears only as Kyle's character from the Nous universe.\n"
   "Trainer voice from the game is marked NEW.\n\n"
   "NousCoder-14B:\n"
   "$$TX,\"https://nousresearch.com/nouscoder-14b-a-competitive-olympiad-programming-model\",HTML=\"https://nousresearch.com/nouscoder-14b-a-competitive-olympiad-programming-model\"$$\n\n"
   "HolyC best practices: docs/HOLYC-BEST-PRACTICES.md\n"
-  "High score: C:/Tmp/DojoDuelScore.TXT\n"
-  "Agent result: C:/Tmp/DojoDuelResult.TXT\n";
+  "High score: %s\n"
+  "Agent result: %s\n",sp,rp);
   PopUp(st,Fs,&pu);
   if (TaskValidate(pu)) Kill(pu);
+  Free(st);
+  Free(sp);
+  Free(rp);
 }
 #endif

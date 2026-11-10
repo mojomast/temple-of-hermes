@@ -55,23 +55,32 @@ U0 TRAgentInput(I64 *l,I64 *r)
 U0 TRWriteResult(U8 *path)
 {
   U8 *s,*st;
-  if (!IsDir("C:/Tmp"))
-    DirMk("C:/Tmp");
   if (tr_state==2)
     st="GAME_OVER";
   else
     st="COMPLETE";
   s=MStrPrint("TOKENRAIN RESULT 1\nmode=agent\nseed=%d\nframes=%d\nscore=%d\ncatches=%d\nhits=%d\nlives=%d\nstatus=%s\n",
     tr_seed0,tr_frames,tr_score,tr_catches,tr_hits,tr_lives,st);
-  FileWrite(path,s,StrLen(s));
+  if (path && *path)
+  {
+    try
+    {
+      FileWrite(path,s,StrLen(s));
+    }
+    catch
+      Fs->catch_except=TRUE;
+  }
   Free(s);
 }
 
 U0 TRAgentSim(U8 *out_file=NULL)
 {
   I64 f,l,r;
-  if (!out_file)
-    out_file="C:/Tmp/TokenRainResult.TXT";
+  U8 *path;
+  if (out_file && *out_file)
+    path=StrNew(out_file);
+  else
+    path=TRResultPath();
   TRLoadHigh;
   TRReset(TRUE);
   for (f=0;f<900;f++)
@@ -86,7 +95,8 @@ U0 TRAgentSim(U8 *out_file=NULL)
     tr_high=tr_score;
     TRSaveHigh;
   }
-  TRWriteResult(out_file);
+  TRWriteResult(path);
+  Free(path);
   tr_state=3;
 }
 

@@ -34,25 +34,48 @@ I64 TRRand(I64 n)
   return (tr_seed>>8)%n;
 }
 
+U8 *TRScorePath()
+{
+  return HermesStateFile("TokenRain","TokenRainScore.TXT");
+}
+
+U8 *TRResultPath()
+{
+  return HermesStateFile("TokenRain","TokenRainResult.TXT");
+}
+
 U0 TRSaveHigh()
 {
-  U8 *s;
-  if (!IsDir("C:/Tmp"))
-    DirMk("C:/Tmp");
+  U8 *s,*path;
+  path=TRScorePath();
   s=MStrPrint("%d\n",tr_high);
-  FileWrite("C:/Tmp/TokenRainScore.TXT",s,StrLen(s));
+  if (path && *path)
+  {
+    try
+    {
+      FileWrite(path,s,StrLen(s));
+    }
+    catch
+      Fs->catch_except=TRUE;
+  }
   Free(s);
+  Free(path);
 }
 
 U0 TRLoadHigh()
 {
-  U8 *s=FileRead("C:/Tmp/TokenRainScore.TXT");
+  U8 *path,*s;
   tr_high=0;
+  path=TRScorePath();
+  s=NULL;
+  if (path && *path && FileFind(path))
+    s=FileRead(path);
   if (s)
   {
     tr_high=Str2I64(s);
     Free(s);
   }
+  Free(path);
   TRSaveHigh;
 }
 

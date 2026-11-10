@@ -1,0 +1,30 @@
+Guest build notes for TempleOfHermes-0.1.1 (transcribed from build logs).
+
+OVERLAY
+  D:/RUN.HC copied 249 Fxx.BIN files onto C: and removed .Z twins.
+  OVERLAY DONE
+
+MAKEDISTRO
+  Adam/Hermes/MakeDistro ran DoDistro/BootDVDIns/RedSeaISO in the guest.
+  Temple of Hermes ISO written to /Tmp/TempleOfHermes.ISO.C
+  Volume id: THE_TEMPLE_OF_HERMES
+
+COMPILE
+  No fatal HolyC compile or link errors in the new state helper, the edited
+  task-ring walks, or the five fixed apps.
+  Non-fatal warnings seen in the guest terminal:
+    WARNING: Unused var (existing BBS locals)
+    WARNING: Using 64-bit reg var. ('ch' in 'HermesHandleLine' and existing BBS locals)
+
+FIX CHECKS
+  Adam/Hermes/Events.HC  HermesPollTasks ring walk: Yield + HERMES_MAX_TASKS bound
+  Adam/Hermes/Text.HC    all five next_task do/while walks: Yield + bound
+  Adam/Hermes/StateDir.HC included from Load.HC; B:/Tmp/Hermes/<App> fallback
+  HermesBBS              DirMk/writes in try; UI shown; offline fallback
+  Caduceus               score/result writes use StateDir and try
+  Spoon                  high/result writes use StateDir and try
+  TokenRain              high/result writes use StateDir and try
+  DojoDuel               best/result writes use StateDir and try
+
+Build logs on the builder: run/build.log, run/integration-build2.log,
+run/overlay-ocr.txt, run/distro-ocr.txt.

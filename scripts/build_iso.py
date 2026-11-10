@@ -19,6 +19,7 @@ from qemu_hermes import (  # noqa: E402
     STOCK_ISO,
     SHOTS,
     Serial,
+    glyph_text,
     start_vm,
     stop_vm,
     wait_for_text,
@@ -30,11 +31,12 @@ SHOT = SHOTS / "_raw" / "build"
 LOG = RUN / "build.log"
 SERIAL_LOG = RUN / "build-com1.bin"
 DIST = ROOT / "dist"
-ISO_NAME = "TempleOfHermes-0.1.0.ISO"
+ISO_NAME = "TempleOfHermes-0.1.1.ISO"
 
 OVERLAY_PATHS = [
     "Adam/Hermes/Glbls.HC",
     "Adam/Hermes/Protocol.HC",
+    "Adam/Hermes/StateDir.HC",
     "Adam/Hermes/Text.HC",
     "Adam/Hermes/Events.HC",
     "Adam/Hermes/Presence.HC",

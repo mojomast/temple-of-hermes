@@ -77,7 +77,7 @@ U8 *HermesEventsDrainJSON()
 U0 HermesPollTasks()
 {
   CTask *task;
-  I64 now[HERMES_MAX_TASKS],n=0,i,j,found;
+  I64 now[HERMES_MAX_TASKS],n=0,i,j,found,it=0;
   U8 buf[192];
   if (!adam_task) return;
   task=adam_task;
@@ -87,9 +87,11 @@ U0 HermesPollTasks()
     {
       now[n++]=task;
     }
+    Yield;
+    it++;
     task=task->next_task;
   }
-  while (task!=adam_task && TaskValidate(task));
+  while (task!=adam_task && TaskValidate(task) && it<HERMES_MAX_TASKS);
 
   if (!hermes_seen_cnt)
   {

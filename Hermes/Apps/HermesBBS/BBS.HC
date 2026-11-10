@@ -20,6 +20,7 @@ I64 hbbs_connected,hbbs_authed;
 U8 hbbs_last_id[64];
 U8 hbbs_last_cmd[16];
 U8 hbbs_result_path[HBBS_PATH_MAX];
+U8 hbbs_result_dir[HBBS_PATH_MAX];
 I64 hbbs_last_ok;
 
 U0 HbbsInit()
@@ -83,10 +84,24 @@ U8 *HbbsFindAny(U8 *rel1,U8 *rel2)
 
 Bool HbbsLoadToken()
 {
-  U8 *st,*data,*p,*d;
+  U8 *st,*dir,*data,*p,*d;
   I64 size,n;
   hbbs_token[0]=0;
-  st=HbbsFindAny(HBBS_TOKEN_REL,HBBS_TOKEN_ALT);
+  st=NULL;
+  dir=HermesStateDirFor("HermesBBS","::/Hermes/Apps/HermesBBS");
+  if (dir && *dir)
+  {
+    st=MStrPrint("%s/token.txt",dir);
+    if (!IsFile(st))
+    {
+      Free(st);
+      st=NULL;
+    }
+  }
+  if (dir)
+    Free(dir);
+  if (!st)
+    st=HbbsFindAny(HBBS_TOKEN_REL,HBBS_TOKEN_ALT);
   if (!st)
     return FALSE;
   data=FileRead(st,&size);
@@ -114,15 +129,32 @@ Bool HbbsLoadToken()
 
 Bool HbbsSaveToken(U8 *tok)
 {
-  U8 *st;
+  U8 *dir,*st;
   I64 n;
   if (!tok || !*tok)
     return FALSE;
-  DirMk("::/Hermes/Apps/HermesBBS");
-  st=MStrPrint("::/Hermes/%s",HBBS_TOKEN_REL);
+  dir=HermesStateDirFor("HermesBBS","::/Hermes/Apps/HermesBBS");
+  if (!dir || !*dir)
+  {
+    if (dir)
+      Free(dir);
+    return FALSE;
+  }
   n=StrLen(tok);
-  FileWrite(st,tok,n);
-  Free(st);
+  try
+  {
+    DirMk(dir);
+    st=MStrPrint("%s/token.txt",dir);
+    FileWrite(st,tok,n);
+    Free(st);
+  }
+  catch
+  {
+    Fs->catch_except=TRUE;
+    Free(dir);
+    return FALSE;
+  }
+  Free(dir);
   return TRUE;
 }
 
@@ -131,8 +163,26 @@ Bool HbbsLoadClaim()
   U8 *st,*data,*p,*d;
   I64 size,n;
   hbbs_claim[0]=0;
-  st=MStrPrint("::/Hermes/Apps/HermesBBS/claim");
-  data=FileRead(st,&size);
+  st=NULL;
+  {
+    U8 *dir=HermesStateDirFor("HermesBBS","::/Hermes/Apps/HermesBBS");
+    if (dir && *dir)
+    {
+      st=MStrPrint("%s/claim",dir);
+      if (!IsFile(st))
+      {
+        Free(st);
+        st=NULL;
+      }
+    }
+    if (dir)
+      Free(dir);
+  }
+  if (!st)
+    st=MStrPrint("::/Hermes/Apps/HermesBBS/claim");
+  data=NULL;
+  if (FileFind(st))
+    data=FileRead(st,&size);
   Free(st);
   if (!data || size<=0)
   {
@@ -157,15 +207,32 @@ Bool HbbsLoadClaim()
 
 Bool HbbsSaveClaim(U8 *tok)
 {
-  U8 *st;
+  U8 *dir,*st;
   I64 n;
   if (!tok || !*tok)
     return FALSE;
-  DirMk("::/Hermes/Apps/HermesBBS");
-  st=MStrPrint("::/Hermes/Apps/HermesBBS/claim");
+  dir=HermesStateDirFor("HermesBBS","::/Hermes/Apps/HermesBBS");
+  if (!dir || !*dir)
+  {
+    if (dir)
+      Free(dir);
+    return FALSE;
+  }
   n=StrLen(tok);
-  FileWrite(st,tok,n);
-  Free(st);
+  try
+  {
+    DirMk(dir);
+    st=MStrPrint("%s/claim",dir);
+    FileWrite(st,tok,n);
+    Free(st);
+  }
+  catch
+  {
+    Fs->catch_except=TRUE;
+    Free(dir);
+    return FALSE;
+  }
+  Free(dir);
   return TRUE;
 }
 
@@ -718,10 +785,19 @@ U8 *HbbsCall(U8 *cmd,U8 *args)
 
 U0 HbbsResultPath(U8 *op)
 {
-  DirMk("::/Hermes/Apps/HermesBBS");
-  DirMk(HBBS_RESULT_DIR);
+  U8 *dir;
+  dir=HermesStateDirFor("HermesBBS",HBBS_RESULT_DIR);
   hbbs_seq++;
-  StrPrint(hbbs_result_path,"%s/%03d-%s.json",HBBS_RESULT_DIR,hbbs_seq,op);
+  if (dir && *dir)
+    StrPrint(hbbs_result_dir,"%s",dir);
+  else
+    hbbs_result_dir[0]=0;
+  if (dir)
+    Free(dir);
+  if (hbbs_result_dir[0])
+    StrPrint(hbbs_result_path,"%s/%03d-%s.json",hbbs_result_dir,hbbs_seq,op);
+  else
+    hbbs_result_path[0]=0;
 }
 
 Bool HbbsWriteResult(U8 *op,U8 *cmd,U8 *body,Bool ok,U8 *err)
@@ -741,7 +817,6 @@ Bool HbbsWriteResult(U8 *op,U8 *cmd,U8 *body,Bool ok,U8 *err)
   else
     data_json=StrNew("null");
   HbbsResultPath(op);
-  last=MStrPrint("%s/last.json",HBBS_RESULT_DIR);
   U8 *err_st;
   if (err)
     err_st=err;
@@ -752,10 +827,24 @@ Bool HbbsWriteResult(U8 *op,U8 *cmd,U8 *body,Bool ok,U8 *err)
   StrPrint(path,
     "{\"v\":1,\"hbbs\":\"%s\",\"dest\":\"%s\",\"transport\":\"hermes-net/com2\",\"op\":\"%s\",\"command\":\"%s\",\"request_id\":\"%s\",\"ok\":%d,\"error\":\"%s\",\"trust\":\"untrusted\",\"data\":%s}\n",
     HBBS_PROTO,HBBS_DEST,op,cmd,hbbs_last_id,ok,err_st,data_json);
-  FileWrite(hbbs_result_path,path,StrLen(path));
-  FileWrite(last,path,StrLen(path));
+  if (hbbs_result_path[0])
+  {
+    last=MStrPrint("%s/last.json",hbbs_result_dir);
+    try
+    {
+      FileWrite(hbbs_result_path,path,StrLen(path));
+      FileWrite(last,path,StrLen(path));
+    }
+    catch
+    {
+      Fs->catch_except=TRUE;
+      ok=FALSE;
+    }
+    Free(last);
+  }
+  else
+    ok=FALSE;
   Free(path);
-  Free(last);
   Free(data_json);
   hbbs_last_ok=ok;
   return ok;
@@ -1407,29 +1496,33 @@ U0 HbbsUiDraw(CDoc *doc)
 U0 HbbsUiTask(U8 *unused)
 {
   I64 ch,sc;
-  CDoc *doc;
   hbbs_ui_running=TRUE;
   HbbsInit;
+  DocTermNew;
   SettingsPush;
+  Fs->win_inhibit=WIG_USER_TASK_DFT;
   Fs->text_attr=BLACK<<4+WHITE;
   AutoComplete(0);
-  WinBorder;
+  WinBorder(TRUE);
   WinMax;
+  LBts(&Fs->display_flags,DISPLAYf_SHOW);
   WinToTop;
+  WinFocus;
+  TaskQueRem(Fs);
+  TaskQueIns(Fs,sys_winmgr_task);
+  WinZBufUpdate;
   DocCursor;
   DocClear;
   HbbsUiInit;
   HbbsUiFallbackBoards;
   HbbsUiSetStatus("Connecting...");
-  HbbsUiRefresh;
-  doc=DocDblBufStart;
   try
   {
+    HbbsUiRefresh;
     while (hbbs_ui_running)
     {
       DocClear;
       HbbsUiDraw(DocPut);
-      DocDblBufSwap;
       Refresh;
       ch=GetKey(&sc);
       if (ch==CH_ESC || ch==CH_SHIFT_ESC || ch=='q' || ch=='Q')
@@ -1471,9 +1564,6 @@ U0 HbbsUiTask(U8 *unused)
     GetKey;
   }
   hbbs_ui_running=FALSE;
-  if (DocPut==doc)
-    DocDblBufSwap;
-  DocDblBufEnd;
   HbbsSessionEnd;
   SettingsPop;
   DocClear;

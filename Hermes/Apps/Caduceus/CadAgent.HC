@@ -43,8 +43,11 @@ U0 CadAgentDir()
 U0 CaduceusAgent(U8 *out_file=NULL)
 {
   I32 i;
-  U8 *st,*res;
-  if (!out_file) out_file=CAD_RESULT;
+  U8 *st,*res,*path;
+  if (out_file && *out_file)
+    path=StrNew(out_file);
+  else
+    path=CadResultPath();
   CadReset();
   CadStart();
   cad_sound=FALSE;
@@ -59,10 +62,18 @@ U0 CaduceusAgent(U8 *out_file=NULL)
   } else
     StrCpy(cad_msg,"Southpaw (NEW): The serpent sleeps.");
   CadSaveScore();
-  DirMk("C:/Tmp");
   if (cad_score>=30) res="PASS"; else res="FAIL";
   st=MStrPrint("score=%d\nlength=%d\nticks=%d\nresult=%s\n",
     cad_score,cad_len,cad_ticks,res);
-  FileWrite(out_file,st,StrLen(st));
+  if (path && *path)
+  {
+    try
+    {
+      FileWrite(path,st,StrLen(st));
+    }
+    catch
+      Fs->catch_except=TRUE;
+  }
   Free(st);
+  Free(path);
 }

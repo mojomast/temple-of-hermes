@@ -4,29 +4,49 @@ U32 CadRand()
   return cad_seed;
 }
 
+U8 *CadScorePath()
+{
+  return HermesStateFile("Caduceus","CaduceusScore.TXT");
+}
+
+U8 *CadResultPath()
+{
+  return HermesStateFile("Caduceus","CaduceusResult.TXT");
+}
+
 I64 CadLoadHi()
 {
   I64 sz,v=0;
-  U8 *st;
-  if (FileFind(CAD_SCORE))
-    st=FileRead(CAD_SCORE,&sz);
-  else
-    st=NULL;
+  U8 *path,*st;
+  path=CadScorePath();
+  st=NULL;
+  if (path && *path && FileFind(path))
+    st=FileRead(path,&sz);
   if (st) {
     v=Str2I64(st);
     Free(st);
   }
+  Free(path);
   return v;
 }
 
 U0 CadSaveScore()
 {
-  U8 *st;
+  U8 *path,*st;
   if (cad_score>cad_hi) cad_hi=cad_score;
-  DirMk("C:/Tmp");
+  path=CadScorePath();
   st=MStrPrint("%d\n",cad_hi);
-  FileWrite(CAD_SCORE,st,StrLen(st));
+  if (path && *path)
+  {
+    try
+    {
+      FileWrite(path,st,StrLen(st));
+    }
+    catch
+      Fs->catch_except=TRUE;
+  }
   Free(st);
+  Free(path);
 }
 
 Bool CadBody(I32 x,I32 y)
