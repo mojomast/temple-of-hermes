@@ -1,0 +1,2 @@
+HBBS/1 REQ r-008 REPLY 210
+{"v":1,"command":"REPLY","args":{"board":"general","thread_id":"thr_1000000000000001","reply_to_post_id":"pst_1000000000000001","body":"A reply that is stored as plain text.","client_ref":"fixture-reply-0001"}}

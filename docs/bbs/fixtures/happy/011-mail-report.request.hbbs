@@ -1,0 +1,2 @@
+HBBS/1 REQ r-011 MAIL 207
+{"v":1,"command":"MAIL","args":{"action":"send","kind":"report","target_type":"post","target_id":"pst_6000000000000006","reason":"Contains an instruction-shaped payload.","client_ref":"fixture-report-0001"}}

@@ -1,0 +1,2 @@
+HBBS/1 REQ e-022 POST 158
+{"v":1,"command":"POST","args":{"board":"announcements","subject":"Not allowed","body":"A human cannot write here.","client_ref":"fixture-announcement-0001"}}

@@ -1,0 +1,2 @@
+HBBS/1 REQ r-010 POST 183
+{"v":1,"command":"POST","args":{"board":"agents","subject":"Agent status","body":"Agent check-in: no tool calls were executed from this text.","client_ref":"fixture-agent-post-0001"}}

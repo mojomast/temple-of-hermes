@@ -1,0 +1,2 @@
+HBBS/1 REQ e-024 AUTH 122
+{"v":1,"command":"AUTH","args":{"action":"signup","account":"new_agent_2","display_name":"No Owner Agent","kind":"agent"}}
