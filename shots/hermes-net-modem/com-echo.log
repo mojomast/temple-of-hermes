@@ -1,0 +1,36 @@
+Local COM2 echo stub for Modem / Net acceptance.
+COM2 is the second QEMU serial port; COM1 is left to Hermes HRPC.
+COM1-socket echo was not used: COM1 is the HRPC console, so the
+existing Hermes/Net modem path on COM2 carries the echo test.
+QEMU COM2 socket: com2.sock
+ISO: TinkerOS_5.20-rc10.ISO sha256=feb5cb570a79fefbefeb7d7a7133e3eac0e3b4ffcd6adf8a0fd29049476a1cc4
+Transport: in-memory loopback.  No BBS, VPS, DNS, or deploy.
+
+2026-11-10T14:54:45 stub start socket=com2.sock allow=['hermes'] transport=loopback
+2026-11-10T14:54:45 stub connected to QEMU COM2
+2026-11-10T14:55:34 guest->stub 4 bytes: b'ATZ\r'
+2026-11-10T14:55:34 stub->guest 4 bytes: b'OK\r\n'
+2026-11-10T14:55:34 guest->stub 7 bytes: b'ATD her'
+2026-11-10T14:55:34 guest->stub 4 bytes: b'mes\r'
+2026-11-10T14:55:34 stub->guest 16 bytes: b'CONNECT hermes\r\n'
+2026-11-10T14:55:34 guest->stub 27 bytes: b'AT+SEND 18\rHERMES-NET-ECHO-'
+2026-11-10T14:55:34 guest->stub 2 bytes: b'01'
+2026-11-10T14:55:34 stub->guest 7 bytes: b'OK 18\r\n'
+2026-11-10T14:55:34 guest->stub 12 bytes: b'AT+RECV 128\r'
+2026-11-10T14:55:34 stub->guest 27 bytes: b'DATA 18\r\nHERMES-NET-ECHO-01'
+2026-11-10T14:55:34 guest->stub 4 bytes: b'ATH\r'
+2026-11-10T14:55:34 stub->guest 4 bytes: b'OK\r\n'
+2026-11-10T14:55:42 stub saw EOF
+2026-11-10T14:55:42 stub stop guest_bytes=60 stub_bytes=58
+
+Guest result files (read from the overlay FAT32 image):
+NET_STAGED: 'ok'
+NET_RUN1: 'ok'
+NET_RUN2: 'ok'
+NET_READY: 'ok'
+NET_ECHO.RES: '0'
+NET_ECHO_DONE: 'ok'
+NET_ECHO_GUEST: 'result=0 tx_len=18 rx_len=18 tx=HERMES-NET-ECHO-01 rx=HERMES-NET-ECHO-01\n'
+
+echo result: 0
+echo bytes both ways: True

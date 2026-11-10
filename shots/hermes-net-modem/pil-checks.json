@@ -1,0 +1,140 @@
+{
+  "02-overlay-listed": {
+    "path": "shots/hermes-net-modem/02-overlay-listed.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "RGB",
+    "mapped_palette_indices": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      9,
+      14,
+      15
+    ],
+    "palette_0_15": true,
+    "off_palette_pixels": 0,
+    "unique_colors": 8,
+    "bbox": [
+      0,
+      0,
+      640,
+      480
+    ]
+  },
+  "03-net-run-first": {
+    "path": "shots/hermes-net-modem/03-net-run-first.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "RGB",
+    "mapped_palette_indices": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      9,
+      11,
+      14,
+      15
+    ],
+    "palette_0_15": true,
+    "off_palette_pixels": 0,
+    "unique_colors": 9,
+    "bbox": [
+      0,
+      0,
+      640,
+      480
+    ]
+  },
+  "04-net-run-second": {
+    "path": "shots/hermes-net-modem/04-net-run-second.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "RGB",
+    "mapped_palette_indices": [
+      0,
+      1,
+      4,
+      5,
+      9,
+      11,
+      14,
+      15
+    ],
+    "palette_0_15": true,
+    "off_palette_pixels": 0,
+    "unique_colors": 8,
+    "bbox": [
+      0,
+      0,
+      640,
+      480
+    ]
+  },
+  "05-net-echo": {
+    "path": "shots/hermes-net-modem/05-net-echo.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "RGB",
+    "mapped_palette_indices": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      9,
+      11,
+      14,
+      15
+    ],
+    "palette_0_15": true,
+    "off_palette_pixels": 0,
+    "unique_colors": 9,
+    "bbox": [
+      0,
+      0,
+      640,
+      480
+    ]
+  },
+  "06-shell-usable": {
+    "path": "shots/hermes-net-modem/06-shell-usable.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "RGB",
+    "mapped_palette_indices": [
+      0,
+      1,
+      2,
+      4,
+      5,
+      9,
+      11,
+      14,
+      15
+    ],
+    "palette_0_15": true,
+    "off_palette_pixels": 0,
+    "unique_colors": 9,
+    "bbox": [
+      0,
+      0,
+      640,
+      480
+    ]
+  }
+}

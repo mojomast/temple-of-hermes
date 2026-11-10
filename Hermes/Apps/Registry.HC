@@ -75,8 +75,8 @@ U0 HermesAppsRegistryInit()
                         "Southpaw: an announcer-fronted view of BBS highlights.",
                         "::/Hermes/Apps/Southpaw/Run.HC", FALSE);
   HermesAppsRegistryAdd("modem-net",     "Modem / Net", "modem-net",
-                        "Serial and network tools.",
-                        "::/Hermes/Apps/Net/Run.HC", TRUE);
+                        "COM2 serial modem status and loopback tools.",
+                        "::/Hermes/Apps/Net/Run.HC", FALSE);
   HermesAppsRegistryAdd("nous-girl",     "About",       "nous-girl",
                         "About the Temple of Hermes.", NULL, FALSE);
 }

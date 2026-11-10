@@ -1,0 +1,211 @@
+{
+  "iso": "TinkerOS_5.20-rc10.ISO",
+  "iso_sha256": "feb5cb570a79fefbefeb7d7a7133e3eac0e3b4ffcd6adf8a0fd29049476a1cc4",
+  "com": "COM2",
+  "socket": "com2.sock",
+  "shots": {
+    "02-overlay-listed": {
+      "path": "shots/hermes-net-modem/02-overlay-listed.png",
+      "size": [
+        640,
+        480
+      ],
+      "mode": "RGB",
+      "mapped_palette_indices": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        9,
+        14,
+        15
+      ],
+      "palette_0_15": true,
+      "off_palette_pixels": 0,
+      "unique_colors": 8,
+      "bbox": [
+        0,
+        0,
+        640,
+        480
+      ]
+    },
+    "03-net-run-first": {
+      "path": "shots/hermes-net-modem/03-net-run-first.png",
+      "size": [
+        640,
+        480
+      ],
+      "mode": "RGB",
+      "mapped_palette_indices": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        9,
+        11,
+        14,
+        15
+      ],
+      "palette_0_15": true,
+      "off_palette_pixels": 0,
+      "unique_colors": 9,
+      "bbox": [
+        0,
+        0,
+        640,
+        480
+      ]
+    },
+    "04-net-run-second": {
+      "path": "shots/hermes-net-modem/04-net-run-second.png",
+      "size": [
+        640,
+        480
+      ],
+      "mode": "RGB",
+      "mapped_palette_indices": [
+        0,
+        1,
+        4,
+        5,
+        9,
+        11,
+        14,
+        15
+      ],
+      "palette_0_15": true,
+      "off_palette_pixels": 0,
+      "unique_colors": 8,
+      "bbox": [
+        0,
+        0,
+        640,
+        480
+      ]
+    },
+    "05-net-echo": {
+      "path": "shots/hermes-net-modem/05-net-echo.png",
+      "size": [
+        640,
+        480
+      ],
+      "mode": "RGB",
+      "mapped_palette_indices": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        9,
+        11,
+        14,
+        15
+      ],
+      "palette_0_15": true,
+      "off_palette_pixels": 0,
+      "unique_colors": 9,
+      "bbox": [
+        0,
+        0,
+        640,
+        480
+      ]
+    },
+    "06-shell-usable": {
+      "path": "shots/hermes-net-modem/06-shell-usable.png",
+      "size": [
+        640,
+        480
+      ],
+      "mode": "RGB",
+      "mapped_palette_indices": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        9,
+        11,
+        14,
+        15
+      ],
+      "palette_0_15": true,
+      "off_palette_pixels": 0,
+      "unique_colors": 9,
+      "bbox": [
+        0,
+        0,
+        640,
+        480
+      ]
+    }
+  },
+  "guest": {
+    "NET_STAGED": "ok",
+    "NET_RUN1": "ok",
+    "NET_RUN2": "ok",
+    "NET_READY": "ok",
+    "NET_ECHO.RES": "0",
+    "NET_ECHO_DONE": "ok",
+    "NET_ECHO_GUEST": "result=0 tx_len=18 rx_len=18 tx=HERMES-NET-ECHO-01 rx=HERMES-NET-ECHO-01\n"
+  },
+  "errors": [],
+  "qemu_pid": 13863,
+  "stub_pid": 13871,
+  "com1_markers": "NET_START\nNET_STAGED\nNET_RUN1\nNET_RUN2\nNET_ECHO_START\nNET_ECHO_END\n",
+  "echo_ok": true,
+  "echo_bytes_both_ways": true,
+  "checks": [
+    {
+      "name": "iso_sha256",
+      "passed": true
+    },
+    {
+      "name": "guest_run1",
+      "passed": true
+    },
+    {
+      "name": "guest_run2",
+      "passed": true
+    },
+    {
+      "name": "com1_run1_marker",
+      "passed": true
+    },
+    {
+      "name": "com1_run2_marker",
+      "passed": true
+    },
+    {
+      "name": "com1_echo_end_marker",
+      "passed": true
+    },
+    {
+      "name": "guest_echo_result_zero",
+      "passed": true
+    },
+    {
+      "name": "guest_echo_done",
+      "passed": true
+    },
+    {
+      "name": "echo_bytes_both_ways",
+      "passed": true
+    },
+    {
+      "name": "all_png_640x480",
+      "passed": true
+    },
+    {
+      "name": "all_png_palette_0_15",
+      "passed": true
+    },
+    {
+      "name": "all_png_zero_off_palette",
+      "passed": true
+    }
+  ]
+}
