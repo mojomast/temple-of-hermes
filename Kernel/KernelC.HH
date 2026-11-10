@@ -985,6 +985,9 @@ public extern U0 UncachedDevFree(U8 *d);
 #help_index "TinkerOS"
 #help_file "::/Doc/TinkerOS"
 
+#help_index "THE TEMPLE OF HERMES"
+#help_file "::/Doc/AboutHermes"
+
 #help_index "TOSClient"
 #help_file "::/Doc/TOSClient"
 

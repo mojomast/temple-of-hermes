@@ -1,4 +1,4 @@
-$WW,1$$FG,5$$TX+CX,"Requirements for TinkerOS"$$FG$
+$WW,1$$FG,5$$TX+CX,"Requirements for THE TEMPLE OF HERMES"$$FG$
 
 $FG,5$User Skills Required to Understand HolyC$FG$
 
@@ -12,7 +12,7 @@ $FG,5$User Skills Desired$FG$
 
 * Knowledge of the $FG,2$TempleOS$FG$ operating system.
 
-$FG,5$Supported Hardware$FG$
+$FG,5$Supported Hardware (TinkerOS 5.20-rc10 base)$FG$
 
 * $FG,4$$TX,"x86_64",HTML="http://en.wikipedia.org/wiki/Amd64#AMD64"$$FG$ PC compatible computer.  (Obviously, you need 64-bit hardware for a 64-bit operating system.)
 

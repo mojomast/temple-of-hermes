@@ -1,6 +1,15 @@
-$WW,1$$FG,5$$TX+CX,"Welcome to TinkerOS"$$FG$
+$WW,1$$FG,5$$TX+CX,"Welcome to THE TEMPLE OF HERMES"$$FG$
 
-TinkerOS is a x86_64, multi-cored, non-preemptive multi-tasking, ring-0-only, single-address mapped (identity-mapped), operating system for recreational programming.  It is a fork of TempleOS which attempts to maintain backwards compatibility with TempleOS.
+THE TEMPLE OF HERMES is a x86_64, multi-cored, non-preemptive multi-tasking,
+ring-0-only, single-address mapped (identity-mapped), operating system for
+recreational programming and for a human and an AI agent sharing one machine.
+It is a rebrand and continuation of TinkerOS, which is a fork of TempleOS by
+Terry A. Davis.  This image is version 0.1.0 and keeps the TempleOS API and
+TinkerOS compatibility of its base.
+
+The first terminal starts in USER mode and opens the $LK,"Start page",A="FI:::/Doc/Start.DD"$.
+The Hermes daemon is already on COM1.  See $LK,"About THE TEMPLE OF HERMES",A="FI:::/Doc/AboutHermes.DD"$
+and $LK,"Features",A="FI:::/Doc/Features.DD"$.
 
 * See also the $FG,4$$TX,"TempleOS Welcome",HTML="https://tinkeros.github.io/WbTempleOS/Doc/Welcome.html"$$FG$
 

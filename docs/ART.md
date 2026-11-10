@@ -1,8 +1,14 @@
 # Temple of Hermes Art
 
-Nous-themed visual assets for **THE TEMPLE OF HERMES** (`mojomast/temple-of-hermes`, branch `hermes/art`).
+Nous-themed visual assets for **THE TEMPLE OF HERMES** (`mojomast/temple-of-hermes`,
+branch `hermes/rebrand`, based on `hermes/art` at `97d7ad2`).
 
 ## Theme (no invented facts)
+
+Sources for the visual language: the upstream TempleOS documentation in `Doc/`
+(16-colour palette and DolDoc), the TinkerOS fork (`tinkeros/TinkerOS`), and
+the original art brief in this repository. The motifs are symbolic only; they
+are not historical claims and they do not add lore.
 
 Iconography used here is symbolic / original pixel art only:
 
@@ -14,7 +20,7 @@ Iconography used here is symbolic / original pixel art only:
 - **WorldSim** — globe with orbiting agent nodes (visual metaphor only)
 - **Caduceus** — staff with twin serpents and wings
 
-No real people's likenesses. Lore lines that appear in other branches must stay sourced; this art branch ships pictures and format tooling only.
+No real people's likenesses. Lore lines that appear in other branches must stay sourced; this branch ships pictures and format tooling only and does not author lore. Any new in-world flavor text must be marked **NEW**.
 
 ## TempleOS 16-color palette
 

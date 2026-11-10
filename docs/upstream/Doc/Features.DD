@@ -1,0 +1,19 @@
+         $WW,1$$FG,5$$TX+CX,"TinkerOS' Features"$$FG$
+
+* $FG,4$$TX,"USB bootable image",HTML="https://github.com/tinkeros/TinkerOS/releases"$$FG$ with the ability to try both TempleOS and TinkerOS with modifying your system and also has the ability to install both.
+
+* Includes extra Apps (After Egypt, Castle Frankenstein 2, Oregon Trail, Sudoku, Wordle)
+
+* Improved installer which can install TempleOS with useful patches or TinkerOS with multiple resolution options as well as TOS supplemental discs.
+
+* Re-paste last command with $FG,2$<F8>$FG$ or use $FG,2$<SHIFT-F8>$FG$ to toggle blinking and scrolling.
+
+* Screenshot with $FG,2$<F9>$FG$ or $FG,2$<SHIFT-F9>$FG$ partial screen clips (saved to ~/ScrnShot or B:/ScrnShot if ~ is not writable).
+
+* Can be installed in ATA/Compatibility/IDE/Legacy mode or AHCI mode.
+
+* Fully backwards compatible with TempleOS with the exception of programs which use the VGA registers directly or attempt to hijack the graphics system.
+
+* Various other TempleOS API extensions (see notes for past releases for details).
+
+* Plus everything else from $FG,4$$TX,"TempleOS",HTML="https://tinkeros.github.io/WbTempleOS/Doc/Features.html"$$FG$

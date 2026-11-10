@@ -96,7 +96,7 @@ U0 FAT32Fmt(U8 drv_let,Bool quick=TRUE)
     br->log_drv_num=0x80;
     br->ext_signature=0x29;
     br->serial_num=RandU32;
-    tmp=MStrPrint("TinkerOS %C",drv_let);
+    tmp=MStrPrint("TEMPLE %C",drv_let);
     MemCpy(br->vol_name,tmp,StrLen(tmp)+1);
     Free(tmp);
     br->fat_name[0](I64)='FAT32';

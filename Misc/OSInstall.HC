@@ -212,7 +212,7 @@ U0 VMInstallDrv(CTask *task,U8 drv_let,
 
 U0 DispResOptions()
 {
-  "Select graphics mode (TinkerOS):\n\n";
+  "Select graphics mode (THE TEMPLE OF HERMES):\n\n";
   "0: 640x480 (4:3)\n"
   "1: 800x600 (4:3)\n"
   "2: 1024x768 (4:3)*\n"
@@ -378,9 +378,9 @@ U0 VMInstallSetup(InstallOptions *cfg)
   I64 i;
   "\nYou may automatically install up to 4\n";
   if (AHCIMode)
-    "copies of TinkerOS on your drive.\n\n";
+    "copies of THE TEMPLE OF HERMES on your drive.\n\n";
   else
-    "copies of Temple/TinkerOS on your drive.\n\n";
+    "copies of THE TEMPLE OF HERMES (TempleOS/TinkerOS base) on your drive.\n\n";
   "Unless otherwise specified 2 is default\n\n";
   cfg->num=GetI64("How many would you like to install :",2,1,4);
   for (i=0; i<cfg->num; i++)
@@ -787,19 +787,19 @@ Bool DoInstall(Bool pmt_reboot)
       if (!res)
       {
         "\nIt looks like for whatever reason\n"
-        "TinkerOS was not able to automatically\n"
+        "THE TEMPLE OF HERMES was not able to automatically\n"
         "install on your hard drive.  You still\n"
-        "may be able to install TinkerOS if it\n"
+        "may be able to install THE TEMPLE OF HERMES if it\n"
         "can detect your hard drive when you\n"
         "manually supply I/O ports.  These can\n"
         "be found using lscpi in Linux or might\n"
         "even be found using the Mount command\n"
-        "within TinkerOS once the drive has\n"
+        "within THE TEMPLE OF HERMES once the drive has\n"
         "been paritioned.\n\n";
         "Please manually parition the drive\n"
         "with a msdos (not gpt) partition\n"
         "table and create a primary FAT32\n"
-        "partition to install TinkerOS on.\n"
+        "partition to install THE TEMPLE OF HERMES on.\n"
         "Then come back instead of choosing\n"
         "the automatic installer, manually\n"
         "install to the partition you created\n"

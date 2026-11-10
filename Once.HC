@@ -13,12 +13,17 @@
 U0 Tmp()
 {
   OnceExe;
-  "\n$$BG,PURPLE$$$$FG,YELLOW$$  THE TEMPLE OF HERMES  v0.1.0  $$FG$$$$BG$$\n\n";
+  "\n$$BG,PURPLE$$$$FG,YELLOW$$  THE TEMPLE OF HERMES  v0.1.0  $$FG$$$$BG$$\n";
+  "  (TinkerOS 5.200 base)\n\n";
   "A TempleOS / TinkerOS fork for an AI agent and a human\n";
   "sharing one machine. The Hermes daemon is already on COM1\n";
   "at 115200 8n1. Presence banner shows who is driving:\n";
   "USER, SHARED, or AGENT.\n\n";
   "Host protocol: HBEACON / HREQ / HRPL / HEVT  (see /Adam/Hermes)\n";
+  "Start page: /Doc/Start.DD. Help: F1. Agent guide is on the host\n";
+  "at docs/USING-WITH-HERMES-AGENTS.md.\n\n";
+  "TempleOS by Terry A. Davis. TinkerOS by its authors.\n";
+  "Public domain / Unlicense; both upstream credits are kept.\n\n";
   "Install is not started automatically. To install later, run OSInstall;\n";
   "from USER mode only.\n\n";
 }

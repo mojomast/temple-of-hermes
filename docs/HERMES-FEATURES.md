@@ -1,7 +1,10 @@
 # THE TEMPLE OF HERMES — features, research, and protocol
 
-Branch `hermes/v0`, image version 0.1.0, based on TinkerOS 5.20-rc10
-(`b8d1703b73fd027a35ede9b6e37ae9430e49f1bb`).
+Branch `hermes/rebrand` (based on `origin/hermes/art` at `97d7ad2`), image
+version 0.1.0, based on TinkerOS 5.20-rc10
+(`b8d1703b73fd027a35ede9b6e37ae9430e49f1bb`). The daemon and protocol below
+are unchanged from the `hermes/v0` workstream; this branch adds the rebrand,
+art, and documentation around them.
 
 Upstream: https://github.com/tinkeros/TinkerOS (Unlicense / public domain).
 TempleOS itself is public domain by Terry A. Davis.
@@ -216,3 +219,27 @@ from the FAT32 partition of the qcow2.
 `scripts/smoke.py` boots the new ISO, waits for `HBEACON`, and exercises
 ping, text, mode, mouse, eval, events, guards, clipboard, and list, writing
 PNGs and a serial transcript into `shots/`.
+
+## Rebrand, art, and companion workstreams
+
+The `hermes/rebrand` branch keeps the daemon protocol above and changes the
+user-facing identity to **THE TEMPLE OF HERMES** 0.1.0. Canonical strings,
+attribution rules, and the requested (but deliberately unapplied) ISO volume
+label are in [REBRAND.md](REBRAND.md).
+
+The art set is in `Hermes/Art/`; the manifest, palette, and `.GR` / `.SP`
+formats are in [ART.md](ART.md). The companion app identities in that art set
+(`hermes-chat`, `worldsim`, `codex-of-nous`, `psyche`, `capybara-pet`,
+`messenger-run`, `modem-net`, `home-temple`) belong to leased workstreams. This
+branch does not claim their source is present here. In particular:
+
+- **Hermes Chat** source is owned by `Hermes/Apps/HermesChat/`.
+- **Hayes-style modem networking** is a planned `Hermes/Net/` workstream; the
+  current branch has no AT-command bridge implementation.
+- **Lore** is owned by a separate workstream; do not infer lore from art. The
+  sourcing rule is stated in [ART.md](ART.md).
+
+The distro label request for TOH-INT is a single string,
+`THE_TEMPLE_OF_HERMES`, documented in
+[REBRAND.md](REBRAND.md#iso-label-request-for-toh-int). It is not applied in
+`Adam/Hermes/MakeDistro.HC` here.
