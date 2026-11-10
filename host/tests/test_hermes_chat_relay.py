@@ -17,6 +17,7 @@ from hermes_chat_relay import (
     ERR_PREFIX,
     PREFIX,
     CallableResponder,
+    HermesAgentResponder,
     HermesChatRelay,
     HermesResponder,
     ScriptedResponder,
@@ -223,3 +224,61 @@ def test_demo_cli_runs_in_memory(capsys):
     out = capsys.readouterr().out
     assert "CONNECT hermes" in out
     assert "pong" not in out
+
+
+class _FakeBridge:
+    def __init__(self, answer="agent reply", available=True, error=None):
+        self.answer = answer
+        self._available = available
+        self.error = error
+
+    def available(self):
+        return self._available
+
+    def reply(self, text):
+        if self.error is not None:
+            raise self.error
+        return f"{self.answer}: {text}"
+
+
+def test_agent_responder_uses_plugin_bridge():
+    responder = HermesAgentResponder(
+        offline=ScriptedResponder(["offline"]),
+        bridge_factory=lambda: _FakeBridge("agent"),
+    )
+    assert responder.reply("hello") == "agent: hello"
+
+
+def test_agent_responder_falls_back_when_bridge_unavailable():
+    responder = HermesAgentResponder(
+        offline=ScriptedResponder(["offline"]),
+        bridge_factory=lambda: _FakeBridge(available=False),
+    )
+    assert responder.reply("hello") == "offline"
+
+
+def test_agent_responder_falls_back_on_bridge_error():
+    responder = HermesAgentResponder(
+        offline=ScriptedResponder(["offline"]),
+        bridge_factory=lambda: _FakeBridge(error=RuntimeError("no agent")),
+    )
+    assert responder.reply("hello") == "offline"
+
+
+def test_agent_responder_falls_back_without_plugin(monkeypatch):
+    monkeypatch.setattr(relay_mod, "_plugin_bridge", lambda: None)
+    responder = HermesAgentResponder(offline=ScriptedResponder(["offline"]))
+    assert responder.reply("hello") == "offline"
+
+
+def test_agent_responder_is_wired_into_chat_roundtrip():
+    relay = make_relay(
+        enabled=True,
+        responder=HermesAgentResponder(
+            offline=ScriptedResponder(["offline"]),
+            bridge_factory=lambda: _FakeBridge("agent"),
+        ),
+    )
+    assert relay.command("ATD hermes") == "CONNECT hermes"
+    send_frame(relay, "ping")
+    assert read_frame(relay) == b"HCHAT1 agent: ping"

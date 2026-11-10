@@ -11,9 +11,10 @@ U0 DojoTickTask(U8 *)
 U0 DojoTask(U8 *)
 {
   I64 sc; U8 key;
-  U8 *p=DojoPath("header-dojo-plate.GR");
+  U8 *p=DojoPath("UI/header-dojo-plate.GR");
   dojo_plate=GRRead(p); Free(p);
-  p=DojoPath("teknium-icon.GR");
+  p=DojoPath("Icons/64/teknium.GR");
+  if (!FileFind(p)) { Free(p); p=DojoPath("Icons/32/teknium.GR"); }
   dojo_tek=GRRead(p); Free(p);
   DojoLoadScores();
   dojo_tick_task=Spawn(&DojoTickTask,NULL,"Dojo Tick");

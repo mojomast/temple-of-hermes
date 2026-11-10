@@ -2,9 +2,9 @@
 #define HERMES_APPS_REGISTRY_HC
 
 //The Hermes app registry.  The launcher and PersonalMenu both read this
-//table.  "planned" entries are placeholders only; their Run.HC files are
-//not part of this change.  The icons are the existing files under
-//::/Hermes/Art/Icons/32 (16 for the PersonalMenu sprites).
+//table.  "planned" entries are placeholders whose Run.HC files are not in
+//this tree yet.  Icons are the existing files under ::/Hermes/Art/Icons/32
+//(16 for the PersonalMenu sprites); no art is generated here.
 
 #define HERMES_APPS_MAX 16
 
@@ -42,23 +42,38 @@ U0 HermesAppsRegistryInit()
   HermesAppsRegistryAdd("home-temple",   "Temple",      "home-temple",
                         "The Temple of Hermes home screen.", NULL, FALSE);
   HermesAppsRegistryAdd("hermes-chat",   "Hermes Chat", "hermes-chat",
-                        "Talk with the Hermes agent over COM1.",
-                        "::/Hermes/Apps/HermesChat/Run.HC", TRUE);
+                        "Talk with the Hermes agent over COM2.",
+                        "::/Hermes/Apps/HermesChat/Run.HC", FALSE);
   HermesAppsRegistryAdd("worldsim",      "WorldSim",    "worldsim",
                         "Agent world simulation.",
-                        "::/Hermes/Apps/WorldSim/Run.HC", TRUE);
+                        "::/Hermes/Apps/WorldSim/Run.HC", FALSE);
   HermesAppsRegistryAdd("codex-of-nous", "Codex",       "codex-of-nous",
-                        "Notes from the Codex of Nous.",
-                        "::/Hermes/Apps/Codex/Run.HC", TRUE);
+                        "Read the Codex of Nous from ::/Hermes/Lore.",
+                        "::/Hermes/Apps/Codex/Run.HC", FALSE);
   HermesAppsRegistryAdd("psyche",        "Psyche",      "psyche",
                         "Decentralized training monitor.",
-                        "::/Hermes/Apps/Psyche/Run.HC", TRUE);
+                        "::/Hermes/Apps/Psyche/Run.HC", FALSE);
   HermesAppsRegistryAdd("capybara-pet",  "Capybara",    "capybara-pet",
                         "The Temple capybara.",
-                        "::/Hermes/Apps/Capybara/Run.HC", TRUE);
+                        "::/Hermes/Apps/Capybara/Run.HC", FALSE);
   HermesAppsRegistryAdd("messenger-run", "Messenger",   "messenger-run",
                         "Hermes messenger run.",
-                        "::/Hermes/Apps/MessengerRun/Run.HC", TRUE);
+                        "::/Hermes/Apps/MessengerRun/Run.HC", FALSE);
+  HermesAppsRegistryAdd("hermes-bbs",    "BBS",         "modem-net",
+                        "Temple of Hermes BBS (HBBS/1) over Hermes/Net.",
+                        "::/Hermes/Apps/HermesBBS/Run.HC", FALSE);
+  HermesAppsRegistryAdd("threshold",     "Threshold",   "home-temple",
+                        "The Threshold: the temple gate and cinematic splash.",
+                        "::/Hermes/Apps/Threshold/Run.HC", FALSE);
+  HermesAppsRegistryAdd("dojo",          "Dojo",        "teknium",
+                        "Teknium's Dojo: game-trainer challenges.",
+                        "::/Hermes/Apps/Dojo/Run.HC", FALSE);
+  HermesAppsRegistryAdd("offerings",     "Offerings",   "don-piedro",
+                        "Don Piedro's Offerings.",
+                        "::/Hermes/Apps/Offerings/Run.HC", FALSE);
+  HermesAppsRegistryAdd("southpaw",      "Southpaw",    "southpaw",
+                        "Southpaw (accepted app not merged yet).",
+                        "::/Hermes/Apps/Southpaw/Run.HC", TRUE);
   HermesAppsRegistryAdd("modem-net",     "Modem / Net", "modem-net",
                         "Serial and network tools.",
                         "::/Hermes/Apps/Net/Run.HC", TRUE);

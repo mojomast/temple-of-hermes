@@ -36,13 +36,21 @@ duplicates the art binaries.
 | `run` | Future `Run.HC` path; `NULL` for the home/about panels |
 | `planned` | `TRUE` means the app is a placeholder in this change |
 
-The current table registers `home-temple`, `hermes-chat`, `worldsim`,
-`codex-of-nous`, `psyche`, `capybara-pet`, `messenger-run`, `modem-net`
-and `nous-girl`.  The six app implementations called out as out of scope
-(Hermes Chat, WorldSim, Codex, Psyche, Capybara, Messenger Run) are
-`planned` entries: selecting one shows a "planned but not implemented yet"
-status instead of running anything.  No `Run.HC` for those apps is
-shipped here.
+The current table registers the accepted apps as real entries
+(`planned = FALSE`) with a working `::/Hermes/Apps/<App>/Run.HC` path:
+
+- Hermes Chat (`HermesChat`)
+- WorldSim (`WorldSim`) and the Codex reader (`Codex`)
+- Psyche (`Psyche`) and Capybara (`Capybara`)
+- Messenger Run (`MessengerRun`)
+- Hermes BBS (`HermesBBS`)
+- The Threshold (`Threshold`)
+- Teknium's Dojo (`Dojo`)
+- Don Piedro's Offerings (`Offerings`)
+
+`home-temple` and `nous-girl` open the launcher's home/about status instead
+of a separate app. `southpaw` and `modem-net` remain `planned = TRUE` until
+their branches land with a `Run.HC`; selecting them shows the planned status.
 
 ## Launcher
 
@@ -60,9 +68,9 @@ The task:
 
 1. Loads every `Art/Icons/32/<icon>.GR` through `HermesAppsIcon()`.
 2. Draws a 3-column grid with the icon, title, a selection border, and a
-   footer that reports `Art icons: N/9` (proof the real Art files loaded).
+   footer that reports `Art icons: N/<registry rows>` (proof the real Art files loaded).
 3. Handles left-clicks and the keys `1`-`9`; `Enter` re-selects, `Esc`
-   closes the launcher.
+   closes the launcher. Rows past nine are click-only.
 4. Shows the registry description, or the planned/launching status, in
    the bottom line.
 
@@ -133,11 +141,21 @@ QEMU TCG:
 
 The source and art are pushed to `T:/Hermes/...` over COM1, then
 `Once.HC` is executed.  QMP `screendump` PNGs are written to
-`shots/hermes-apps/`.  The footer text `Art icons: 9/9` and the icon grid
+`shots/hermes-apps/`.  The footer text `Art icons: N/N` and the icon grid
 in those shots are the acceptance evidence.
+
+## Codex lore
+
+The Codex app reads `::/Hermes/Lore/*.DD` and `::/Hermes/Lore/*.TXT` at
+startup. The November 2026 refresh ships `Hermes/Lore/Codex.TXT` as the
+plain-text export of `docs/LORE.md`, alongside the native
+`Hermes/Lore/Codex00.HC` through `Codex06.HC` reader. The small bundled
+sample in `CodexLore.HC` is used only when the lore directory is absent or
+empty.
 
 ## Non-goals
 
-This change does not implement Hermes Chat, WorldSim, Codex, Psyche,
-Capybara, Messenger Run, or a template app, and does not touch
-`Adam/Hermes`, `Hermes/Net`, `Hermes/Lore`, or any `Hermes/Art` binary.
+This change does not regenerate or duplicate any `Hermes/Art` binary. The
+Dojo loads the official `Hermes/Art/UI/header-dojo-plate.GR` and
+`Hermes/Art/Icons/64/teknium.GR` (falling back to the 32-pixel icon), and
+the other apps use existing icons from `Hermes/Art/Icons/{16,32,64}`.

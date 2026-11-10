@@ -62,8 +62,9 @@ the same keyboard interface or compare against the same behaviour.
   raises the multiplier, up to x6.
 - Collect a caduceus seal: 25 points and one extra life, up to five lives.
 - Storm hit: lose a life and 20 points; a missed scroll resets the combo.
-- A run ends at zero lives. `BEST` is saved with the TinkerOS registry key
-  `TinkerOS/MessengerRun`.
+- A run ends at zero lives. `BEST` is saved with the Temple registry key
+  `TempleOfHermes/MessengerRun` (the old `TinkerOS/MessengerRun` key is
+  migrated on first run).
 
 ## Files
 

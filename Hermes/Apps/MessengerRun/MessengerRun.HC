@@ -36,8 +36,23 @@ F64 mr_next_tick;
 F64 mr_next_agent;
 F64 mr_tick_interval;
 
-RegDft("TinkerOS/MessengerRun", "mr_best=0;\n");
-RegExe("TinkerOS/MessengerRun");
+#define MR_REG_NEW "TempleOfHermes/MessengerRun"
+#define MR_REG_OLD "TinkerOS/MessengerRun"
+
+U0 MrRegLoad()
+{//Prefer the TempleOfHermes key; migrate a score from the old TinkerOS key.
+  Bool have_new;
+  mr_best=0;
+  have_new=RegDft(MR_REG_NEW, "mr_best=0;\n");
+  if (!have_new)
+  {
+    try { RegExe(MR_REG_OLD); } catch { mr_best=0; }
+    RegWrite(MR_REG_NEW, "mr_best=%d;\n", mr_best);
+  }
+  RegExe(MR_REG_NEW);
+}
+
+MrRegLoad;
 
 I64 MrClamp(I64 v, I64 lo, I64 hi)
 {
@@ -650,7 +665,7 @@ mr_done:
   Fs->draw_it = NULL;
   if (mr_score > mr_best)
     mr_best = mr_score;
-  RegWrite("TinkerOS/MessengerRun", "mr_best=%d;\n", mr_best);
+  RegWrite(MR_REG_NEW, "mr_best=%d;\n", mr_best);
   MenuPop;
   SettingsPop;
   DocClear;

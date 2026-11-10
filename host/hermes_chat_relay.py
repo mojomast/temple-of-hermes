@@ -27,6 +27,7 @@ __all__ = [
     "CRLF",
     "DEFAULT_BAUD",
     "ERR_PREFIX",
+    "HermesAgentResponder",
     "HermesChatRelay",
     "HermesResponder",
     "MAX_RECV",
@@ -102,6 +103,67 @@ class CallableResponder:
 
     def reply(self, text: str) -> str:
         return self.fn(text)
+
+
+def _plugin_bridge():
+    """Return the plugin-side PINT2 chat bridge, or ``None`` when absent.
+
+    The import is lazy so this file keeps working when the hermes-templeos
+    plugin is not installed.  Configuration is read by the plugin from its
+    own environment contract; nothing here hardcodes a host, URL, or path.
+    """
+    try:
+        from templeos import chat_bridge  # type: ignore
+    except Exception:
+        return None
+    try:
+        return chat_bridge.get_bridge()
+    except Exception:
+        return None
+
+
+class HermesAgentResponder:
+    """Relay responder that prefers the plugin chat bridge, then falls back.
+
+    ``reply(text)`` calls the plugin-side PINT2 hook
+    (``templeos.chat_bridge``).  If the plugin is not installed, the bridge is
+    disabled or has no agent, or the agent call fails in any way, the
+    deterministic offline :class:`HermesResponder` answers instead.  Message
+    payloads are never logged here.
+    """
+
+    def __init__(
+        self,
+        offline: ChatResponder | None = None,
+        bridge_factory: Callable[[], object | None] | None = None,
+    ) -> None:
+        self.offline: ChatResponder = offline or HermesResponder()
+        self._bridge_factory = bridge_factory
+        self._bridge_loaded = False
+        self._bridge: object | None = None
+
+    def _get_bridge(self) -> object | None:
+        if not self._bridge_loaded:
+            self._bridge_loaded = True
+            try:
+                if self._bridge_factory is not None:
+                    self._bridge = self._bridge_factory()
+                else:
+                    self._bridge = _plugin_bridge()
+            except Exception:
+                self._bridge = None
+        return self._bridge
+
+    def reply(self, text: str) -> str:
+        bridge = self._get_bridge()
+        if bridge is not None:
+            try:
+                available = getattr(bridge, "available", None)
+                if not callable(available) or available():
+                    return str(bridge.reply(text))  # type: ignore[attr-defined]
+            except Exception:
+                pass
+        return self.offline.reply(text)
 
 
 def encode_frame(text: str) -> bytes:
@@ -440,12 +502,23 @@ def main(argv: list[str] | None = None) -> int:
         help="include chat text in the log (off by default)",
     )
     parser.add_argument("--demo", action="store_true", help="run an in-memory transcript")
+    parser.add_argument(
+        "--offline",
+        action="store_true",
+        help="force the deterministic offline responder (skip the plugin bridge)",
+    )
     args = parser.parse_args(argv)
 
     allow = args.allow or (["hermes"] if args.demo else [])
+    responder: ChatResponder
+    if args.offline:
+        responder = HermesResponder()
+    else:
+        responder = HermesAgentResponder()
     relay = HermesChatRelay(
         enabled=args.enable or args.demo,
         allow_list=allow,
+        responder=responder,
         log_path=args.log,
         log_messages=args.log_messages,
     )

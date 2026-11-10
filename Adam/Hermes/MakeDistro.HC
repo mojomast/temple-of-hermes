@@ -3,6 +3,33 @@
 // Do not include this file from Load.HC — it is a build-time script.
 
 #define HERMES_DISTRO_DVD_CFG "TB\nScale2Mem(2048,0x40000)\nT \n\n\n\n"
+#define HERMES_ISO_VOLUME_ID "THE_TEMPLE_OF_HERMES"
+
+U0 TempleSetISOLabel(U8 *iso_filename)
+{//Patch the ISO9660 primary and supplementary Volume Identifier fields.
+  CFile *f;
+  U8 *buf=CAlloc(DVD_BLK_SIZE),*label=HERMES_ISO_VOLUME_ID;
+  I64 i,len=StrLen(label);
+  if (f=FOpen(iso_filename,"w+"))
+  {
+    if (FBlkRead(f,buf,16<<2,4))
+    {
+      for (i=0;i<32;i++) buf[40+i]=' ';
+      MemCpy(buf+40,label,len);
+      FBlkWrite(f,buf,16<<2,4);
+    }
+    if (FBlkRead(f,buf,18<<2,4))
+    {
+      for (i=0;i<32;i++) buf[40+i]=' ';
+      MemCpy(buf+40,label,len);
+      FBlkWrite(f,buf,18<<2,4);
+    }
+    FClose(f);
+  }
+  else
+    PrintErr("Could not open %s to set the ISO label.\n",iso_filename);
+  Free(buf);
+}
 
 U0 MakeTempleOfHermesISO(U8 *out_iso_filename)
 {
@@ -26,6 +53,7 @@ U0 MakeTempleOfHermesISO(U8 *out_iso_filename)
   CopyTree("/Compiler",	"/Distro/Compiler");
   CopyTree("/Demo",	"/Distro/Demo");
   CopyTree("/Doc",	"/Distro/Doc");
+  CopyTree("/Hermes",	"/Distro/Hermes");
   CopyTree("/Kernel",	"/Distro/Kernel");
   CopyTree("/Misc",	"/Distro/Misc");
   Del("/Distro/Adam/AutoComplete/ACDefs.DATA");
@@ -35,6 +63,7 @@ U0 MakeTempleOfHermesISO(U8 *out_iso_filename)
   DirMk("/Distro/Tmp");
   DirMk("/Distro/Tmp/ScrnShots");
   RedSeaISO(out_iso_filename2,"/Distro","/Distro" BOOT_DIR_KERNEL_BIN_C);
+  TempleSetISOLabel(out_iso_filename2);
   Free(out_iso_filename2);
   FileWrite("/Tmp/HERMES_ISO_DONE","ok\n",3);
   "\nTemple of Hermes ISO written to %s\n",out_iso_filename;

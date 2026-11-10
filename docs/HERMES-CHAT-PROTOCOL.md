@@ -173,6 +173,33 @@ python3 host/hermes_chat_relay.py \
 Other modes: `--stdio` bridges AT bytes on stdin/stdout; `--demo` runs an
 in-memory transcript.
 
+### Plugin agent bridge (config-driven)
+
+For a real Hermes agent, the relay uses `HermesAgentResponder`. Its
+`reply(text)` calls the plugin-side PINT2 hook
+`templeos.chat_bridge` (commit
+`d8a7ee33bd15b296dedfa23c5948b4cad27c8e1c`, `feat/plugin-integration`) and
+returns the agent's answer. That hook is a module, not a fifth plugin tool.
+
+Selection is configuration only; no host, URL, port, socket path, or token is
+baked into this repository. The plugin reads:
+
+| Variable | Meaning |
+| --- | --- |
+| `TEMPLEOS_CHAT_BRIDGE` | `1`/`true`/`yes`/`on` enables the bridge; anything else disables it |
+| `TEMPLEOS_CHAT_BRIDGE_ENDPOINT` | `http`/`https` agent reply endpoint; required for the built-in HTTP transport |
+| `TEMPLEOS_CHAT_BRIDGE_TOKEN` | optional bearer token; never logged |
+| `TEMPLEOS_CHAT_BRIDGE_TIMEOUT_S` | optional positive timeout in seconds |
+
+If the plugin is not installed, the bridge is disabled or has no endpoint, or
+the agent is unreachable, `HermesAgentResponder` falls back to the
+deterministic offline `HermesResponder`. The relay never logs message payload
+bytes unless `log_messages=True` is explicitly passed. `--offline` forces the
+offline responder for a reproducible test or demo.
+
+Host tests inject a fake bridge and stay offline; they do not require the
+plugin, a live model, a network, or a guest to be running.
+
 ## Guest app: Hermes/Apps/HermesChat
 
 Files:

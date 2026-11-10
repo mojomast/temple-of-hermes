@@ -3,7 +3,16 @@
 #include "Dojo.HC"
 #include "DojoSmall.HC"
 U8 *DojoPath(U8 *rel)
-{
+{//Look for the official art-nous asset first, then the app directory.
+  I64 i;
+  U8 *st,*roots[4]={"::/Hermes/Art/","T:/Hermes/Art/","C:/Hermes/Art/","~/Hermes/Art/"};
+  for (i=0;i<4;i++)
+  {
+    st=MStrPrint("%s%s",roots[i],rel);
+    if (IsFile(st))
+      return st;
+    Free(st);
+  }
   return MStrPrint("%s/%s",__DIR__,rel);
 }
 U8 *DojoAgent(U8 *rel)
