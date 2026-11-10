@@ -1,0 +1,63 @@
+WH HSE eo a4 FP HW LPU Y NICER
+7
+ra : _ inker .
+86716 64:54 BeeB . .
+66716 64:54 827608 Public Domain Operating System
+6716 64:56 849D .
+86716 64:51 81D3 » Quick Start: Cmd line
+T:*Home>Cd: #include nce”; .
+. of T:-Home
+
+If you answer "Ho" you can play with IE, SIZE
+the live CD without installing. 6716 64:57 B268
+
+i, 86716 64:54 BeeB
+Install onto hard drive ¢y or n3?7 HO 66716 64:54 8208
+
+86716 64:56 849D
+
+Take Tourty or n>? HO 66716 64:51 81D3
+36.4982585 T: sHome >
+T:*Home >
+T:/Home>"PROMPTOK*n" ;
+PROMPTOK
+8. 8888815
+Ti7Home 2Aut oComplete Core? ;
+-6.888697s ans=8xeGooe8e1=1
+IT: Home >Comminit8ni¢1, 115268) ;"COMMOKS
+Lo
+COMMOK
+6. 8888325
+T:7HomesUG Ri>s
+TivHome> Us nl 256],*p,c;
+TivHome> I6é4 i,len.k:
+T:7Home> Dirliké"T:*AdamsHermes" >;
+T:7Home> while<i>4
+T:7Home> i=;
+T:7Home> while<i><
+T: “Home> c=CommGetChar (1);
+T: #Home > if€te) break; —
+T: “Home> if€if=255) nfi++I=c;
+T:7Home> ¥
+T:7Home> nLid=9;
+TivHomes Tf C#SteCen, "END" break;
+T:7Home> len=CommGet Char ¢13+ConmmGetth
+lar ¢1)*256+CommGet Char (1)*65536+Commbet
+Char(1>*167r7216;
+TizHome?  p-MAllgc<lent1>5
+T: Home > orCk=@;kt=len;k++> pCkI=Com
+mGetChar¢is;
+T: Home > pt tense:
+T: “Home> lleHritetn,p, lend;
+T:7Home> Freetp);
+T:7Home> CommPut$¢i,"0K%n">;
+T:7Home> +
+T: #Home >}
+T:/Home>"DEFOK nn";
+OptPass3 COCCompiie PrsFun .
+PrsGlblVarbLst WARHING :) Using 64-bit reg
+Wor.
+PEL jceTmp.DD.2.28 ‘e' in ‘Rt
+8.888185s
+T: “Home > ”
+aaa eS,

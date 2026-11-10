@@ -5,11 +5,52 @@
 U8 hermes_line[HERMES_LINE_MAX];
 I64 hermes_line_n=0;
 
+I64 HermesNumAfter(U8 *s,U8 *pat)
+{
+  U8 *p;
+  I64 n=0;
+  if (!s || !pat) return 0;
+  p=StrFind(pat,s,SFF_IGNORE_CASE);
+  if (!p) return 0;
+  p+=StrLen(pat);
+  while (*p==' ' || *p==':' || *p=='#') p++;
+  while ('0'<=*p && *p<='9')
+  {
+    n=n*10+*p-'0';
+    p++;
+  }
+  return n;
+}
+
+U8 *HermesEvalErrorJSON(U8 *text,I64 code)
+{
+  U8 *kind,*msg,*out;
+  I64 line,col;
+  if (!text) text="";
+  if (StrIMatch("compile",text) || StrIMatch("parse",text))
+    kind="compile";
+  else if (StrIMatch("undefined extern",text))
+    kind="link";
+  else
+    kind="exception";
+  line=HermesNumAfter(text,"line ");
+  col=HermesNumAfter(text,"col ");
+  if (!col)
+    col=HermesNumAfter(text,"column ");
+  msg=HermesEsc(text);
+  out=MStrPrint(
+    "{\"kind\":\"%s\",\"code\":%d,\"line\":%d,\"col\":%d,"
+    "\"message\":\"%s\"}",
+    kind,code,line,col,msg);
+  Free(msg);
+  return out;
+}
+
 U8 *HermesEval(U8 *src)
 {
   CDoc *cap,*old;
-  U8 *st,*esc,*out;
-  I64 err=FALSE;
+  U8 *st,*esc,*out,*errjson;
+  I64 err=FALSE,code=0;
   if (!src) src="";
   cap=DocNew;
   old=Fs->put_doc;
@@ -22,6 +63,7 @@ U8 *HermesEval(U8 *src)
   {
     Fs->catch_except=TRUE;
     err=TRUE;
+    code=Fs->except_ch;
     try
     {
       PutExcept;
@@ -33,13 +75,20 @@ U8 *HermesEval(U8 *src)
   st=HermesDocPlain(cap);
   if (!st) st=StrNew("");
   if (err || StrIMatch("\nErr",st) ||
-      !StrNCmp(st,"Err",3) || StrIMatch("Exception",st))
+      !StrNCmp(st,"Err",3) || StrIMatch("Exception",st) ||
+      StrIMatch("Compile Error",st))
   {
     HermesEventPush("compile_error",st);
     err=TRUE;
   }
   esc=HermesEsc(st);
-  out=MStrPrint("{\"ok\":%d,\"text\":\"%s\"}",!err,esc);
+  if (err)
+    errjson=HermesEvalErrorJSON(st,code);
+  else
+    errjson=StrNew("null");
+  out=MStrPrint("{\"ok\":%d,\"text\":\"%s\",\"error\":%s}",
+                !err,esc,errjson);
+  Free(errjson);
   Free(st);
   Free(esc);
   DocDel(cap);
@@ -86,17 +135,20 @@ U8 *HermesHelpJSON()
 {
   return StrNew(
     "{\"ops\":[\"ping\",\"eval\",\"tasks\",\"focus\",\"mouse\","
-    "\"text\",\"mode\",\"clip_get\",\"clip_set\",\"list\",\"pull\","
-    "\"push\",\"events\",\"idle\",\"help\"],"
+    "\"text\",\"mode\",\"clip_get\",\"clip_set\",\"list\",\"ls\","
+    "\"stat\",\"pull\",\"push\",\"events\",\"idle\",\"windows\","
+    "\"window_focus\",\"task_kill\",\"doc_read\",\"doc_write\","
+    "\"toast\",\"guards\",\"sysinfo\",\"help\"],"
     "\"name\":\"" HERMES_NAME "\",\"version\":\"" HERMES_VERSION "\"}");
 }
 
 U0 HermesHandle(I64 id,U8 *op,U8 *payload,I64 len)
 {
-  U8 *res=NULL,*path,tmp[64];
+  U8 *res=NULL,*path,tmp[64],*s1;
   CTask *task;
-  I64 mode,size,wrote,i,x,y;
+  I64 mode,size,wrote,i,x,y,addr,killed=0;
   U8 *data;
+  Bool ok;
   if (!op) op="";
   if (!payload) payload="";
 
@@ -119,13 +171,19 @@ U0 HermesHandle(I64 id,U8 *op,U8 *payload,I64 len)
     HermesReply(id,res);
     Free(res);
   }
-  else if (!StrICmp(op,"tasks"))
+  else if (!StrICmp(op,"tasks") || !StrICmp(op,"task_list"))
   {
     res=HermesTasksJSON;
     HermesReply(id,res);
     Free(res);
   }
-  else if (!StrICmp(op,"focus"))
+  else if (!StrICmp(op,"windows"))
+  {
+    res=HermesWindowsJSON;
+    HermesReply(id,res);
+    Free(res);
+  }
+  else if (!StrICmp(op,"focus") || !StrICmp(op,"window_focus"))
   {
     if (len>0 && *payload)
     {
@@ -141,7 +199,41 @@ U0 HermesHandle(I64 id,U8 *op,U8 *payload,I64 len)
         return;
       }
     }
-    res=HermesTasksJSON;
+    if (!StrICmp(op,"window_focus"))
+      res=HermesWindowsJSON;
+    else
+      res=HermesTasksJSON;
+    HermesReply(id,res);
+    Free(res);
+  }
+  else if (!StrICmp(op,"task_kill"))
+  {
+    if (!*payload)
+    {
+      HermesReplyErr(id,"no_task");
+      return;
+    }
+    task=HermesParseTask(payload);
+    if (!task || !TaskValidate(task))
+    {
+      HermesReplyErr(id,"no_task");
+      return;
+    }
+    if (task==Fs || task==hermes_task || task==adam_task ||
+        task==sys_winmgr_task)
+    {
+      HermesReplyErr(id,"protected_task");
+      return;
+    }
+    addr=task;
+    s1=HermesEsc(task->task_title);
+    ok=Kill(task,FALSE);
+    if (ok)
+      killed=1;
+    res=MStrPrint(
+      "{\"ok\":1,\"killed\":%d,\"addr\":\"0x%X\",\"title\":\"%s\"}",
+      killed,addr,s1);
+    Free(s1);
     HermesReply(id,res);
     Free(res);
   }
@@ -200,9 +292,66 @@ U0 HermesHandle(I64 id,U8 *op,U8 *payload,I64 len)
     HermesReply(id,res);
     Free(res);
   }
-  else if (!StrICmp(op,"list"))
+  else if (!StrICmp(op,"list") || !StrICmp(op,"ls"))
   {
     res=HermesListDir(payload);
+    HermesReply(id,res);
+    Free(res);
+  }
+  else if (!StrICmp(op,"stat"))
+  {
+    res=HermesStatJSON(payload);
+    HermesReply(id,res);
+    Free(res);
+  }
+  else if (!StrICmp(op,"doc_read"))
+  {
+    res=HermesDocReadJSON(payload);
+    HermesReply(id,res);
+    Free(res);
+  }
+  else if (!StrICmp(op,"doc_write"))
+  {
+    i=0;
+    while (i<len && payload[i]) i++;
+    if (i>=len)
+    {
+      HermesReplyErr(id,"doc_path");
+      return;
+    }
+    path=payload;
+    data=payload+i+1;
+    wrote=FileWrite(path,data,len-i-1);
+    if (wrote<0)
+    {
+      HermesReplyErr(id,"doc_write");
+      return;
+    }
+    s1=HermesEsc(path);
+    res=MStrPrint("{\"ok\":1,\"wrote\":%d,\"path\":\"%s\"}",wrote,s1);
+    Free(s1);
+    HermesReply(id,res);
+    Free(res);
+  }
+  else if (!StrICmp(op,"toast"))
+  {
+    HermesToastSet(payload,5.0);
+    s1=HermesEsc(hermes_toast);
+    res=MStrPrint("{\"ok\":1,\"toast\":\"%s\",\"until\":%7.3f}",
+                  s1,hermes_toast_until);
+    Free(s1);
+    HermesReply(id,res);
+    Free(res);
+  }
+  else if (!StrICmp(op,"guards"))
+  {
+    res=HermesGuardJSON(payload);
+    HermesReply(id,res);
+    Free(res);
+  }
+  else if (!StrICmp(op,"sysinfo"))
+  {
+    res=HermesSysInfoJSON();
     HermesReply(id,res);
     Free(res);
   }
