@@ -1,0 +1,9 @@
+$HL,0$$FG,11$PSYCHE // SIGNAL FIELD$$FG$
+
+$ID,2$A visualization-only neural signal field. Pulses, layers, weights and
+a simulated loss curve are drawn for atmosphere. There is no network,
+no training, no data collection and no external I/O.
+
+$ID,2$$LK,"Run Psyche",A="FI:::/Hermes/Apps/Psyche/Run.HC"$
+
+$ID,2$Keys: SPACE pause, R reseed, ESC exit.

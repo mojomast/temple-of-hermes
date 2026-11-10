@@ -1,0 +1,8 @@
+$HL,0$$FG,11$CAPYBARA // TEMPLE PET$$FG$
+
+$ID,2$A small capybara that wanders, naps and accepts pets. This is a local
+desktop pet for TinkerOS with no network access.
+
+$ID,2$$LK,"Run Capybara",A="FI:::/Hermes/Apps/Capybara/Run.HC"$
+
+$ID,2$Keys: F feed, P pet, S sleep, left-click pet, ESC exit.
