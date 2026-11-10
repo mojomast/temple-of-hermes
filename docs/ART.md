@@ -8,7 +8,7 @@ Iconography used here is symbolic / original pixel art only:
 
 - **Hermes the messenger** — caduceus, talaria (winged sandals), temple facade
 - **Classical / cyber-occult** — Greek key meander, marble columns, VGA dither, starfield
-- **Nous Girl** — original fictional badge character (not a likeness of any real person)
+- **Nous Girl** — fictional game character from AGENT ARMEGEDDON: CLAWPOCALYPSE NOW (not a likeness of any real person and not an official Nous Research mascot). The cine v3 portrait is the default likeness; the earlier generated badge remains in git history of this file's previous revision.
 - **Capybara** — pet mascot poses
 - **Psyche** — neural-flower / decentralized-training motif (visual metaphor only)
 - **WorldSim** — globe with orbiting agent nodes (visual metaphor only)
@@ -111,3 +111,71 @@ Embed in DolDoc with `DocSprite` / `$$SP...$$` after loading, or `DocGR` after p
 ## Regeneration note
 
 Masters were generated with the image tool under Kyle's Nov 9–10 unlimited window, then quantized with Floyd–Steinberg (wallpapers/sheets) or nearest-color (tiny icons).
+
+
+## Cinematic portraits (hermes/art-nous)
+
+Added 9–10 Nov 2026. Kyle approved copying cropped/resized cine v3 portraits from
+`mojomast/clawpocalypse-now` (and the already-fitted Hermagotchi copies of the
+same stills) into this tree and converting them to the TempleOS 16-color palette.
+Backgrounds were generated once each (no faces, no characters) and composited
+under the portraits. No photoreal likeness of any real person. In the guest, the
+announcer character is named **Southpaw** only — never print "TurboFit".
+
+### Portrait origins
+
+All four masters are the cine v3 stills from `mojomast/clawpocalypse-now` on
+the `main` branch, copied into `art/source/cine/`:
+
+| Guest name | In-tree source | Origin path in clawpocalypse-now | Notes |
+|---|---|---|---|
+| Nous Girl | `art/source/cine/nous_girl.png` | `assets/cine/v3/portraits/nous_girl.png` | Flipped horizontally on the splash, wallpaper, and threshold header so she faces the temple. Also used for the 16/32/64 `nous-girl` badge. |
+| Teknium | `art/source/cine/teknium.png` | `assets/cine/v3/portraits/teknium.png` | Game character only, not a likeness of the real person. Dojo header, right side. |
+| Don Piedro | `art/source/cine/don_piedro.png` | `assets/cine/v3/portraits/don_piedro.png` | Offerings header, right side. |
+| Southpaw | `art/source/cine/southpaw.png` | `assets/cine/v3/portraits/turbofit.png` | Same still Hermagotchi maps as Southpaw (`assets/source/cine_v3_southpaw.png`). The in-tree file is named `southpaw.png`. Stage header, left side. |
+
+Do not copy the multi-megabyte `after/` or `comparison/` rig sheets.
+
+### Generated backgrounds and prompts
+
+Empty architectural plates only, generated once, prompts in
+`art/source/generated/PROMPTS.md`:
+
+- `art/source/generated/toh-bg-boot-splash.jpg` — temple threshold, open right third
+- `art/source/generated/toh-bg-wallpaper.jpg` — night courtyard, open lower right
+- `art/source/generated/toh-bg-header-offerings.jpg` — empty offering hall
+- `art/source/generated/toh-bg-header-dojo.jpg` — empty training hall
+- `art/source/generated/toh-bg-header-southpaw.jpg` — empty night stage
+
+Title typography on the splash ("THE TEMPLE OF HERMES") was added in the
+composite script, not generated.
+
+### Composites and converter outputs
+
+Recompose with `python3 scripts/toh_composite_cine.py`, then:
+
+```bash
+nice -n 19 python3 scripts/toh_art_convert.py splash    art/source/composites/toh-boot-splash.png toh-boot-splash
+nice -n 19 python3 scripts/toh_art_convert.py wallpaper art/source/composites/toh-nous-girl.png   toh-nous-girl
+nice -n 19 python3 scripts/toh_art_convert.py header    art/source/composites/header-threshold.png header-threshold
+nice -n 19 python3 scripts/toh_art_convert.py header    art/source/composites/header-dojo.png      header-dojo
+nice -n 19 python3 scripts/toh_art_convert.py header    art/source/composites/header-offerings.png header-offerings
+nice -n 19 python3 scripts/toh_art_convert.py header    art/source/composites/header-southpaw.png  header-southpaw
+nice -n 19 python3 scripts/toh_art_convert.py badge     art/source/cine/nous_girl.png  nous-girl
+nice -n 19 python3 scripts/toh_art_convert.py badge     art/source/cine/teknium.png     teknium
+nice -n 19 python3 scripts/toh_art_convert.py badge     art/source/cine/don_piedro.png  don-piedro
+nice -n 19 python3 scripts/toh_art_convert.py badge     art/source/cine/southpaw.png    southpaw
+```
+
+- **Default boot splash** is now the cinematic Nous Girl composite:
+  `Hermes/Art/Splash/toh-boot-splash.{PNG,GR}` (replaces the earlier generated
+  splash of the same stem; recover the old file from `97d7ad2` if needed).
+- **Recommended wallpaper** is `Hermes/Art/Wallpaper/toh-nous-girl.{PNG,GR}` plus
+  `Hermes/Art/Sprites/toh-nous-girl.SP`. Earlier wallpapers (`toh-temple-night`,
+  `toh-hero`, and the others) are unchanged.
+- **Thin UI strips** (1280×80 / 640×40) live under `art/ui/` and
+  `Hermes/Art/UI/header-{threshold,dojo,offerings,southpaw}`.
+- **In-guest header plates** (640×160) are `Hermes/Art/UI/header-*-plate.{PNG,GR}`
+  and matching `.SP` under `Hermes/Art/Sprites/`.
+
+Load one full-screen `.GR` at a time: each 640×480 uncompressed body is ~307 KB.
