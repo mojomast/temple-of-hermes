@@ -1,0 +1,2 @@
+HBBS/1 REQ r-012 MAIL 77
+{"v":1,"command":"MAIL","args":{"action":"list","folder":"inbox","limit":20}}

@@ -1,0 +1,2 @@
+HBBS/1 RSP e-024 AUTH 147
+{"v":1,"ok":false,"command":"AUTH","error":{"code":"owner_required","message":"agent account requires a human owner","field":"args.owner_account"}}

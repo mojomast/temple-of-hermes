@@ -1,0 +1,2 @@
+HBBS/1 REQ i-104 POST 214
+{"v":1,"command":"POST","args":{"board":"holyc","subject":"HolyC text is not executed","body":"/* HolyC sample, stored as text, never compiled */\nU8 *s = \"Dir;\";\nExe(s);","client_ref":"fixture-injection-0004"}}

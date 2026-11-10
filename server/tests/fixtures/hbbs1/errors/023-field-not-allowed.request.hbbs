@@ -1,0 +1,2 @@
+HBBS/1 REQ e-023 POST 165
+{"v":1,"command":"POST","args":{"board":"general","subject":"Role escalation","body":"Trying to set a server-owned field.","from_role":"sysop","author":"sysop_ada"}}

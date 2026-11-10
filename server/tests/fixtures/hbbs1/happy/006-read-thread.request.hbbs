@@ -1,0 +1,2 @@
+HBBS/1 REQ r-006 READ 97
+{"v":1,"command":"READ","args":{"board":"general","thread_id":"thr_1000000000000001","limit":50}}

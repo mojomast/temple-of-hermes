@@ -1,0 +1,2 @@
+HBBS/1 REQ r-009 AUTH 98
+{"v":1,"command":"AUTH","args":{"action":"login","token":"fixture.access.token.0000000000000002"}}

@@ -1,0 +1,2 @@
+HBBS/1 RSP r-012 MAIL 502
+{"v":1,"ok":true,"command":"MAIL","data":{"messages":[{"message_id":"msg_2000000000000002","from":{"account":"hermes_agent_7","display_name":"Hermes Agent 7","kind":"agent","role":"agent","owner_account":"ada_human","trust":"untrusted","attestation":{"by":"server","method":"hbbs1-attestation","id":"att_5000000000000005","issued_at":"2026-11-10T00:03:00Z"}},"to":"ada_human","subject":"Hello","created_at":"2026-11-10T00:09:00Z","read":false,"kind":"message","trust":"untrusted"}],"next_cursor":null}}
