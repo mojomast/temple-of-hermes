@@ -6,16 +6,12 @@ This is slow under TCG (no usable /dev/kvm on this builder).
 """
 from __future__ import annotations
 
-import hashlib
-import shutil
-import struct
 import subprocess
 import sys
 import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from fat32_read import extract, open_first_fat  # noqa: E402
 from qemu_hermes import (  # noqa: E402
     QMP,
     RUN,
@@ -23,7 +19,6 @@ from qemu_hermes import (  # noqa: E402
     STOCK_ISO,
     SHOTS,
     Serial,
-    glyph_text,
     start_vm,
     stop_vm,
     wait_for_text,
@@ -36,18 +31,6 @@ LOG = RUN / "build.log"
 SERIAL_LOG = RUN / "build-com1.bin"
 DIST = ROOT / "dist"
 ISO_NAME = "TempleOfHermes-0.1.0.ISO"
-
-# Compact serial file receiver, typed at the HolyC prompt after install.
-RECEIVER = (
-    "CommInit;CommInit8n1(1,115200);\n"
-    "U0 R(){U8 n[256],*p,c;I64 i,len,k;DirMk(\"C:/Adam/Hermes\");"
-    "while(1){i=0;while((c=CommGetChar(1))&&i<255)n[i++]=c;n[i]=0;"
-    "if(!StrCmp(n,\"END\"))break;len=0;for(k=0;k<4;k++)"
-    "len|=CommGetChar(1)<<(8*k);p=MAlloc(len+1);"
-    "for(k=0;k<len;k++)p[k]=CommGetChar(1);p[len]=0;"
-    "FileWrite(n,p,len);Free(p);CommPutS(1,\"OK\\n\");}}\n"
-    "R;\n"
-)
 
 OVERLAY_PATHS = [
     "Adam/Hermes/Glbls.HC",
@@ -124,18 +107,6 @@ def overlay_files() -> list[tuple[str, bytes]]:
     return items
 
 
-def send_overlay(ser: Serial, files: list[tuple[str, bytes]]) -> None:
-    for dest, data in files:
-        log(f"push {dest} ({len(data)} bytes)")
-        frame = dest.encode("ascii") + b"\x00" + struct.pack("<I", len(data)) + data
-        ser.write(frame)
-        # OK\n from the guest
-        got = ser.read_until(b"OK\n", timeout=30.0)
-        log(f"  ack {got!r}")
-    ser.write(b"END\x00")
-    log("overlay complete")
-
-
 def shot(qmp: QMP, name: str) -> Path:
     dest = SHOT / f"{name}.png"
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -149,10 +120,14 @@ def shot(qmp: QMP, name: str) -> Path:
     return dest
 
 
-def main() -> int:
+def install_to_disk() -> None:
+    """Install stock TinkerOS onto DISK and stop at the post-install prompt.
+
+    This is the install-wizard half only.  The Hermes sources are delivered by
+    the separate FAT32 overlay, never by typing CommInit at this shell.
+    """
     if not STOCK_ISO.is_file():
-        log(f"missing stock ISO: {STOCK_ISO}")
-        return 2
+        raise FileNotFoundError(f"missing stock ISO: {STOCK_ISO}")
     RUN.mkdir(parents=True, exist_ok=True)
     SHOT.mkdir(parents=True, exist_ok=True)
     if DISK.exists():
@@ -168,107 +143,39 @@ def main() -> int:
         log("waiting for first-boot install prompt")
         wait_for_text(qmp, SHOT, "Install onto hard drive", timeout=900, interval=10, prefix="boot")
         shot(qmp, "01-install-prompt")
-        qmp.type_text("y\n")
+        qmp.type_text("y\n", delay=0.14)
         wait_for_text(qmp, SHOT, "automated partitioning", timeout=300, interval=6, prefix="wiz1")
         shot(qmp, "02-automated")
-        qmp.type_text("y\n")
-        wait_for_text(qmp, SHOT, "How many", timeout=180, interval=5, prefix="howmany")
+        qmp.type_text("y\n", delay=0.14)
+        wait_for_text(qmp, SHOT, "would you like to install", timeout=180, interval=5, prefix="howmany")
         shot(qmp, "03-how-many")
-        qmp.type_text("1\n")
-        wait_for_text(qmp, SHOT, "graphics mode", timeout=180, interval=5, prefix="gfx")
+        qmp.type_text("1\n", delay=0.14)
+        wait_for_text(qmp, SHOT, "Select graphics mode for drive C:", timeout=180, interval=5, prefix="gfx")
         shot(qmp, "04-graphics")
-        qmp.type_text("\n")  # default 640x480
-        wait_for_text(qmp, SHOT, "extra", timeout=180, interval=5, prefix="extras")
+        qmp.type_text("\n", delay=0.14)  # default 640x480
+        wait_for_text(qmp, SHOT, "would you like to also install extra", timeout=180, interval=5, prefix="extras")
         shot(qmp, "05-extras")
-        qmp.type_text("n\n")
+        qmp.type_text("n\n", delay=0.14)
         log("waiting for install copy / Reboot Now")
-        wait_for_text(qmp, SHOT, "Reboot Now", timeout=1800, interval=10, prefix="install")
+        wait_for_text(qmp, SHOT, "Reboot Now (y or n", timeout=1800, interval=10, prefix="install")
         shot(qmp, "07-reboot-now")
-        qmp.type_text("n\n")
-        time.sleep(2)
-        # Leave the Install.DD editor if it still has focus.
-        qmp.send_qcodes("shift", "esc")
-        time.sleep(0.4)
-        qmp.send_qcodes("shift", "esc")
-        time.sleep(0.6)
-        qmp.type_text("\n")
-        shot(qmp, "08-after-install")
-        log("typing serial receiver")
-        qmp.type_text(RECEIVER, delay=0.07)
-        time.sleep(2)
-        shot(qmp, "09-receiver")
-        files = overlay_files()
-        send_overlay(ser, files)
-        time.sleep(1)
-        qmp.send_qcodes("shift", "esc")
-        time.sleep(0.3)
-        qmp.type_text("\n#include \"C:/Tmp/AfterOverlay.HC\";\n", delay=0.07)
-        time.sleep(2)
-        shot(qmp, "10-after-overlay")
-        log("starting in-guest DoDistro / BootDVDIns (very slow under TCG)")
-        qmp.type_text('C:;\nCd("/");\n#include "C:/Adam/Hermes/MakeDistro";\n', delay=0.07)
-        wait_for_text(
-            qmp,
-            SHOT,
-            "ISO written",
-            timeout=5400,
-            interval=20,
-            prefix="distro",
-        )
-        shot(qmp, "11-iso-written")
-        time.sleep(2)
+        qmp.type_text("n\n", delay=0.14)
+        time.sleep(3)
+        shot(qmp, "08-installed")
     finally:
-        log("stopping VM")
-        try:
-            shot(qmp, "99-final")
-        except Exception:
-            pass
+        log("stopping VM after install")
         ser.close()
         stop_vm(meta, qmp)
         qmp.close()
+    log(f"installed disk kept at {DISK}")
 
-    raw = RUN / "hermes-build.raw"
-    log(f"converting {DISK} -> {raw}")
-    if raw.exists():
-        raw.unlink()
-    subprocess.check_call(["qemu-img", "convert", "-O", "raw", str(DISK), str(raw)])
-    # List /Tmp so we can see the ISO name
-    try:
-        fs = open_first_fat(raw)
-        listing = "\n".join(fs.tree())
-        (RUN / "fat-tree.txt").write_text(listing)
-        log("fat tree (head):\n" + "\n".join(listing.splitlines()[:80]))
-        fs.close()
-    except Exception as e:
-        log(f"fat tree failed: {e}")
 
-    dest = DIST / ISO_NAME
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    candidates = [
-        "/Tmp/TempleOfHermes.ISO.C",
-        "/Tmp/TempleOfHermes.ISO.C.Z",
-        "/Tmp/TEMPLEOF.ISO",
-        "/Tmp/TempleOfHermes.ISO",
-    ]
-    last_err = None
-    for cand in candidates:
-        try:
-            extract(raw, cand, dest)
-            log(f"extracted {cand} -> {dest} ({dest.stat().st_size} bytes)")
-            last_err = None
-            break
-        except Exception as e:
-            last_err = e
-            log(f"extract {cand} failed: {e}")
-    if last_err and not dest.exists():
-        raise last_err
-    digest = hashlib.sha256(dest.read_bytes()).hexdigest()
-    (DIST / "SHA256SUMS").write_text(f"{digest}  {ISO_NAME}\n")
-    log(f"SHA256 {digest}")
-    # Keep a copy of the raw only if something went wrong; it's large, drop it on success.
-    raw.unlink(missing_ok=True)
-    log("build finished")
-    return 0
+def main() -> int:
+    install_to_disk()
+    sys.path.insert(0, str(ROOT / "shots" / "hermes-integration"))
+    from build_from_installed import main as build_from_installed_main
+
+    return build_from_installed_main()
 
 
 if __name__ == "__main__":

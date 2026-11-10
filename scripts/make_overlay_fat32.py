@@ -6,7 +6,7 @@ import struct
 import sys
 from pathlib import Path
 
-ROOT = Path("/workspace/temple-of-hermes")
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from build_iso import overlay_files  # noqa: E402
 

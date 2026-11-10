@@ -145,11 +145,13 @@ def main() -> int:
         time.sleep(3)
         log("copying overlay from D: to C:")
         type_slow(qmp, 'Cd("D:/");\n#include "D:/RUN.HC";\n')
-        wait_for(qmp, "OVERLAY DONE", timeout=1800, prefix="overlay")
+        over = wait_for(qmp, "OVERLAY DONE", timeout=1800, prefix="overlay")
+        (LOG.parent / "overlay-ocr.txt").write_text(over)
         time.sleep(3)
         log("running MakeDistro from C:")
         type_slow(qmp, 'Cd("C:/");\n#include "C:/Adam/Hermes/MakeDistro";\n')
-        wait_for(qmp, "ISO written", timeout=1800, prefix="distro")
+        distro = wait_for(qmp, "ISO written", timeout=5400, prefix="distro")
+        (LOG.parent / "distro-ocr.txt").write_text(distro)
         time.sleep(3)
         screen(qmp, "iso-written")
     finally:
@@ -163,10 +165,29 @@ def main() -> int:
     raw.unlink(missing_ok=True)
     subprocess.check_call(["qemu-img", "convert", "-O", "raw", str(DISK), str(raw)])
     ISO_OUT.parent.mkdir(parents=True, exist_ok=True)
-    extract(raw, "/Tmp/TempleOfHermes.ISO.C", ISO_OUT)
-    digest = hashlib.sha256(ISO_OUT.read_bytes()).hexdigest()
+    candidates = [
+        "/Tmp/TempleOfHermes.ISO.C",
+        "/Tmp/TempleOfHermes.ISO.C.Z",
+        "/Tmp/TempleOfHermes.ISO",
+    ]
+    last_err: Exception | None = None
+    for cand in candidates:
+        try:
+            extract(raw, cand, ISO_OUT)
+            log(f"extracted {cand}")
+            last_err = None
+            break
+        except Exception as e:  # try the next RedSea name
+            last_err = e
+            log(f"extract {cand} failed: {e}")
+    if last_err is not None:
+        raise last_err
+    data = ISO_OUT.read_bytes()
+    digest = hashlib.sha256(data).hexdigest()
+    label = data[16 * 2048 + 40:16 * 2048 + 72].decode("ascii", "replace").strip()
+    log(f"ISO label: {label!r}")
     (ISO_OUT.parent / "SHA256SUMS").write_text(f"{digest}  {ISO_OUT.name}\n")
-    log(f"ISO {ISO_OUT} ({ISO_OUT.stat().st_size} bytes) sha256={digest}")
+    log(f"ISO {ISO_OUT} ({len(data)} bytes) sha256={digest}")
     raw.unlink(missing_ok=True)
     return 0
 

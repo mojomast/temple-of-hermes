@@ -1,0 +1,21 @@
+Guest build logs (transcribed from QMP screendumps; no host paths).
+
+OVERLAY
+  ... Copying D:/F224.BIN to C:/Hermes/Art/UI/pane-header.GR ...
+  ... F225 -> C:/Hermes/Art/Wallpaper/toh-hero.GR ...
+  OVERLAY DONE
+
+MAKEDISTRO
+  ... Copying C:/Distro/Misc/Tour/Tour4.IN.Z to Q:/Misc/Tour/Tour4.IN.Z ...
+  Temple of Hermes ISO written to /Tmp/TempleOfHermes.ISO.C
+
+WARNINGS (non-fatal, from boot)
+  OptPass3 COCCompile PrsFun PrsGlblVarLst WARNING: Using 64-bit reg var.
+  ... 'ch' in 'HermesHandleLine'
+
+APP/GAME FAILURES (read-only live ISO, no writable C:/Tmp)
+  BBS        HbbsInit DirMk("::/Hermes/Apps/HermesBBS") outside try; UI task exits
+  Caduceus   Except:Drv / DirMk -> panic screen
+  Token Rain Except:Drv
+  Spoon      Except:Drv / DirMk -> panic screen
+  Dojo Duel  Except:Drv from the best-score save path

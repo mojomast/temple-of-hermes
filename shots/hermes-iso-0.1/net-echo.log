@@ -1,0 +1,11 @@
+guest->stub ATZ\r
+stub->guest OK\r\n
+guest->stub ATD hermes\r
+stub->guest CONNECT 115200\r\n
+guest->stub AT+SEND 18\r
+stub payload HERMES-NET-ECHO-01
+stub->guest OK\r\n
+guest->stub AT+RECV 128\r
+stub->guest DATA 18\r\nHERMES-NET-ECHO-01
+guest->stub ATH\r
+stub->guest OK\r\n

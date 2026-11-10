@@ -16,7 +16,10 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 RUN = ROOT / "run"
 SHOTS = ROOT / "shots"
-STOCK_ISO = Path(os.environ.get("TOH_TINKEROS_ISO") or (Path.home() / ".hermes/plugin-data/templeos/isos/TinkerOS_5.20-rc10.ISO"))
+STOCK_ISO = Path(
+    os.environ.get("TOH_TINKEROS_ISO")
+    or (ROOT / "run" / "TinkerOS_5.20-rc10.ISO")
+)
 QEMU = "qemu-system-x86_64"
 
 
@@ -211,11 +214,102 @@ class Serial:
         return out
 
 
+_FONT_CACHE: list[int] | None = None
+
+
+def _font_glyphs() -> list[int]:
+    """Parse Kernel/FontStd.HC (8x8 bitmaps) into 64-bit cell masks.
+
+    TempleOS stores each glyph as a U64: low byte is the top row and bit 0 is
+    the leftmost pixel.
+    """
+    global _FONT_CACHE
+    if _FONT_CACHE is not None:
+        return _FONT_CACHE
+    import re
+    import struct
+
+    raw = (ROOT / "Kernel" / "FontStd.HC").read_bytes().decode("latin-1")
+    body = raw.split("{", 1)[1].split("}", 1)[0]
+    vals = [int(x, 16) for x in re.findall(r"0x([0-9A-Fa-f]{16})", body)]
+    masks: list[int] = []
+    for v in vals:
+        b = struct.pack("<Q", v)
+        m = 0
+        for y, byte in enumerate(b):
+            for x in range(8):
+                if (byte >> x) & 1:
+                    m |= 1 << (y * 8 + x)
+        masks.append(m)
+    _FONT_CACHE = masks
+    return masks
+
+
+def _ocr_at(im, ox: int, oy: int, min_score: int = 58) -> str:
+    glyphs = _font_glyphs()
+    px = im.load()
+    w, h = im.size
+    full = (1 << 64) - 1
+    lines: list[str] = []
+    for cy in range((h - oy) // 8):
+        line: list[str] = []
+        for cx in range((w - ox) // 8):
+            x0 = cx * 8 + ox
+            y0 = cy * 8 + oy
+            counts: dict[tuple[int, int, int], int] = {}
+            for y in range(8):
+                for x in range(8):
+                    c = px[x0 + x, y0 + y]
+                    counts[c] = counts.get(c, 0) + 1
+            bg = max(counts, key=counts.get)
+            m = 0
+            for y in range(8):
+                for x in range(8):
+                    if px[x0 + x, y0 + y] != bg:
+                        m |= 1 << (y * 8 + x)
+            if m == 0:
+                line.append(" ")
+                continue
+            best = 0
+            best_score = -1
+            best_inv = -1
+            best_inv_ch = 0
+            lim = min(len(glyphs), 126)
+            for i in range(32, lim):
+                sc = 64 - (m ^ glyphs[i]).bit_count()
+                if sc > best_score:
+                    best_score = sc
+                    best = i
+                si = 64 - (m ^ full ^ glyphs[i]).bit_count()
+                if si > best_inv:
+                    best_inv = si
+                    best_inv_ch = i
+            if best_score >= min_score:
+                line.append(chr(best))
+            elif best_inv >= min_score:
+                line.append(chr(best_inv_ch))
+            else:
+                line.append("?")
+        lines.append("".join(line).rstrip())
+    return "\n".join(lines)
+
+
+def ocr_variants(image_path: Path) -> list[str]:
+    """OCR the screen at each 8-pixel horizontal offset.
+
+    TempleOS GrPrint can start a text run at any x, so one fixed grid is not
+    enough.  Vertical cell rows are 8-pixel aligned on the screens we read.
+    """
+    im = Image.open(image_path).convert("RGB")
+    return [_ocr_at(im, ox, 0) for ox in range(8)]
+
+
 def glyph_text(image_path: Path) -> str:
-    from templeos.screen import glyph_read_ex
-    im = Image.open(image_path)
-    result = glyph_read_ex(im, flavor="tinkeros")
-    return str(result.get("text") or "")
+    """Best-effort OCR text for one screendump (no external OCR package)."""
+    variants = ocr_variants(image_path)
+    def confident(text: str) -> int:
+        return sum(1 for ch in text if ch not in " ?")
+    return max(variants, key=confident)
 
 
 def wait_for_text(
@@ -237,12 +331,15 @@ def wait_for_text(
         dest = shots / f"{prefix}-{n:03d}.png"
         qmp.screendump(dest)
         try:
-            last = glyph_text(dest)
+            variants = ocr_variants(dest)
+            last = max(variants, key=lambda t: sum(1 for c in t if c not in " ?"))
         except Exception as e:
+            variants = []
             last = f"<ocr error: {e}>"
+        for text in variants:
+            if needle_l in text.lower():
+                return text
         print(f"[wait] {prefix} #{n} needle={needle!r} got={last[:240]!r}", flush=True)
-        if needle_l in last.lower():
-            return last
         time.sleep(interval)
     raise TimeoutError(f"timed out waiting for {needle!r}; last text:\n{last}")
 
@@ -250,10 +347,11 @@ def wait_for_text(
 def start_vm(
     name: str,
     iso: Path,
-    disk: Path,
+    disk: Path | None,
     memory: str = "2G",
     boot: str = "d",
     extra: list[str] | None = None,
+    serial2: bool = False,
 ) -> dict[str, Any]:
     rundir = RUN / name
     rundir.mkdir(parents=True, exist_ok=True)
@@ -262,6 +360,7 @@ def start_vm(
     qmp = rundir / "qmp.sock"
     vnc = rundir / "vnc.sock"
     com = rundir / "com1.sock"
+    com2 = rundir / "com2.sock"
     log = rundir / "qemu.log"
     cmd = [
         QEMU,
@@ -279,8 +378,11 @@ def start_vm(
         "-serial", f"unix:{com},server=on,wait=off",
         "-cdrom", str(iso),
         "-boot", f"order={boot},menu=on",
-        "-drive", f"file={disk},format=qcow2,if=ide,index=0,media=disk",
     ]
+    if serial2:
+        cmd += ["-serial", f"unix:{com2},server=on,wait=off"]
+    if disk is not None:
+        cmd += ["-drive", f"file={disk},format=qcow2,if=ide,index=0,media=disk"]
     if extra:
         cmd += extra
     lf = log.open("ab")
@@ -292,7 +394,8 @@ def start_vm(
         "qmp": str(qmp),
         "vnc": str(vnc),
         "com1": str(com),
-        "disk": str(disk),
+        "com2": str(com2),
+        "disk": str(disk) if disk else None,
         "iso": str(iso),
         "log": str(log),
         "started": time.time(),
