@@ -37,7 +37,7 @@ U0 HermesAppsRegistryInit()
   HermesAppsRegistryAdd("home-temple",   "Temple",      "home-temple",
                         "The Temple of Hermes home screen.", NULL, FALSE);
   HermesAppsRegistryAdd("hermes-bbs",    "BBS",         "modem-net",
-                        "Temple of Hermes BBS over Hermes/Net dest bbs.",
+                        "Temple of Hermes BBS (HBBS/1) over Hermes/Net dest bbs.",
                         "::/Hermes/Apps/HermesBBS/Run.HC", FALSE);
   HermesAppsRegistryAdd("hermes-chat",   "Hermes Chat", "hermes-chat",
                         "Talk with the Hermes agent over COM1.",

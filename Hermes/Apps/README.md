@@ -14,10 +14,9 @@ Hermes/Apps/
     Paths.HC           find a file under ::/Hermes, T:/Hermes, C:/Hermes or ~/Hermes
     Icons.HC           load Art/Icons/<size>/<name>.GR as a CDC
   HermesBBS/
-    Load.HC            includes the real Hermes/Net sources and this app
-    Core.HC            HBBS/1 framing, JSON helpers, redaction, result files
-    Commands.HC        non-interactive CLI (List/Read/Post/Reply/Mail)
-    UI.HC              human DolDoc board/thread/read window
+    BBS.HC             HBBS/1 framing, JSON helpers, redaction, result files,
+                       non-interactive CLI, and DolDoc board/thread window
+    Load.HC            includes the real Hermes/Net sources and BBS.HC
     Run.HC             launcher entry point
     README.md          protocol, CLI, token, and result-file notes
   Launcher/
