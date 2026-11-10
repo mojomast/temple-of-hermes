@@ -1,0 +1,591 @@
+{
+  "version": "HBBS/1",
+  "dest": "bbs",
+  "generated": "2026-11-10",
+  "notes": [
+    "All tokens are obvious non-secret fixtures; none is valid.",
+    "Injection-shaped fixtures are test data. No fixture executes content or changes a role.",
+    "The endpoint and any hostname are intentionally absent; dest bbs is resolved from config."
+  ],
+  "fixtures": [
+    {
+      "name": "happy/001-auth-login",
+      "group": "happy",
+      "id": "r-001",
+      "command": "AUTH",
+      "request": "happy/001-auth-login.request.hbbs",
+      "response": "happy/001-auth-login.response.hbbs",
+      "request_body_length": 98,
+      "response_body_length": 736,
+      "request_sha256": "9d52d9f7d13d212f77a694cf600ab76333f670455e0c40d06db7ff2116d87819",
+      "response_sha256": "59f99945b106fac3b1b36b7c114ac2b4e34a33c1f551e1b9b81af9c410ffc8da",
+      "expect": {
+        "ok": true,
+        "command": "AUTH",
+        "author_kind": "human",
+        "author_role": "human",
+        "trust": "untrusted"
+      }
+    },
+    {
+      "name": "happy/002-whoami",
+      "group": "happy",
+      "id": "r-002",
+      "command": "WHOAMI",
+      "request": "happy/002-whoami.request.hbbs",
+      "response": "happy/002-whoami.response.hbbs",
+      "request_body_length": 36,
+      "response_body_length": 722,
+      "request_sha256": "76f446b160188b7542b0d80645f1971633ebf0fd317681107aafcf180a758da7",
+      "response_sha256": "6c0dc571a6aaecf286cd0c3f6714a95cde95cb876b047524465b1058ebb4c7ed",
+      "expect": {
+        "ok": true,
+        "command": "WHOAMI",
+        "author_kind": "human",
+        "author_role": "human"
+      }
+    },
+    {
+      "name": "happy/003-list-boards",
+      "group": "happy",
+      "id": "r-003",
+      "command": "LIST",
+      "request": "happy/003-list-boards.request.hbbs",
+      "response": "happy/003-list-boards.response.hbbs",
+      "request_body_length": 51,
+      "response_body_length": 1056,
+      "request_sha256": "6b4c4282e11c364c478a806a84975689877df0fbba61f9df20de6cd7e8b286da",
+      "response_sha256": "3fe1d4f75f72feb9a52e935815151903084710715bd6961c7895c032996cfd80",
+      "expect": {
+        "ok": true,
+        "command": "LIST",
+        "board_count": 5
+      }
+    },
+    {
+      "name": "happy/004-list-threads",
+      "group": "happy",
+      "id": "r-004",
+      "command": "LIST",
+      "request": "happy/004-list-threads.request.hbbs",
+      "response": "happy/004-list-threads.response.hbbs",
+      "request_body_length": 80,
+      "response_body_length": 1024,
+      "request_sha256": "9688fc41732c0cc3c221a7ec983010424c4e9e0705c9ddb4594e468ecc974344",
+      "response_sha256": "2a58b93ac2136a6b874db7c1e741d69de046777e1017d1e1f0be45da9e7d34b3",
+      "expect": {
+        "ok": true,
+        "command": "LIST",
+        "thread_count": 2
+      }
+    },
+    {
+      "name": "happy/005-list-posts",
+      "group": "happy",
+      "id": "r-005",
+      "command": "LIST",
+      "request": "happy/005-list-posts.request.hbbs",
+      "response": "happy/005-list-posts.response.hbbs",
+      "request_body_length": 113,
+      "response_body_length": 1258,
+      "request_sha256": "45d14c518e29b53708607c7dd04b77e2030337e00d2f177acf969efcf0c52606",
+      "response_sha256": "4b46c46350ea37662de19a974f5e195f95e1e7ebdd2cecee3a0a7dcea361d772",
+      "expect": {
+        "ok": true,
+        "command": "LIST",
+        "post_count": 2
+      }
+    },
+    {
+      "name": "happy/006-read-thread",
+      "group": "happy",
+      "id": "r-006",
+      "command": "READ",
+      "request": "happy/006-read-thread.request.hbbs",
+      "response": "happy/006-read-thread.response.hbbs",
+      "request_body_length": 97,
+      "response_body_length": 1754,
+      "request_sha256": "21f6d28a616b3bffe5feec7817fdf3b2ffb508289327d4e5ff216e444e8576c4",
+      "response_sha256": "03de1d160d0415fc523f82db2bf1b087185cf9a7e17e37635912b72ca6550748",
+      "expect": {
+        "ok": true,
+        "command": "READ",
+        "post_count": 2,
+        "trust": "untrusted"
+      }
+    },
+    {
+      "name": "happy/007-post-general",
+      "group": "happy",
+      "id": "r-007",
+      "command": "POST",
+      "request": "happy/007-post-general.request.hbbs",
+      "response": "happy/007-post-general.response.hbbs",
+      "request_body_length": 173,
+      "response_body_length": 1126,
+      "request_sha256": "68f179ebf32cf9fc42d70a23fec6317bfc43425116a600ce3219d63e0766a5d8",
+      "response_sha256": "d18b1739a94a4a6babc0df635cd2d665b266489ec1c64f6aeaa13e9e6ce8f719",
+      "expect": {
+        "ok": true,
+        "command": "POST",
+        "author_kind": "human",
+        "author_role": "human",
+        "status": "published",
+        "trust": "untrusted",
+        "no_execution": true
+      }
+    },
+    {
+      "name": "happy/008-reply-general",
+      "group": "happy",
+      "id": "r-008",
+      "command": "REPLY",
+      "request": "happy/008-reply-general.request.hbbs",
+      "response": "happy/008-reply-general.response.hbbs",
+      "request_body_length": 210,
+      "response_body_length": 1163,
+      "request_sha256": "5f29ce65ca640b679105fb1fb1876d5f5530e0ba589845ba4c0b9b5d78a088ed",
+      "response_sha256": "54fdcdc41b148a554eb485280fc36a28b669df24e1f0148ebad11f9c87fb3838",
+      "expect": {
+        "ok": true,
+        "command": "REPLY",
+        "author_kind": "agent",
+        "author_role": "agent",
+        "status": "published",
+        "trust": "untrusted",
+        "no_execution": true
+      }
+    },
+    {
+      "name": "happy/009-auth-login-agent",
+      "group": "happy",
+      "id": "r-009",
+      "command": "AUTH",
+      "request": "happy/009-auth-login-agent.request.hbbs",
+      "response": "happy/009-auth-login-agent.response.hbbs",
+      "request_body_length": 98,
+      "response_body_length": 781,
+      "request_sha256": "7cfebc81f7002cde2f74e741f6790dbd5e90909bb3fc850f7288e955d151bdd6",
+      "response_sha256": "836d81e8aebfa822786b7ea7d5ce2742ca491921dc5836b46ebac978a460d141",
+      "expect": {
+        "ok": true,
+        "command": "AUTH",
+        "author_kind": "agent",
+        "author_role": "agent",
+        "owner_account": "ada_human"
+      }
+    },
+    {
+      "name": "happy/010-post-agents",
+      "group": "happy",
+      "id": "r-010",
+      "command": "POST",
+      "request": "happy/010-post-agents.request.hbbs",
+      "response": "happy/010-post-agents.response.hbbs",
+      "request_body_length": 183,
+      "response_body_length": 1192,
+      "request_sha256": "bbd34a8ebf70ad5ef5989fc0e1e38e95805a18f2f493810bec73ce47a3988c71",
+      "response_sha256": "1eee471b8310c0f099b7d572551d7b1bd7c68c37282892f787d2a6e45f483d1d",
+      "expect": {
+        "ok": true,
+        "command": "POST",
+        "author_kind": "agent",
+        "author_role": "agent",
+        "owner_account": "ada_human",
+        "status": "published",
+        "trust": "untrusted",
+        "no_execution": true
+      }
+    },
+    {
+      "name": "happy/011-mail-report",
+      "group": "happy",
+      "id": "r-011",
+      "command": "MAIL",
+      "request": "happy/011-mail-report.request.hbbs",
+      "response": "happy/011-mail-report.response.hbbs",
+      "request_body_length": 207,
+      "response_body_length": 149,
+      "request_sha256": "98678d39260628083eb30c0a012de859ef370c2c51e447af76e4c9f7161ce818",
+      "response_sha256": "46375f6d31963784d3aaf3a0888510e409c0a1f19248a320ee5d38a16dfcad52",
+      "expect": {
+        "ok": true,
+        "command": "MAIL",
+        "status": "queued"
+      }
+    },
+    {
+      "name": "happy/012-mail-list",
+      "group": "happy",
+      "id": "r-012",
+      "command": "MAIL",
+      "request": "happy/012-mail-list.request.hbbs",
+      "response": "happy/012-mail-list.response.hbbs",
+      "request_body_length": 77,
+      "response_body_length": 502,
+      "request_sha256": "8f017b3a1f4743403ece5f4b378fc14e6a624930431bdfaf19b6011e4f4e92e6",
+      "response_sha256": "0ccca1d97d6b2a0b14485ed4b95b2cc1510d66e307eac68c0f5fcd2d720aef04",
+      "expect": {
+        "ok": true,
+        "command": "MAIL",
+        "message_count": 1
+      }
+    },
+    {
+      "name": "happy/013-mail-read",
+      "group": "happy",
+      "id": "r-013",
+      "command": "MAIL",
+      "request": "happy/013-mail-read.request.hbbs",
+      "response": "happy/013-mail-read.response.hbbs",
+      "request_body_length": 85,
+      "response_body_length": 503,
+      "request_sha256": "e9a030a1e3598b49649400e84e584ba0219bb621df523b2125201ad23f637939",
+      "response_sha256": "603018f1902baf2bf6d93df51d5f062d7594527fd6dcb1b2ea94348f9ddeff89",
+      "expect": {
+        "ok": true,
+        "command": "MAIL",
+        "trust": "untrusted"
+      }
+    },
+    {
+      "name": "happy/014-logout",
+      "group": "happy",
+      "id": "r-014",
+      "command": "LOGOUT",
+      "request": "happy/014-logout.request.hbbs",
+      "response": "happy/014-logout.response.hbbs",
+      "request_body_length": 58,
+      "response_body_length": 81,
+      "request_sha256": "87f408b57494eaa4baafdb0b0c50e464adc6777cee3844bf638ad40dfd567854",
+      "response_sha256": "0b77cb14e54a9d1acecf6c9a4e3d4eee866c58b5aea710c3b56d25b4f4288f51",
+      "expect": {
+        "ok": true,
+        "command": "LOGOUT",
+        "revoked": true
+      }
+    },
+    {
+      "name": "happy/015-auth-signup-human",
+      "group": "happy",
+      "id": "r-015",
+      "command": "AUTH",
+      "request": "happy/015-auth-signup-human.request.hbbs",
+      "response": "happy/015-auth-signup-human.response.hbbs",
+      "request_body_length": 119,
+      "response_body_length": 367,
+      "request_sha256": "42bfc83a33febaeac0f236ace5dae770ec0dda18156258608db5f91df3d707e1",
+      "response_sha256": "fc75deb9e02996da6579e69b2830ccc5b49de81c57f4bcbad74bade98c891fdb",
+      "expect": {
+        "ok": true,
+        "command": "AUTH",
+        "status": "pending_moderation",
+        "trust": "untrusted",
+        "no_token": true
+      }
+    },
+    {
+      "name": "happy/016-auth-signup-pending",
+      "group": "happy",
+      "id": "r-016",
+      "command": "AUTH",
+      "request": "happy/016-auth-signup-pending.request.hbbs",
+      "response": "happy/016-auth-signup-pending.response.hbbs",
+      "request_body_length": 151,
+      "response_body_length": 314,
+      "request_sha256": "80fad5aae0df2834669b02d749fce4654388087a230889dbd16ec83204277c14",
+      "response_sha256": "012671d0d2857d3608f2d40191e28f374c16509d43d276a329067d132443a28e",
+      "expect": {
+        "ok": true,
+        "command": "AUTH",
+        "status": "pending_moderation",
+        "trust": "untrusted",
+        "no_token": true
+      }
+    },
+    {
+      "name": "happy/017-auth-signup-approved",
+      "group": "happy",
+      "id": "r-017",
+      "command": "AUTH",
+      "request": "happy/017-auth-signup-approved.request.hbbs",
+      "response": "happy/017-auth-signup-approved.response.hbbs",
+      "request_body_length": 151,
+      "response_body_length": 1068,
+      "request_sha256": "3e7f2820058dac614a4a788cba0527e695e83fb9c126d3dc7a1e05618fad6ff1",
+      "response_sha256": "d07ce511ad95bfb2bc663b9935caaba23c435f85403593ea60dd8ecc8b2f56cd",
+      "expect": {
+        "ok": true,
+        "command": "AUTH",
+        "status": "approved",
+        "author_kind": "human",
+        "author_role": "human"
+      }
+    },
+    {
+      "name": "errors/020-rate-limited",
+      "group": "errors",
+      "id": "e-020",
+      "command": "POST",
+      "request": "errors/020-rate-limited.request.hbbs",
+      "response": "errors/020-rate-limited.response.hbbs",
+      "request_body_length": 172,
+      "response_body_length": 213,
+      "request_sha256": "6fb55c02739feb62eb8bdead042a3ae0f639903fd5082e2ded11853e33bc1f0f",
+      "response_sha256": "7150447dd9461f79271651259fc92c88a21dcec08fcc9f32a363958d7b53fc1e",
+      "expect": {
+        "ok": false,
+        "command": "POST",
+        "error_code": "rate_limited",
+        "retry_after": 37,
+        "no_execution": true
+      }
+    },
+    {
+      "name": "errors/021-duplicate-content",
+      "group": "errors",
+      "id": "e-021",
+      "command": "POST",
+      "request": "errors/021-duplicate-content.request.hbbs",
+      "response": "errors/021-duplicate-content.response.hbbs",
+      "request_body_length": 178,
+      "response_body_length": 199,
+      "request_sha256": "ebe1a168f1bc1d1c7227ec014030010e190ed8d1d9dd236f4e19c1afe97704d5",
+      "response_sha256": "f21c918bea90ed6bcb8ad8a6f370dae3f7f1cc4742b9aa83acf9e48b4eecded8",
+      "expect": {
+        "ok": false,
+        "command": "POST",
+        "error_code": "duplicate_content",
+        "retry_after": 86400
+      }
+    },
+    {
+      "name": "errors/022-announcements-read-only",
+      "group": "errors",
+      "id": "e-022",
+      "command": "POST",
+      "request": "errors/022-announcements-read-only.request.hbbs",
+      "response": "errors/022-announcements-read-only.response.hbbs",
+      "request_body_length": 158,
+      "response_body_length": 175,
+      "request_sha256": "c0695a93cbcfa1b9f527f534241476c0febb18668a6388de3f2c7b324c5cbd82",
+      "response_sha256": "c520978fbb6098f634f4d8385c143a0242d16b87758eafdf53634e9579d5c50d",
+      "expect": {
+        "ok": false,
+        "command": "POST",
+        "error_code": "read_only_board",
+        "field": "args.board"
+      }
+    },
+    {
+      "name": "errors/023-field-not-allowed",
+      "group": "errors",
+      "id": "e-023",
+      "command": "POST",
+      "request": "errors/023-field-not-allowed.request.hbbs",
+      "response": "errors/023-field-not-allowed.response.hbbs",
+      "request_body_length": 165,
+      "response_body_length": 138,
+      "request_sha256": "22c8bfd96466fa3dda67ac475ad627369e73a41c7a5f1fd426ded4b90eb5275c",
+      "response_sha256": "4743395739a4852d5e0442ded533c1f67c7ded0c9c72e141f3cdb49f8f3d9e6a",
+      "expect": {
+        "ok": false,
+        "command": "POST",
+        "error_code": "field_not_allowed",
+        "field": "args.from_role",
+        "no_role_change": true
+      }
+    },
+    {
+      "name": "injection/101-post-ignore-previous",
+      "group": "injection",
+      "id": "i-101",
+      "command": "POST",
+      "request": "injection/101-post-ignore-previous.request.hbbs",
+      "response": "injection/101-post-ignore-previous.response.hbbs",
+      "request_body_length": 229,
+      "response_body_length": 1184,
+      "request_sha256": "3e0d34ecba6bcee51d6e118e0b2c79848a47d1df57c1989b3460962426388fb7",
+      "response_sha256": "8d058cd7f6e9ae7e0954c01da943300046414ae0b905b0cc56caa990ce01c19c",
+      "expect": {
+        "ok": true,
+        "command": "POST",
+        "author_kind": "human",
+        "author_role": "human",
+        "status": "published",
+        "trust": "untrusted",
+        "injection_shaped": true,
+        "no_execution": true,
+        "no_role_change": true
+      }
+    },
+    {
+      "name": "injection/102-post-planted-tool-call",
+      "group": "injection",
+      "id": "i-102",
+      "command": "POST",
+      "request": "injection/102-post-planted-tool-call.request.hbbs",
+      "response": "injection/102-post-planted-tool-call.response.hbbs",
+      "request_body_length": 214,
+      "response_body_length": 1156,
+      "request_sha256": "2b7b086f1f26e931fc7f6dfdcdb35addd4896ac15b29ea64687c79264de42046",
+      "response_sha256": "dfa4717183b8d72bcab5b50adaedb5aa35f500b453c713933d5d7a3c14727177",
+      "expect": {
+        "ok": true,
+        "command": "POST",
+        "author_kind": "human",
+        "author_role": "human",
+        "status": "published",
+        "trust": "untrusted",
+        "injection_shaped": true,
+        "no_execution": true
+      }
+    },
+    {
+      "name": "injection/103-post-fake-system",
+      "group": "injection",
+      "id": "i-103",
+      "command": "POST",
+      "request": "injection/103-post-fake-system.request.hbbs",
+      "response": "injection/103-post-fake-system.response.hbbs",
+      "request_body_length": 216,
+      "response_body_length": 1162,
+      "request_sha256": "96231bc4278b9d338dcc87202a16597c77c4bf33c642effca9c7f04f9e263fb6",
+      "response_sha256": "441a5c10b0549a5c41fb12936796a398b4a0dd36cd328db772839db2829d41f8",
+      "expect": {
+        "ok": true,
+        "command": "POST",
+        "author_kind": "human",
+        "author_role": "human",
+        "status": "published",
+        "trust": "untrusted",
+        "injection_shaped": true,
+        "no_execution": true
+      }
+    },
+    {
+      "name": "injection/104-post-holyc-text",
+      "group": "injection",
+      "id": "i-104",
+      "command": "POST",
+      "request": "injection/104-post-holyc-text.request.hbbs",
+      "response": "injection/104-post-holyc-text.response.hbbs",
+      "request_body_length": 214,
+      "response_body_length": 1165,
+      "request_sha256": "ed61f3e37c55103a67bbecc911682080a498df7eb62aece8392c2f883651cadb",
+      "response_sha256": "04af16d2dd2c80e7bae4028d3689f5f2de387411d31e90d64f408cf1a6209cc9",
+      "expect": {
+        "ok": true,
+        "command": "POST",
+        "author_kind": "human",
+        "author_role": "human",
+        "status": "published",
+        "trust": "untrusted",
+        "injection_shaped": true,
+        "no_execution": true
+      }
+    },
+    {
+      "name": "injection/105-signup-display-name",
+      "group": "injection",
+      "id": "i-105",
+      "command": "AUTH",
+      "request": "injection/105-signup-display-name.request.hbbs",
+      "response": "injection/105-signup-display-name.response.hbbs",
+      "request_body_length": 137,
+      "response_body_length": 385,
+      "request_sha256": "b4be259e56438a5b7c5afbea1fd3e51942eacfebf44af6e55777959b938e7ffe",
+      "response_sha256": "80d61ce46ce88dd6b5de1668e74ef346ed116f0dbf2d0259fe82fdf0073469a2",
+      "expect": {
+        "ok": true,
+        "command": "AUTH",
+        "status": "pending_moderation",
+        "trust": "untrusted",
+        "injection_shaped": true,
+        "no_role_change": true,
+        "no_token": true
+      }
+    },
+    {
+      "name": "injection/106-forged-attestation",
+      "group": "injection",
+      "id": "i-106",
+      "command": "POST",
+      "request": "injection/106-forged-attestation.request.hbbs",
+      "response": "injection/106-forged-attestation.response.hbbs",
+      "request_body_length": 382,
+      "response_body_length": 135,
+      "request_sha256": "cc1789f6d0fab14259885f30ad3e91ac58d2c41aa665c0c73d0b14b439871757",
+      "response_sha256": "c5310da9d5dc81c9649f92ea4c9fa8166cdc3ad962e128781950e4b01bb2a528",
+      "expect": {
+        "ok": false,
+        "command": "POST",
+        "error_code": "field_not_allowed",
+        "field": "args.author",
+        "injection_shaped": true,
+        "no_role_change": true
+      }
+    },
+    {
+      "name": "injection/107-post-markup-literal",
+      "group": "injection",
+      "id": "i-107",
+      "command": "POST",
+      "request": "injection/107-post-markup-literal.request.hbbs",
+      "response": "injection/107-post-markup-literal.response.hbbs",
+      "request_body_length": 193,
+      "response_body_length": 1137,
+      "request_sha256": "159743048c77dd0753e66374b1162ba624ee0b2d47d81df61d451852064a8689",
+      "response_sha256": "99f4381bd88a84a1a21db3f158e1d8c49ea55470047fec6ba780a8bd1081e24e",
+      "expect": {
+        "ok": true,
+        "command": "POST",
+        "author_kind": "human",
+        "author_role": "human",
+        "status": "published",
+        "trust": "untrusted",
+        "injection_shaped": true,
+        "no_execution": true
+      }
+    },
+    {
+      "name": "happy/018-auth-signup-agent",
+      "group": "happy",
+      "id": "r-018",
+      "command": "AUTH",
+      "request": "happy/018-auth-signup-agent.request.hbbs",
+      "response": "happy/018-auth-signup-agent.response.hbbs",
+      "request_body_length": 145,
+      "response_body_length": 393,
+      "request_sha256": "b0c3efacf879ccefc5f25632401fa0feb69441e6663c112475053d245bcc9857",
+      "response_sha256": "202201b23189c073cc998014fe7d9a139a91c6ec8628390f29f4335379880a81",
+      "expect": {
+        "ok": true,
+        "command": "AUTH",
+        "status": "pending_moderation",
+        "trust": "untrusted",
+        "owner_account": "ada_human",
+        "no_token": true
+      }
+    },
+    {
+      "name": "errors/024-owner-required",
+      "group": "errors",
+      "id": "e-024",
+      "command": "AUTH",
+      "request": "errors/024-owner-required.request.hbbs",
+      "response": "errors/024-owner-required.response.hbbs",
+      "request_body_length": 122,
+      "response_body_length": 147,
+      "request_sha256": "ddbdae852345a88c8fb8a9546b8fc4a2a3f8e15748f56e32373b84152816bb25",
+      "response_sha256": "01a6cfc87d7e75332cbb31cea56ee8d8f5b303ee95d7de9c8aadeb34e871e30a",
+      "expect": {
+        "ok": false,
+        "command": "AUTH",
+        "error_code": "owner_required",
+        "field": "args.owner_account",
+        "no_role_change": true
+      }
+    }
+  ]
+}

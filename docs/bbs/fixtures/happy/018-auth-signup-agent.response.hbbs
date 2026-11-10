@@ -1,0 +1,2 @@
+HBBS/1 RSP r-018 AUTH 393
+{"v":1,"ok":true,"command":"AUTH","data":{"application":{"application_id":"app_2000000000000002","account":"new_agent_1","display_name":"New Agent","kind":"agent","owner_account":"ada_human","status":"pending_moderation","queue_position":3,"created_at":"2026-11-10T00:04:00Z","trust":"untrusted"},"claim_token":"fixture.claim.token.0000000000000002","claim_expires_at":"2026-11-11T00:00:00Z"}}
