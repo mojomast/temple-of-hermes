@@ -16,6 +16,10 @@ Hermes/Apps/
   Launcher/
     Load.HC            launcher state, drawing, click/key handling, entry points
     Run.HC             Cd(__DIR__); #include "Load"; HermesAppsLauncher;
+  Net/
+    Load.HC            includes the real ../../Net/Load.HC plus Net.HC
+    Net.HC             status and HermesNetEchoTest loopback tools
+    Run.HC             Cd(__DIR__); #include "Load"; HermesNetApp;
   README.md
 ```
 
@@ -48,10 +52,12 @@ The current table registers the accepted apps as real entries
 - Teknium's Dojo (`Dojo`)
 - Don Piedro's Offerings (`Offerings`)
 - Southpaw (`Southpaw`)
+- Modem / Net (`Net`)
 
 `home-temple` and `nous-girl` open the launcher's home/about status instead
-of a separate app. `modem-net` remains `planned = TRUE` until it has a
-`Run.HC`; selecting it shows the planned status.
+of a separate app. `modem-net` is now a real entry (`planned = FALSE`) with
+`::/Hermes/Apps/Net/Run.HC`; its CLI reports COM2 port, baud, connected/idle
+state, and offers the `HermesNetEchoTest` loopback check.
 
 ## Launcher
 
@@ -81,11 +87,18 @@ crash.  `HermesAppsIcon()` also retries the basename in upper case, which
 covers FAT 8.3 entries that were written without a long-name record.  If
 an app's `run` path exists, the launcher spawns
 `HermesAppsRunFile()` to `ExeFile` it in its own task.  Every accepted app
-now has a real `Run.HC`; only the planned Southpaw and Modem/Net rows do
-not.
+now has a real `Run.HC`, including Modem / Net.
 
 `HermesAppsOpen(id)` is the menu-friendly entry point.  It opens the
 launcher with the matching row selected.
+
+## Modem / Net
+
+`Net/Run.HC` launches a small CLI over `Hermes/Net`: it prints COM2, the
+baud rate, connected/idle state, and the optional destination, then returns
+to the shell.  `HermesNetEchoTest` dials the allow-listed name `hermes`,
+sends one frame, and compares the host echo.  COM1 stays with the Hermes
+HRPC daemon; no hostname, address, or credential is compiled into the app.
 
 ## Autostart
 
