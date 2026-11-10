@@ -1,0 +1,60 @@
+Tue 11/10 02:01:10 FPS: 30 CPU11                                           ENTER
+ MENU                        6D57B428[X] MENU                       6D56FA28[X]
+TT-Z are ATAPI CD/DVD drives.                        TinkerOS V5.20
+e
+rDrive Letter (<ENTER> to exit):             Public Domain Operating System
+m
+ 18.450891s ans=0x00000000=0             Help & Index, Quick Start: Cmd line
+ T:/Home>#include "C:/RUN.HC";
+ Make Directory:B:/Hermes                Directory of T:/Home
+ Make Directory:B:/Hermes/Net            DATE_ TIME_ SIZE
+ Make Directory:B:/Hermes/Apps           06/16 04:54 0200 ,
+ Make Directory:B:/Hermes/Apps/HermesCha 06/16 04:54 0000 ,,
+ MENU                                           6D847628                    [X]
+TTHE TEMPLE OF HERMES - Hermes Chat
+eCOM2 modem, destination "hermes"
+rart: hermes-chat 32x32 loaded
+mconnected: CONNECT hermes
+
+ you> hello hermes
+ hermes> Hermes heard: hello hermes
+ you> ping
+ hermes> pong
+ you>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                  EOF

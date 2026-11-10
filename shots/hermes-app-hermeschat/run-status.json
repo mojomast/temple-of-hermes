@@ -1,0 +1,22 @@
+{
+  "qemu_pid": 22119,
+  "shots": [
+    "00-boot-prompt.png",
+    "01-live-desktop.png",
+    "02-mounted.png",
+    "03-overlay.png",
+    "04-net-build.png",
+    "05-chat-build.png",
+    "06-chat-connected.png",
+    "07-chat-hello.png",
+    "08-chat-ping.png",
+    "09-chat-quit.png",
+    "99-final.png"
+  ],
+  "markers": [
+    "HERMES_NET_BUILD_OK",
+    "HERMES_CHAT_BUILD_OK"
+  ],
+  "error": null,
+  "relay_returncode": null
+}
