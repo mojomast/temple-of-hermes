@@ -1,0 +1,9 @@
+COM1 build markers captured from the QEMU serial socket
+(chunks have been joined; the guest sent both markers only after the
+actual Hermes/Net and Hermes/Apps/HermesChat sources compiled).
+
+HERMES_NET_BUILD_OK
+HERMES_CHAT_BUILD_OK
+
+raw bytes:
+b'HERMES_NET_BUILD_OK\nHERMES_CHAT_BUILD_OK\n'
