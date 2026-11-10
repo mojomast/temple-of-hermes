@@ -1,0 +1,71 @@
+{
+  "iso": "Extras/TempleOS.ISO",
+  "memory": "1G",
+  "accel": "tcg",
+  "machine": "pc,kernel-irqchip=off",
+  "boot_order": "d",
+  "qemu_binary": "/usr/bin/qemu-system-x86_64",
+  "qemu_version": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+  "kvm": {
+    "path": "/dev/kvm",
+    "exists": false,
+    "usable": false,
+    "reason": "device node absent"
+  },
+  "qemu_installed": true,
+  "iso_bytes": 17350656,
+  "iso_sha256": "5d0fc944e5d89c155c0fc17c148646715bc1db6fa5750c0b913772cfec19ba26",
+  "cmd": [
+    "/usr/bin/qemu-system-x86_64",
+    "-name",
+    "hermes-qemu-probe",
+    "-machine",
+    "pc,kernel-irqchip=off",
+    "-accel",
+    "tcg",
+    "-cpu",
+    "qemu64",
+    "-m",
+    "1G",
+    "-smp",
+    "1",
+    "-vga",
+    "std",
+    "-display",
+    "none",
+    "-nic",
+    "none",
+    "-qmp",
+    "unix:./shots/hermes-qemu-probe/run/qmp.sock,server=on,wait=off",
+    "-cdrom",
+    "./Extras/TempleOS.ISO",
+    "-boot",
+    "order=d,menu=on",
+    "-no-reboot"
+  ],
+  "pid": 3355,
+  "boot_seconds": 25.11,
+  "framebuffer": {
+    "width": 640,
+    "height": 480,
+    "maxval": 255,
+    "bytes": 921615,
+    "sampled_pixels": 20480,
+    "unique_colors": 10,
+    "nonblack_fraction": 0.9626
+  },
+  "screenshot": {
+    "bytes": 11595,
+    "signature_ok": true,
+    "width": 640,
+    "height": 480,
+    "path": "shots/hermes-qemu-probe/boot.png"
+  },
+  "ok": true,
+  "shutdown": {
+    "pid": 3355,
+    "returncode": 0,
+    "stopped": true
+  },
+  "elapsed_seconds": 25.12
+}
