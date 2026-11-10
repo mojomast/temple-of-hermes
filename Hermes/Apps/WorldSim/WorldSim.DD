@@ -1,0 +1,27 @@
+$WW,1$$FG,14$$TX+CX,"WorldSim"$$FG$
+
+$TX+CX,"Hermes agent worlds"$
+
+A tile planet where five named agents explore, gather resources, and
+write their discoveries into an event log.
+
+$FG,10$Controls$FG$
+  $FG,11$Space$FG$       - Pause / resume
+  $FG,11$R$FG$           - Grow a new world
+  $FG,11$Tab$FG$         - Select the next agent
+  $FG,11$1 - 5$FG$       - Select an agent directly
+  $FG,11$Arrows$FG$      - Nudge the selected agent
+  $FG,11$+ / -$FG$       - Faster / slower ticks
+  $FG,11$Esc$FG$         - Quit
+
+$FG,10$The world$FG$
+Terrain is generated from overlapping land masses.  Blue is ocean,
+green is plain, bright green is forest, brown is hill, light gray is
+mountain, and yellow is the city.  Small yellow marks are resources.
+
+Agents seek nearby resources, spend energy while moving, and recover
+at the city.  New resources appear from time to time.
+
+$FG,10$Art$FG$
+The header uses $FG,11$Hermes/Art/Icons/32/worldsim$FG$ in the
+standard sixteen-color temple palette.
