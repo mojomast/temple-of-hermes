@@ -1,0 +1,12 @@
+01-dojo-window.png: {"bbox": [0, 8, 639, 471], "palette_ok": true, "size": [640, 480], "unique_colors": 12}
+02-challenge-result.png: {"bbox": [0, 8, 391, 295], "palette_ok": true, "size": [392, 296], "unique_colors": 5}
+03-dojo-second.png: {"bbox": [0, 8, 639, 471], "palette_ok": true, "size": [640, 480], "unique_colors": 12}
+04-final-shell.png: {"bbox": [0, 0, 639, 479], "palette_ok": true, "size": [640, 480], "unique_colors": 9}
+header_plate: {"dx": 0, "dy": 8, "match_pct": 99.78, "size": [640, 64]}
+teknium_icon: {"dx": 0, "dy": 8, "match_pct": 100.0, "size": [64, 64]}
+scoreboard_colors: {"0": 3567, "7": 585, "10": 110525, "14": 408, "15": 947}
+final_shell_text: {"has_C_Home": true, "has_public_domain": true}
+challenge_result_text: {"has_DolDoc": true, "has_PASS_100": true}
+result1: {"exists": true, "pass": true, "score100": true}
+result2: {"exists": true, "pass": true, "score100": true}
+result4: {"exists": true, "pass": true, "score100": true}
