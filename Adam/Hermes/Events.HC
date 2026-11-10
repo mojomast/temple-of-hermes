@@ -74,19 +74,6 @@ U8 *HermesEventsDrainJSON()
   return tmp;
 }
 
-Bool HermesTaskIsWindow(CTask *task)
-{
-  if (!task || !TaskValidate(task))
-    return FALSE;
-  if (task==hermes_task)
-    return FALSE;
-  if (!Bt(&task->display_flags,DISPLAYf_SHOW))
-    return FALSE;
-  if (task==sys_winmgr_task)
-    return FALSE;
-  return TRUE;
-}
-
 U0 HermesPollTasks()
 {
   CTask *task;

@@ -24,6 +24,7 @@ public CTask *hermes_task=NULL;
 
 public U0 (*hermes_old_wall)(CTask *task)=NULL;
 public U0 (*hermes_old_ms)(CDC *dc,I64 x,I64 y)=NULL;
+public U0 (*hermes_old_final)(CDC *dc)=NULL;
 
 class CHermesEvt
 {
@@ -41,6 +42,8 @@ public I64 hermes_seen_tasks[HERMES_MAX_TASKS];
 public I64 hermes_seen_cnt=0;
 public U8  hermes_last_prompt[256];
 public I64 hermes_prompt_armed=FALSE;
+public U8  hermes_toast[192];
+public F64 hermes_toast_until=0.0;
 
 U8 *HermesModeName()
 {

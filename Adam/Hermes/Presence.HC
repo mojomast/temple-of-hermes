@@ -1,5 +1,55 @@
 // On-screen driver banner and a second AGENT cursor.
 
+U0 HermesToastSet(U8 *s,F64 secs=5.0)
+{
+  if (!s) s="";
+  if (StrNCmp(s,"Hermes says",11))
+    StrPrint(hermes_toast,"Hermes says: %s",s);
+  else
+    StrPrint(hermes_toast,"%s",s);
+  hermes_toast[191]=0;
+  if (secs<=0)
+    secs=5.0;
+  hermes_toast_until=tS+secs;
+  HermesEventPush("toast",hermes_toast);
+}
+
+U0 HermesDrawToastDC(CDC *dc)
+{
+  U8 line[200];
+  I64 c,x,y,w,h,old_color;
+  if (!dc || !hermes_toast[0] || tS>hermes_toast_until)
+  {
+    if (!hermes_toast[0] || tS>hermes_toast_until)
+      hermes_toast[0]=0;
+    return;
+  }
+  StrPrint(line," %s ",hermes_toast);
+  c=StrLen(line);
+  if (c>74)
+  {
+    c=74;
+    line[c]=0;
+  }
+  w=c*FONT_WIDTH+12;
+  h=FONT_HEIGHT+8;
+  x=(GR_WIDTH-w)/2;
+  y=FONT_HEIGHT*2;
+  old_color=dc->color;
+  dc->color=RED;
+  GrRect3(dc,x,y,0,w,h);
+  dc->color=WHITE;
+  GrPrint3(dc,x+6,y+4,0,"%s",line);
+  dc->color=old_color;
+}
+
+U0 HermesFinalUpdate(CDC *dc)
+{
+  if (hermes_old_final)
+    (*hermes_old_final)(dc);
+  HermesDrawToastDC(dc);
+}
+
 U0 HermesWallPaper(CTask *_task)
 {
   U8 *mode,line[80];
@@ -66,6 +116,9 @@ U0 HermesPresenceInstall()
   if (!hermes_old_ms && gr.fp_draw_ms!=&HermesDrawMs)
     hermes_old_ms=gr.fp_draw_ms;
   gr.fp_draw_ms=&HermesDrawMs;
+  if (!hermes_old_final && gr.fp_final_scrn_update!=&HermesFinalUpdate)
+    hermes_old_final=gr.fp_final_scrn_update;
+  gr.fp_final_scrn_update=&HermesFinalUpdate;
 }
 
 U0 HermesSetMode(I64 mode)
