@@ -1,0 +1,60 @@
+TinkerOS V5.200 11/11/26 21:35:48
+
+Enable IRQ's
+DskChg(':');
+
+Defined Drives:
+B REDSEA   RAM        0000 0000 00
+   0000000000000058-0000000000020000
+C FAT32    ATA        01F0 03F4 00
+   Model# :QEMU HARDDISK
+   Serial#:QM00001
+   000000000000003F-00000000007FF589
+T ISO9660  ATAPI      0170 0374 00
+   0000000000000000-FFFFFFFFFFFFFFFF
+Home Dir:"C:/Home"
+MultiCore Start
+
+Loading Compiler
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

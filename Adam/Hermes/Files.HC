@@ -1,15 +1,34 @@
 // Serial file list / pull / push, used by the daemon and the plugin.
 
-U8 *HermesListDir(U8 *path)
+U8 *HermesListDir(U8 *path,Bool *ok=NULL)
 {
   U8 *buf,*tmp,*esc;
-  I64 first=TRUE;
+  U8 drive;
+  I64 first=TRUE,ech=0;
   CDirEntry *tree=NULL,*de;
+  if (ok) *ok=FALSE;
   if (!path || !*path) path="/";
+  if (StrLen(path)>=HERMES_FILE_PATH_MAX || HermesFileHasBadDotDot(path))
+    return HermesFileErrJSON("list","bad_path",path,0);
+  drive=HermesFileDriveOf(path);
+  if (!HermesFileDriveOk(drive))
+    return HermesFileErrJSON("list","bad_drive",path,drive);
+  try
+    tree=FilesFind(path);
+  catch
+  {
+    Fs->catch_except=TRUE;
+    return HermesFileErrJSON("list","exception",path,drive);
+  }
+  if (!tree)
+  {
+    if (!HermesFileIsRoot(path) &&
+        !HermesFileFindSafe(path,NULL,FUF_JUST_DIRS,&ech))
+      return HermesFileErrJSON("list","missing_dir",path,drive);
+  }
   buf=StrNew("[");
   try
   {
-    tree=FilesFind(path);
     de=tree;
     while (de)
     {
@@ -28,10 +47,16 @@ U8 *HermesListDir(U8 *path)
     }
   }
   catch
+  {
     Fs->catch_except=TRUE;
+    if (tree) DirTreeDel(tree);
+    Free(buf);
+    return HermesFileErrJSON("list","exception",path,drive);
+  }
   if (tree) DirTreeDel(tree);
   tmp=MStrPrint("%s]",buf);
   Free(buf);
+  if (ok) *ok=TRUE;
   return tmp;
 }
 
@@ -59,17 +84,32 @@ U0 HermesClipSet(U8 *s)
     DocUnlock(sys_clip_doc);
 }
 
-U8 *HermesStatJSON(U8 *path)
+U8 *HermesStatJSON(U8 *path,Bool *ok=NULL)
 {
   CDirEntry de;
   U8 *pe,*ne,*out;
+  U8 drive;
+  I64 ech=0;
+  if (ok) *ok=FALSE;
   if (!path || !*path) path="/";
+  if (StrLen(path)>=HERMES_FILE_PATH_MAX || HermesFileHasBadDotDot(path))
+    return HermesFileErrJSON("stat","bad_path",path,0);
+  drive=HermesFileDriveOf(path);
+  if (!HermesFileDriveOk(drive))
+    return HermesFileErrJSON("stat","bad_drive",path,drive);
   MemSet(&de,0,sizeof(de));
   pe=HermesEsc(path);
-  if (!FileFind(path,&de))
+  if (!HermesFileFindSafe(path,&de,0,&ech))
   {
+    if (de.full_name) Free(de.full_name);
+    if (ech)
+    {
+      Free(pe);
+      return HermesFileErrJSON("stat","exception",path,drive);
+    }
     out=MStrPrint("{\"path\":\"%s\",\"exists\":0}",pe);
     Free(pe);
+    if (ok) *ok=TRUE;
     return out;
   }
   ne=HermesEsc(de.name);
@@ -77,26 +117,42 @@ U8 *HermesStatJSON(U8 *path)
     "{\"path\":\"%s\",\"exists\":1,\"name\":\"%s\",\"size\":%d,"
     "\"attr\":%d,\"is_dir\":%d,\"datetime\":%d}",
     pe,ne,de.size,de.attr,!!(de.attr & RS_ATTR_DIR),de.datetime);
+  if (de.full_name) Free(de.full_name);
   Free(pe);
   Free(ne);
+  if (ok) *ok=TRUE;
   return out;
 }
 
-U8 *HermesDocReadJSON(U8 *path)
+U8 *HermesDocReadJSON(U8 *path,Bool *ok=NULL)
 {
   CDoc *doc;
   Bool del=FALSE;
   U8 *dol,*text,*edol,*etext,*epath,*out,*pname;
-  I64 size=0;
-  if (!path || !*path)
-    doc=DocPut(sys_focus_task);
-  else
+  U8 drive=0;
+  I64 size=0,ech=0;
+  if (ok) *ok=FALSE;
+  if (path && *path)
   {
-    doc=DocRead(path);
+    if (StrLen(path)>=HERMES_FILE_PATH_MAX || HermesFileHasBadDotDot(path))
+      return HermesFileErrJSON("doc_read","bad_path",path,0);
+    drive=HermesFileDriveOf(path);
+    if (!HermesFileDriveOk(drive))
+      return HermesFileErrJSON("doc_read","bad_drive",path,drive);
+    doc=HermesDocReadSafe(path,&ech);
     del=TRUE;
   }
+  else
+  {
+    doc=DocPut(sys_focus_task);
+    del=FALSE;
+  }
   if (!doc || doc->doc_signature!=DOC_SIGNATURE_VAL)
-    return StrNew("{\"ok\":0,\"error\":\"doc_read\"}");
+  {
+    if (ech || (path && *path))
+      return HermesFileErrJSON("doc_read","read_failed",path,drive);
+    return HermesFileErrJSON("doc_read","missing_file",path,drive);
+  }
   dol=DocSave(doc,&size);
   if (!dol) dol=StrNew("");
   text=HermesDocPlain(doc);
@@ -118,6 +174,7 @@ U8 *HermesDocReadJSON(U8 *path)
   Free(epath);
   if (del && !doc->win_task)
     DocDel(doc);
+  if (ok) *ok=TRUE;
   return out;
 }
 

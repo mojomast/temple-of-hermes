@@ -1,0 +1,38 @@
+{
+  "app-temple-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "19-net-echo.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 6
+  },
+  "01-boot-splash.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 2
+  },
+  "02-home-launcher.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "write_phase": {
+    "dirs": {
+      "home": true,
+      "bbs": true
+    },
+    "C:/Home/TEST-MARKER.TXT": {
+      "ok": true,
+      "detail": "bytes=12"
+    },
+    "C:/Hermes/Apps/HermesBBS/TEST-TOKEN.TXT": {
+      "ok": true,
+      "detail": "bytes=11"
+    },
+    "ping": "ok"
+  },
+  "reboot_phase": {
+    "C:/Home/TEST-MARKER.TXT": {
+      "ok": true,
+      "detail": "status=ok bytes=12"
+    },
+    "C:/Hermes/Apps/HermesBBS/TEST-TOKEN.TXT": {
+      "ok": true,
+      "detail": "status=ok bytes=11"
+    },
+    "ping": "ok"
+  },
+  "ok": true,
+  "shot_meta": {
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "max_index": 15,
+    "off_palette_pixels": 0
+  },
+  "shot": "persistence-launcher.png"
+}

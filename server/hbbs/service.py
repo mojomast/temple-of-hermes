@@ -315,8 +315,9 @@ class HBBSService:
 
     # ---------------------------------------------------------------- accounts
     def signup(self, payload: Mapping[str, Any]) -> dict[str, Any]:
-        if self.config.signup_mode != "open":
+        if self.config.signup_mode == "closed":
             raise forbidden("Sign-up is closed.", code="signup_closed")
+        auto_mode = self.config.signup_mode == "auto"
         kind = (_text(payload, "kind", "type", "account_type") or "human").strip().lower()
         if kind not in SIGNUP_KINDS:
             raise bad_request(
@@ -353,45 +354,80 @@ class HBBSService:
             raise bad_request("Password is too long.", code="validation_error", details={"field": "password"})
 
         owner_username: str | None = None
+        owner_id: int | None = None
+        owner_missing = False
         if kind == "agent":
             owner_raw = _text(payload, "owner", "owner_username", "owned_by")
             if not owner_raw:
-                raise bad_request(
-                    "Agent accounts must name a human owner.",
-                    code="owner_required",
-                    details={"field": "owner"},
-                )
-            owner_username = normalize_username(owner_raw)
-            owner_id = int(owner_raw.strip()) if owner_raw.strip().isdigit() else None
-
-        now = _now_int(self.clock)
-        with self.db.transaction() as conn:
-            if self._account_by_username(conn, username) is not None:
-                raise conflict("That username is already taken.", code="username_taken", details={"field": "username"})
-            if kind == "agent":
-                if owner_id is not None:
-                    owner = conn.execute("SELECT * FROM accounts WHERE id = ?", (owner_id,)).fetchone()
-                else:
-                    owner = self._account_by_username(conn, owner_username or "")
-                if owner is None or owner["kind"] != "human":
+                if not auto_mode:
                     raise bad_request(
-                        "Agent accounts must be owned by an existing human account.",
-                        code="invalid_owner",
+                        "Agent accounts must name a human owner.",
+                        code="owner_required",
                         details={"field": "owner"},
                     )
-                owner_username = owner["username"]
+                owner_missing = True
+            else:
+                owner_username = normalize_username(owner_raw)
+                owner_id = int(owner_raw.strip()) if owner_raw.strip().isdigit() else None
+
+        auto_kind = auto_mode and kind in self.config.auto_approve_kinds
+        now = _now_int(self.clock)
+        with self.db.transaction() as conn:
+            existing = self._account_by_username(conn, username)
+            if existing is not None:
+                if auto_mode and existing["status"] == "banned":
+                    raise conflict("This account is banned.", code="account_banned", details={"field": "username"})
+                raise conflict("That username is already taken.", code="username_taken", details={"field": "username"})
+            owner_eligible = True
+            if kind == "agent":
+                if owner_missing:
+                    owner_eligible = False
+                else:
+                    if owner_id is not None:
+                        owner = conn.execute("SELECT * FROM accounts WHERE id = ?", (owner_id,)).fetchone()
+                    else:
+                        owner = self._account_by_username(conn, owner_username or "")
+                    if not auto_mode:
+                        owner_eligible = owner is not None and owner["kind"] == "human"
+                    else:
+                        owner_eligible = (
+                            owner is not None
+                            and owner["kind"] in {"human", "sysop"}
+                            and owner["status"] == "active"
+                        )
+                    if not owner_eligible and not auto_mode:
+                        raise bad_request(
+                            "Agent accounts must be owned by an existing human account.",
+                            code="invalid_owner",
+                            details={"field": "owner"},
+                        )
+                    if owner is not None:
+                        owner_username = owner["username"]
+            approve_now = bool(auto_kind and owner_eligible)
+            account_status = "active" if approve_now else "pending"
             try:
                 cur = conn.execute(
-                    "INSERT INTO accounts(username, display_name, kind, owner_username, password_hash, status, created_at) "
-                    "VALUES (?, ?, ?, ?, ?, 'pending', ?)",
-                    (username, display_name, kind, owner_username, hash_password(password), now),
+                    "INSERT INTO accounts(username, display_name, kind, owner_username, password_hash, status, created_at, approved_at) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    (
+                        username,
+                        display_name,
+                        kind,
+                        owner_username,
+                        hash_password(password),
+                        account_status,
+                        now,
+                        now if approve_now else None,
+                    ),
                 )
             except sqlite3.IntegrityError as exc:
                 raise conflict("That username is already taken.", code="username_taken") from exc
             account_id = int(cur.lastrowid)
+            queue_state = "approved" if approve_now else "pending"
             qcur = conn.execute(
-                "INSERT INTO queue(kind, target_id, state, reason, created_at) VALUES ('account', ?, 'pending', 'signup', ?)",
-                (account_id, now),
+                "INSERT INTO queue(kind, target_id, state, reason, created_at, resolved_at) "
+                "VALUES ('account', ?, ?, 'signup', ?, ?)",
+                (account_id, queue_state, now, now if approve_now else None),
             )
             self._audit(
                 conn,
@@ -401,7 +437,28 @@ class HBBSService:
                 target_id=account_id,
                 detail={"kind": kind, "queue_id": int(qcur.lastrowid), "owner_required": kind == "agent"},
             )
+            if approve_now:
+                self._audit(
+                    conn,
+                    None,
+                    "account.approve",
+                    target_type="account",
+                    target_id=account_id,
+                    detail={
+                        "actor": "system:auto",
+                        "auto": True,
+                        "kind": kind,
+                        "queue_id": int(qcur.lastrowid),
+                    },
+                )
             account = self._account_by_id(conn, account_id)
+            if approve_now:
+                return {
+                    "account": _public_account(account),
+                    "queue_id": int(qcur.lastrowid),
+                    "status": "active",
+                    "message": "Account approved automatically; sign in to continue.",
+                }
             return {
                 "account": _public_account(account),
                 "queue_id": int(qcur.lastrowid),
@@ -1000,16 +1057,17 @@ class HBBSService:
             ).fetchall()
         entries = []
         for row in rows:
+            detail = json.loads(row["detail"] or "{}")
             entries.append(
                 {
                     "id": int(row["id"]),
                     "created_at": _iso(row["created_at"]),
                     "actor_id": row["actor_id"],
-                    "actor": row["actor_username"],
+                    "actor": row["actor_username"] or detail.get("actor"),
                     "action": row["action"],
                     "target_type": row["target_type"],
                     "target_id": row["target_id"],
-                    "detail": json.loads(row["detail"] or "{}"),
+                    "detail": detail,
                 }
             )
         return {"entries": entries, "audit": entries}

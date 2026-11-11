@@ -1,0 +1,28 @@
+{
+  "beacon": "HBEACON TempleOfHermes/0.1.3",
+  "eval": {
+    "status": "ok",
+    "body": {
+      "ok": 1,
+      "text": "",
+      "error": null
+    }
+  },
+  "guest_result": {
+    "status": "ok",
+    "text": "HERMES FILE ERRORS TEST (0.1.3)\nPASS missing_dir\nPASS cd_read_only\nPASS ram_write\nPASS too_large\nPASS bad_drive\nPASS ram_readback\nHERMES FILE ERRORS TEST PASS\n"
+  },
+  "large_push": {
+    "status": "err",
+    "body": "{\"ok\":0,\"error\":\"short_read\",\"code\":\"short_read\",\"op\":\"push\",\"len\":4015}"
+  },
+  "ping_after": {
+    "status": "ok",
+    "body": {
+      "pong": 1,
+      "t": 6.76,
+      "mode": "user",
+      "version": "0.1.3"
+    }
+  }
+}

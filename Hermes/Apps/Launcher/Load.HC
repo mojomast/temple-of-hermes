@@ -67,7 +67,7 @@ U0 HermesAppsLauncherDraw(CTask *task,CDC *dc)
   dc->color=BLUE;
   GrRect(dc,0,0,w,40);
   dc->color=YELLOW;
-  GrPrint(dc,16,8,"THE TEMPLE OF HERMES  v0.1.2");
+  GrPrint(dc,16,8,"THE TEMPLE OF HERMES  v0.1.3");
   dc->color=LTCYAN;
   if (s->status)
     GrPrint(dc,16,24,"%s",s->status);

@@ -1,0 +1,31 @@
+22:39:13 static home_defines_HomeInit: PASS
+22:39:13 static home_defines_JournalAdd: PASS
+22:39:13 static home_defines_JournalTail: PASS
+22:39:13 static home_defines_ProjectSet: PASS
+22:39:13 static home_defines_ProjectShow: PASS
+22:39:13 static home_defines_HomeDir: PASS
+22:39:13 static home_line_max_200: PASS
+22:39:13 static home_current_next: PASS
+22:39:13 static home_src_dir: PASS
+22:39:13 static home_writable_check: PASS
+22:39:13 static home_control_strip: PASS
+22:39:13 static test_uses_journal_tail: PASS
+22:39:13 static test_uses_project_set: PASS
+22:39:13 static test_no_c_error: PASS
+22:39:13 static load_one_home_include: PASS
+22:39:13 static home_syntax_balanced: PASS
+22:39:13 static test_syntax_balanced: PASS
+22:39:13 static home_include_guard: PASS
+22:39:13 static doc_exists: PASS
+22:39:13 static doc_mentions_C:/Home/<handle>/: PASS C:/Home/<handle>/
+22:39:13 static doc_mentions_JOURNAL.TXT: PASS JOURNAL.TXT
+22:39:13 static doc_mentions_PROJECTS.TXT: PASS PROJECTS.TXT
+22:39:13 static doc_mentions_Current:: PASS Current:
+22:39:13 static doc_mentions_Next:: PASS Next:
+22:39:13 static doc_mentions_B:: PASS B: is RAM only
+22:39:13 static doc_mentions_read-only: PASS read-only
+22:39:13 static doc_mentions_session_start: PASS session_start
+22:39:13 static parser_accepts_contract: PASS
+22:39:13 static parser_rejects_bad: PASS
+22:39:13 static parser_projects: PASS
+22:39:13 static matrix: 30/30

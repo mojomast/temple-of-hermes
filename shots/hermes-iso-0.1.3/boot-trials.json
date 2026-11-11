@@ -1,0 +1,564 @@
+{
+  "trials": [
+    {
+      "trial": 1,
+      "ok": true,
+      "seconds": 11.9,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405828",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "ok": true,
+      "seconds": 11.8,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405628",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "ok": true,
+      "seconds": 11.8,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405828",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 4,
+      "ok": true,
+      "seconds": 11.7,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405828",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 5,
+      "ok": true,
+      "seconds": 11.8,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405828",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 6,
+      "ok": true,
+      "seconds": 11.7,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405828",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 7,
+      "ok": true,
+      "seconds": 12.0,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405828",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 8,
+      "ok": true,
+      "seconds": 11.7,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405828",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 9,
+      "ok": true,
+      "seconds": 11.9,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405828",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 10,
+      "ok": true,
+      "seconds": 11.7,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405828",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 11,
+      "ok": true,
+      "seconds": 12.0,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405628",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 12,
+      "ok": true,
+      "seconds": 11.7,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405828",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 13,
+      "ok": true,
+      "seconds": 11.8,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405828",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 14,
+      "ok": true,
+      "seconds": 11.7,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405628",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 15,
+      "ok": true,
+      "seconds": 11.8,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405628",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 16,
+      "ok": true,
+      "seconds": 11.7,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405828",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 17,
+      "ok": true,
+      "seconds": 11.8,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405628",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 18,
+      "ok": true,
+      "seconds": 11.7,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405828",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 19,
+      "ok": true,
+      "seconds": 11.8,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405828",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
+      "trial": 20,
+      "ok": true,
+      "seconds": 11.9,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D405628",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    }
+  ]
+}

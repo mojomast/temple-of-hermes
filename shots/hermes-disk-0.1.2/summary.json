@@ -1,0 +1,11 @@
+{
+  "image": "dist/TempleOfHermes-0.1.2-disk.qcow2",
+  "image_sha256": "d41672fb148051f3b4d85d06895bfc0f67da0e3af539bf89bbf4933056241087",
+  "image_sha256_after_tests": "d41672fb148051f3b4d85d06895bfc0f67da0e3af539bf89bbf4933056241087",
+  "source_unchanged": true,
+  "boots": 20,
+  "passed": 20,
+  "median_seconds": 9.0,
+  "persistence": true,
+  "hrpc_ping": "ok"
+}

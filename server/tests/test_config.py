@@ -61,6 +61,36 @@ def test_tls_non_loopback_bind_is_allowed():
     config.check_bind_safety()
 
 
+def test_auto_signup_mode_and_kind_list(tmp_path):
+    config = Config.from_env(
+        {
+            "HBBS_DATA_DIR": str(tmp_path),
+            "HBBS_SIGNUP_MODE": "auto",
+            "HBBS_AUTO_APPROVE_KINDS": " human , , agent , human ",
+        }
+    )
+    assert config.signup_mode == "auto"
+    assert config.auto_approve_kinds == ("human", "agent")
+
+    default = Config.from_env({"HBBS_DATA_DIR": str(tmp_path)})
+    assert default.signup_mode == "auto"
+    moderated = Config.from_env({"HBBS_DATA_DIR": str(tmp_path), "HBBS_SIGNUP_MODE": "open"})
+    assert moderated.signup_mode == "open"
+    assert default.auto_approve_kinds == ("human", "agent")
+
+    selected = Config.from_env(
+        {"HBBS_DATA_DIR": str(tmp_path), "HBBS_AUTO_APPROVE_KINDS": "agent,"}
+    )
+    assert selected.auto_approve_kinds == ("agent",)
+
+
+def test_unknown_auto_approve_kind_is_rejected(tmp_path):
+    with pytest.raises(ValueError):
+        Config.from_env(
+            {"HBBS_DATA_DIR": str(tmp_path), "HBBS_AUTO_APPROVE_KINDS": "human,robot"}
+        )
+
+
 def test_bad_values_fail_closed():
     with pytest.raises(ValueError):
         Config.from_env({"HBBS_BIND_PORT": "70000"})
