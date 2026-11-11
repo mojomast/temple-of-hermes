@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS hbbs1_threads (
     created_at INTEGER NOT NULL,
     last_activity_at INTEGER NOT NULL,
     reply_count INTEGER NOT NULL DEFAULT 0,
+    download_count INTEGER NOT NULL DEFAULT 0,
     status TEXT NOT NULL CHECK (status IN ('published', 'pending', 'hidden', 'removed'))
 );
 CREATE INDEX IF NOT EXISTS hbbs1_threads_board_idx ON hbbs1_threads(board_id, last_activity_at DESC);
@@ -76,7 +77,8 @@ CREATE TABLE IF NOT EXISTS hbbs1_posts (
     content_hash TEXT NOT NULL,
     reply_to_post_id TEXT,
     client_ref TEXT,
-    args_digest TEXT
+    args_digest TEXT,
+    download_count INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS hbbs1_posts_thread_idx ON hbbs1_posts(thread_id, created_at, post_id);
 CREATE INDEX IF NOT EXISTS hbbs1_posts_board_idx ON hbbs1_posts(board_id, status, created_at DESC);
@@ -166,4 +168,57 @@ CREATE TABLE IF NOT EXISTS hbbs1_duplicates (
     PRIMARY KEY (account, board_id, content_hash)
 );
 CREATE INDEX IF NOT EXISTS hbbs1_duplicates_created_idx ON hbbs1_duplicates(account, board_id, created_at);
+
+CREATE TABLE IF NOT EXISTS hbbs1_mentions (
+    mention_id TEXT PRIMARY KEY,
+    post_id TEXT NOT NULL,
+    thread_id TEXT NOT NULL,
+    board_id TEXT NOT NULL,
+    author_account TEXT NOT NULL,
+    mentioned_account TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    seen_at INTEGER,
+    UNIQUE (post_id, mentioned_account)
+);
+CREATE INDEX IF NOT EXISTS hbbs1_mentions_account_idx
+    ON hbbs1_mentions(mentioned_account, created_at DESC);
+CREATE INDEX IF NOT EXISTS hbbs1_mentions_unseen_idx
+    ON hbbs1_mentions(mentioned_account, seen_at, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS hbbs1_downloads (
+    account TEXT NOT NULL,
+    post_id TEXT NOT NULL,
+    last_at INTEGER NOT NULL,
+    PRIMARY KEY (account, post_id)
+);
+CREATE INDEX IF NOT EXISTS hbbs1_downloads_post_idx ON hbbs1_downloads(post_id);
+
+CREATE TABLE IF NOT EXISTS hbbs1_post_tags (
+    post_id TEXT NOT NULL,
+    tag TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    PRIMARY KEY (post_id, tag)
+);
+CREATE INDEX IF NOT EXISTS hbbs1_post_tags_tag_idx ON hbbs1_post_tags(tag, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS hbbs1_digest_state (
+    account TEXT PRIMARY KEY,
+    last_digest_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS hbbs1_challenge_drafts (
+    draft_id TEXT PRIMARY KEY,
+    subject TEXT NOT NULL,
+    body TEXT NOT NULL,
+    tag TEXT,
+    created_by TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('draft', 'approved', 'rejected')),
+    approved_by TEXT,
+    approved_at INTEGER,
+    thread_id TEXT,
+    post_id TEXT
+);
+CREATE INDEX IF NOT EXISTS hbbs1_challenge_drafts_status_idx
+    ON hbbs1_challenge_drafts(status, created_at DESC);
 """

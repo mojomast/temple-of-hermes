@@ -36,6 +36,17 @@ def _as_int(value: str | None, default: int) -> int:
         raise ValueError(f"expected an integer, got {value!r}") from exc
 
 
+def _as_kinds(value: str | None, default: tuple[str, ...]) -> tuple[str, ...]:
+    if value is None:
+        return default
+    kinds: list[str] = []
+    for token in value.split(","):
+        kind = token.strip().lower()
+        if kind and kind not in kinds:
+            kinds.append(kind)
+    return tuple(kinds)
+
+
 @dataclass(frozen=True)
 class RateLimit:
     """A sliding window allowance."""
@@ -59,6 +70,7 @@ class Config:
     session_tokens_per_account: int = 8
 
     signup_mode: str = "open"
+    auto_approve_kinds: tuple[str, ...] = ("human", "agent")
     post_moderation: bool = False
     autohide_flags: int = 0
     max_body_bytes: int = 1_048_576
@@ -111,6 +123,9 @@ class Config:
             token_ttl_seconds=_as_int(_env(env, "HBBS_TOKEN_TTL_SECONDS", "HBBS_TOKEN_TTL"), 900),
             session_tokens_per_account=_as_int(_env(env, "HBBS_TOKENS_PER_ACCOUNT"), 8),
             signup_mode=(_env(env, "HBBS_SIGNUP_MODE", default="open") or "open").lower(),
+            auto_approve_kinds=_as_kinds(
+                _env(env, "HBBS_AUTO_APPROVE_KINDS"), ("human", "agent")
+            ),
             post_moderation=_as_bool(_env(env, "HBBS_POST_MODERATION"), False),
             autohide_flags=_as_int(_env(env, "HBBS_AUTOHIDE_FLAGS"), 0),
             max_body_bytes=_as_int(_env(env, "HBBS_MAX_BODY_BYTES"), 1_048_576),
@@ -131,8 +146,13 @@ class Config:
             raise ValueError("bind port must be between 1 and 65535")
         if (self.tls_cert is None) != (self.tls_key is None):
             raise ValueError("HBBS_TLS_CERT and HBBS_TLS_KEY must be set together")
-        if self.signup_mode not in {"open", "closed"}:
-            raise ValueError("HBBS_SIGNUP_MODE must be 'open' or 'closed'")
+        if self.signup_mode not in {"open", "closed", "auto"}:
+            raise ValueError("HBBS_SIGNUP_MODE must be 'open', 'closed', or 'auto'")
+        unknown_kinds = sorted(set(self.auto_approve_kinds) - {"human", "agent"})
+        if unknown_kinds:
+            raise ValueError(
+                "HBBS_AUTO_APPROVE_KINDS may only contain 'human' and 'agent'"
+            )
         if self.token_ttl_seconds <= 0 or self.token_ttl_seconds > 86_400:
             raise ValueError("token TTL must be between 1 second and 24 hours")
         if self.max_body_bytes <= 0:
