@@ -15,7 +15,7 @@ The original upstream TinkerOS/TempleOS guide is preserved at
    `/dev/kvm`, use `-accel tcg`; it is slower but works.
 3. Install 64-bit QEMU from your package manager.
 4. Get a bootable image:
-   - THE TEMPLE OF HERMES: build `TempleOfHermes-0.1.0.ISO` with
+   - THE TEMPLE OF HERMES: build `TempleOfHermes-0.1.2.ISO` with
      `scripts/build_iso.py`, or use a verified release image.
    - Stock TinkerOS: <https://github.com/tinkeros/TinkerOS/releases>
    - TempleOS: <http://templeos.org/Downloads/TOS_Distro.ISO>
@@ -31,7 +31,7 @@ qemu-system-x86_64 \
   -machine pc,kernel-irqchip=off \
   -smp 1 -vga std \
   -display sdl -nic none \
-  -cdrom TempleOfHermes-0.1.0.ISO \
+  -cdrom TempleOfHermes-0.1.2.ISO \
   -serial unix:/tmp/toh-com1.sock,server=on,wait=off
 ```
 
@@ -57,7 +57,7 @@ qemu-system-x86_64 -m 2G -accel kvm,kernel-irqchip=off -smp 4 \
 qemu-img create toh.qcow2 512M
 qemu-system-x86_64 -m 2G -accel tcg -machine pc,kernel-irqchip=off \
   -smp 1 -display sdl -nic none \
-  -cdrom TempleOfHermes-0.1.0.ISO -hda toh.qcow2
+  -cdrom TempleOfHermes-0.1.2.ISO -hda toh.qcow2
 ```
 
 On the Hermes image, the live CD does not start the installer automatically.
@@ -71,6 +71,7 @@ input gate refuses install and format operations by design.
 - Without KVM the guest is slow; the agent should prefer the serial `text` and
   `idle` operations over screenshot polling.
 - The Hermes image expects COM1 for the guest daemon. Attach a socket or PTY and
-  wait for `HBEACON TempleOfHermes/0.1.0` before sending requests.
+  wait for the `HBEACON` line (the daemon string may still read
+  `HBEACON TempleOfHermes/0.1.0` on this 0.1.2 build) before sending requests.
 - Networking stays off for the agent image. See
   [`docs/HERMES-FEATURES.md`](docs/HERMES-FEATURES.md) for the serial protocol.

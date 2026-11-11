@@ -12,7 +12,9 @@ This branch does not change the plugin itself.
 
 ## The short version
 
-1. Start the VM with `templeos_vm` and wait for `HBEACON TempleOfHermes/0.1.0`.
+1. Start the VM with `templeos_vm` and wait for the `HBEACON` line. On this
+   0.1.2 build the daemon string may still read
+   `HBEACON TempleOfHermes/0.1.0`.
 2. Set the mode you want: `user`, `shared`, or `agent`.
 3. Read the focused window with `templeos_screen` using the **text** path, not
    a screenshot.
@@ -36,7 +38,7 @@ feature; extend the existing request fields instead.
 - `stop`, `reset`, `snapshot`, `restore`, `doctor` stay host-side. `snapshot`
   still ejects the floppy first, as in the TinkerOS bake-off.
 - `doctor` checks the ISO hash. The expected artifact is
-  `TempleOfHermes-0.1.0.ISO`.
+  `TempleOfHermes-0.1.2.ISO`.
 
 ### `templeos_screen`
 
@@ -113,8 +115,10 @@ HRPL <id> <ok|err> <len>\n + <len bytes>
 HEVT <seq> <kind> <len>\n + <len bytes of JSON>
 ```
 
-The beacon is sent once when the daemon task starts. Bytes sent before that are
-lost, as with any TempleOS serial port. Keep COM1 open for the session.
+The beacon is sent once when the daemon task starts. The version in that
+string is the daemon's own value; on this 0.1.2 image it can still read
+`0.1.0`. Bytes sent before the beacon are lost, as with any TempleOS serial
+port. Keep COM1 open for the session.
 
 ### Operations
 
@@ -142,32 +146,23 @@ The full payload shapes and guard semantics are in
 
 ## Launcher autostart
 
-This branch boots to a USER terminal and opens `Doc/Start.DD`. That is the
-launcher surface today. A graphical launcher is a companion workstream; if you
-add one, autostart it from the startup path rather than from the daemon.
+This branch ships the full-screen Hermes launcher and starts it from
+`Once.HC` after the welcome text. The launcher reads
+`Hermes/Apps/Registry.HC` and presents all 18 entries in a 6x3 grid.
 
-Recommended pattern:
+- Click an icon or press its shortcut key.
+- Arrow keys move the selection; Enter or Space opens it.
+- `F1` opens About. `Temple` keeps you on the home screen.
+- `Launcher/RunFile.HC` runs an app in its own visible task and restores the
+  launcher when the app exits.
+- The launcher searches `::`, `T:`, `C:`, and `~/` for `Hermes/Apps`, so the
+  same files work from a live CD, an installed disk, or a serial-pushed
+  overlay.
 
-1. Put the launcher source under a non-leased app path and mount it on the
-   guest filesystem.
-2. In `HomeSys.HC` (guest `/Home/HomeSys.HC`), inside `StartUpTasks`, after
-   the first `User` task is created and `WinToTop` / `WinTileVert` have run,
-   start the launcher in that USER task. Do not spawn it from `Adam` or from the Hermes daemon.
-3. Keep the default mode `user`. A launcher that steals focus in AGENT mode
-   will fight the agent crosshair and the presence banner.
-4. If the launcher is optional, guard it with an `IsFile(...)` check so a
-   missing app does not break boot.
-5. Do not add install, format, or disk-write actions to a launcher that can be
-   clicked in AGENT mode. Let `fp_input_gate` do its job.
-
-A minimal hook looks like this (new code for your launcher, not present in this
-branch):
-
-```holyc
-// In HomeSys.HC (guest /Home/HomeSys.HC), inside StartUpTasks, after user1=User;
-if (IsFile("::/Apps/MyLauncher/Run.HC"))
-  XTalk(user1,"Cd(\"::/Apps/MyLauncher\");;#include \"Run\";\n");
-```
+`Once.HC` calls `HermesStartApps`, which only starts the launcher when
+`Hermes/Apps/Launcher/Run.HC` exists. Do not spawn it from `Adam` or from the
+Hermes daemon, and do not add install, format, or disk-write actions to it.
+Let `fp_input_gate` enforce the mode guards.
 
 Keep the launcher's own startup messages short. The boot path already prints
 the product name and version; do not repeat them on every window.
