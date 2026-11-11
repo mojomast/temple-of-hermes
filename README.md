@@ -46,17 +46,20 @@ an optional allow-list Hayes-style modem.
 
 ### The 0.1.2 build
 
-This branch ships the **0.1.2** build. The launcher header and `Once.HC` say
-`v0.1.2`; the built artifact is `TempleOfHermes-0.1.2.ISO`:
+This repository ships the **0.1.2** release. The launcher header and `Once.HC`
+say `v0.1.2`. The official artifact is
+[`TempleOfHermes-0.1.2.ISO`](https://github.com/mojomast/temple-of-hermes/releases/download/v0.1.2/TempleOfHermes-0.1.2.ISO)
+on the [v0.1.2 GitHub release](https://github.com/mojomast/temple-of-hermes/releases/tag/v0.1.2):
 
 - size: `14,030,848` bytes
-- SHA-256: `8bcf43c31689e328716ca42f0255f1ede834dd39cd0fa345bc96719d60f74c60`
+- SHA-256: `9afc98ed2bb15a3ff26ebaca12ea392079292df6667b3c1c527fdd30d80cdb13`
 - ISO9660 volume id: `THE_TEMPLE_OF_HERMES`
 
 A few in-guest daemon and status strings still read `0.1.0`, including
 `Adam/Hermes/VERSION`, comments around the `HBEACON` protocol, and the kernel
 banner. Those are known leftovers, not the build identity. The ISO itself is a
-gitignored PC/snapshot artifact: it is not committed to this repository.
+gitignored PC/snapshot artifact: it is not committed to this repository, and
+the official download is the GitHub release asset above.
 
 ## Screens
 
@@ -198,18 +201,24 @@ four-tool mapping. The daemon lives in `Adam/Hermes/`; the protocol frames are
 
 ## Quick start
 
-You need QEMU, a built `dist/TempleOfHermes-0.1.2.ISO`, and a 640x480-capable
-display. The ISO is not committed; build it with the steps below or use a
-verified local copy.
+Download the official 0.1.2 ISO from the [v0.1.2 GitHub
+release](https://github.com/mojomast/temple-of-hermes/releases/tag/v0.1.2),
+verify the SHA-256, and boot it in QEMU. You need QEMU and a 640x480-capable
+display.
 
 ```bash
+curl -L -o TempleOfHermes-0.1.2.ISO \
+  https://github.com/mojomast/temple-of-hermes/releases/download/v0.1.2/TempleOfHermes-0.1.2.ISO
+
+echo 9afc98ed2bb15a3ff26ebaca12ea392079292df6667b3c1c527fdd30d80cdb13  TempleOfHermes-0.1.2.ISO | sha256sum -c
+
 qemu-system-x86_64 \
   -m 2G \
   -accel tcg \
   -machine pc,kernel-irqchip=off \
   -smp 1 -vga std \
   -display sdl -nic none \
-  -cdrom dist/TempleOfHermes-0.1.2.ISO \
+  -cdrom TempleOfHermes-0.1.2.ISO \
   -serial unix:/tmp/toh-com1.sock,server=on,wait=off \
   -serial unix:/tmp/toh-com2.sock,server=on,wait=off
 ```
@@ -223,6 +232,12 @@ guest is slow under TCG, that is expected. For a headless probe, use
 The guest does not start the installer. The launcher appears on the first
 USER desktop. Networking is off; the two serial sockets are for the daemon
 and the optional modem, not for IP.
+
+The ISO is not committed to this repository. The verified artifact is the
+`TempleOfHermes-0.1.2.ISO` asset on the v0.1.2 release (SHA-256
+`9afc98ed2bb15a3ff26ebaca12ea392079292df6667b3c1c527fdd30d80cdb13`,
+14,030,848 bytes). To rebuild it yourself, see
+[Building from source](#building-from-source).
 
 ## Building from source
 

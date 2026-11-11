@@ -103,11 +103,12 @@ convert the qcow2 to raw, and use `scripts/fat32_read.extract` on
 
 - `dist/TempleOfHermes-0.1.2.ISO`
 - size `14030848` bytes
-- sha256 `8bcf43c31689e328716ca42f0255f1ede834dd39cd0fa345bc96719d60f74c60`
+- sha256 `9afc98ed2bb15a3ff26ebaca12ea392079292df6667b3c1c527fdd30d80cdb13`
 - ISO9660 volume id `THE_TEMPLE_OF_HERMES`
 
-The ISO is a PC/snapshot artifact. `dist/*.ISO` is gitignored; it is not
-committed, released, or deployed.
+The ISO is a PC/snapshot artifact. `dist/*.ISO` is gitignored and is not
+committed to this repository. The verified 0.1.2 ISO is attached to the
+[v0.1.2 GitHub release](https://github.com/mojomast/temple-of-hermes/releases/tag/v0.1.2).
 
 ## 5. Boot the built ISO
 
