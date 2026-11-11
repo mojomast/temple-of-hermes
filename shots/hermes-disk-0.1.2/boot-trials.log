@@ -1,0 +1,22 @@
+21:37:18 cold boot trials: 20 x run/disk-test/boot-test.qcow2 (source dist/TempleOfHermes-0.1.2-disk.qcow2)
+21:37:27 boot 01: PASS 8.9s 
+21:37:35 boot 02: PASS 6.9s 
+21:37:43 boot 03: PASS 6.9s 
+21:37:53 boot 04: PASS 9.1s 
+21:38:03 boot 05: PASS 9.2s 
+21:38:12 boot 06: PASS 9.1s 
+21:38:22 boot 07: PASS 9.1s 
+21:38:30 boot 08: PASS 7.1s 
+21:38:40 boot 09: PASS 9.1s 
+21:38:50 boot 10: PASS 9.1s 
+21:39:00 boot 11: PASS 9.0s 
+21:39:10 boot 12: PASS 9.1s 
+21:39:20 boot 13: PASS 9.0s 
+21:39:29 boot 14: PASS 9.0s 
+21:39:39 boot 15: PASS 9.0s 
+21:39:49 boot 16: PASS 9.0s 
+21:39:57 boot 17: PASS 6.9s 
+21:40:04 boot 18: PASS 7.0s 
+21:40:12 boot 19: PASS 6.9s 
+21:40:22 boot 20: PASS 8.9s 
+21:40:53 persistence: PASS
