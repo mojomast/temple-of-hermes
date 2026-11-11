@@ -1,0 +1,41 @@
+19:34:23 waiting for HBEACON
+19:34:32 beacon: HBEACON TempleOfHermes/0.1.3
+19:34:33 missing_dir: status=err code='missing_dir' ping=ok version=0.1.3 -> PASS
+19:34:33 read_only_cd: status=err code='read_only' ping=ok version=0.1.3 -> PASS
+19:34:33 ram_write: status=ok code='' ping=ok version=0.1.3 -> PASS
+19:34:33 ram_pull: status=ok bytes=12 matches=True -> PASS
+19:34:33 huge_payload: status=err code='too_large' ping=ok -> PASS
+19:34:33 bad_drive: status=err code='bad_drive' ping=ok version=0.1.3 -> PASS
+19:34:34 screen bad=[] palette={'size': [640, 480], 'mode': 'P', 'used': 6}
+19:34:34 file-error matrix: 6/6 screen_bad=False
+19:59:34 waiting for HBEACON
+19:59:42 beacon: HBEACON TempleOfHermes/0.1.3
+19:59:42 missing_dir: status=err code='missing_dir' ping=ok version=0.1.3 -> PASS
+19:59:42 read_only_cd: status=err code='read_only' ping=ok version=0.1.3 -> PASS
+19:59:42 ram_write: status=ok code='' ping=ok version=0.1.3 -> PASS
+19:59:42 ram_pull: status=ok bytes=12 matches=True -> PASS
+19:59:43 huge_payload: status=err code='too_large' ping=ok -> PASS
+19:59:43 bad_drive: status=err code='bad_drive' ping=ok version=0.1.3 -> PASS
+19:59:43 screen bad=[] palette={'size': [640, 480], 'mode': 'P', 'used': 6}
+19:59:43 file-error matrix: 6/6 screen_bad=False
+20:21:20 waiting for HBEACON
+20:21:28 beacon: HBEACON TempleOfHermes/0.1.3
+20:21:29 missing_dir: status=err code='missing_dir' ping=ok version=0.1.3 -> PASS
+20:21:29 read_only_cd: status=err code='read_only' ping=ok version=0.1.3 -> PASS
+20:21:29 ram_write: status=ok code='' ping=ok version=0.1.3 -> PASS
+20:21:29 ram_pull: status=ok bytes=12 matches=True -> PASS
+20:21:30 huge_payload: status=err code='too_large' ping=ok -> PASS
+20:21:30 bad_drive: status=err code='bad_drive' ping=ok version=0.1.3 -> PASS
+20:21:30 screen bad=[] palette={'size': [640, 480], 'mode': 'P', 'used': 5}
+20:21:30 file-error matrix: 6/6 screen_bad=False
+20:28:23 waiting for HBEACON
+20:28:31 beacon: HBEACON TempleOfHermes/0.1.3
+20:28:32 missing_dir: status=err code='missing_dir' ping=ok version=0.1.3 -> PASS
+20:28:32 released_bug_path: status=err code='bad_drive' ping=ok version=0.1.3 -> PASS
+20:28:32 read_only_cd: status=err code='read_only' ping=ok version=0.1.3 -> PASS
+20:28:32 ram_write: status=ok code='' ping=ok version=0.1.3 -> PASS
+20:28:32 ram_pull: status=ok bytes=12 matches=True -> PASS
+20:28:32 huge_payload: status=err code='too_large' ping=ok -> PASS
+20:28:32 bad_drive: status=err code='bad_drive' ping=ok version=0.1.3 -> PASS
+20:28:33 screen bad=[] palette={'size': [640, 480], 'mode': 'P', 'used': 5}
+20:28:33 file-error matrix: 7/7 screen_bad=False

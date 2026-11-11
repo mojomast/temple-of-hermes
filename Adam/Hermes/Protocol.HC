@@ -1,5 +1,5 @@
 // Length-prefixed text frames on COM1.
-//   HBEACON TempleOfHermes/0.1.0\n
+//   HBEACON TempleOfHermes/0.1.3\n
 //   HREQ <id> <op> <len>\n  + <len bytes>
 //   HRPL <id> <ok|err> <len>\n + <len bytes>
 //   HEVT <seq> <kind> <len>\n + <len bytes>

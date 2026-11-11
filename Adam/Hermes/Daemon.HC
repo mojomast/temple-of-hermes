@@ -144,11 +144,11 @@ U8 *HermesHelpJSON()
 
 U0 HermesHandle(I64 id,U8 *op,U8 *payload,I64 len)
 {
-  U8 *res=NULL,*path,tmp[64],*s1;
+  U8 *res=NULL,*path,tmp[64],*s1,*ferr;
   CTask *task;
-  I64 mode,size,wrote,i,x,y,addr,killed=0;
+  I64 mode,size,i,x,y,addr,killed=0;
   U8 *data;
-  Bool ok;
+  Bool ok,fok=FALSE;
   if (!op) op="";
   if (!payload) payload="";
 
@@ -294,20 +294,53 @@ U0 HermesHandle(I64 id,U8 *op,U8 *payload,I64 len)
   }
   else if (!StrICmp(op,"list") || !StrICmp(op,"ls"))
   {
-    res=HermesListDir(payload);
-    HermesReply(id,res);
+    res=NULL;
+    try
+      res=HermesListDir(payload,&fok);
+    catch
+    {
+      Fs->catch_except=TRUE;
+      res=HermesFileErrJSON("list","exception",payload,0);
+      fok=FALSE;
+    }
+    if (fok)
+      HermesReply(id,res);
+    else
+      HermesReplyErr(id,res);
     Free(res);
   }
   else if (!StrICmp(op,"stat"))
   {
-    res=HermesStatJSON(payload);
-    HermesReply(id,res);
+    res=NULL;
+    try
+      res=HermesStatJSON(payload,&fok);
+    catch
+    {
+      Fs->catch_except=TRUE;
+      res=HermesFileErrJSON("stat","exception",payload,0);
+      fok=FALSE;
+    }
+    if (fok)
+      HermesReply(id,res);
+    else
+      HermesReplyErr(id,res);
     Free(res);
   }
   else if (!StrICmp(op,"doc_read"))
   {
-    res=HermesDocReadJSON(payload);
-    HermesReply(id,res);
+    res=NULL;
+    try
+      res=HermesDocReadJSON(payload,&fok);
+    catch
+    {
+      Fs->catch_except=TRUE;
+      res=HermesFileErrJSON("doc_read","exception",payload,0);
+      fok=FALSE;
+    }
+    if (fok)
+      HermesReply(id,res);
+    else
+      HermesReplyErr(id,res);
     Free(res);
   }
   else if (!StrICmp(op,"doc_write"))
@@ -316,21 +349,26 @@ U0 HermesHandle(I64 id,U8 *op,U8 *payload,I64 len)
     while (i<len && payload[i]) i++;
     if (i>=len)
     {
-      HermesReplyErr(id,"doc_path");
+      res=HermesFileErrJSON("doc_write","bad_path","",0);
+      HermesReplyErr(id,res);
+      Free(res);
       return;
     }
     path=payload;
     data=payload+i+1;
-    wrote=FileWrite(path,data,len-i-1);
-    if (wrote<0)
+    res=NULL;
+    try
+      res=HermesFileWriteJSON("doc_write",path,data,len-i-1,&fok);
+    catch
     {
-      HermesReplyErr(id,"doc_write");
-      return;
+      Fs->catch_except=TRUE;
+      res=HermesFileErrJSON("doc_write","exception",path,0);
+      fok=FALSE;
     }
-    s1=HermesEsc(path);
-    res=MStrPrint("{\"ok\":1,\"wrote\":%d,\"path\":\"%s\"}",wrote,s1);
-    Free(s1);
-    HermesReply(id,res);
+    if (fok)
+      HermesReply(id,res);
+    else
+      HermesReplyErr(id,res);
     Free(res);
   }
   else if (!StrICmp(op,"toast"))
@@ -359,16 +397,22 @@ U0 HermesHandle(I64 id,U8 *op,U8 *payload,I64 len)
   {
     path=payload;
     size=0;
-    data=FileRead(path,&size);
-    if (!data)
+    data=NULL;
+    ferr=NULL;
+    fok=FALSE;
+    try
+      data=HermesFileReadChecked("pull",path,&size,&ferr,&fok);
+    catch
     {
-      HermesReplyErr(id,"pull_read");
-      return;
+      Fs->catch_except=TRUE;
+      data=NULL;
+      ferr=HermesFileErrJSON("pull","exception",path,0);
+      fok=FALSE;
     }
-    if (size<0 || size>HERMES_MAX_PAYLOAD)
+    if (!fok)
     {
-      Free(data);
-      HermesReplyErr(id,"pull_size");
+      HermesReplyErr(id,ferr);
+      if (ferr) Free(ferr);
       return;
     }
     HermesReplyLen(id,data,size);
@@ -380,19 +424,26 @@ U0 HermesHandle(I64 id,U8 *op,U8 *payload,I64 len)
     while (i<len && payload[i]) i++;
     if (i>=len)
     {
-      HermesReplyErr(id,"push_path");
+      res=HermesFileErrJSON("push","bad_path","",0);
+      HermesReplyErr(id,res);
+      Free(res);
       return;
     }
     path=payload;
     data=payload+i+1;
-    wrote=FileWrite(path,data,len-i-1);
-    if (wrote<0)
+    res=NULL;
+    try
+      res=HermesFileWriteJSON("push",path,data,len-i-1,&fok);
+    catch
     {
-      HermesReplyErr(id,"push_write");
-      return;
+      Fs->catch_except=TRUE;
+      res=HermesFileErrJSON("push","exception",path,0);
+      fok=FALSE;
     }
-    res=MStrPrint("{\"wrote\":%d}",wrote);
-    HermesReply(id,res);
+    if (fok)
+      HermesReply(id,res);
+    else
+      HermesReplyErr(id,res);
     Free(res);
   }
   else if (!StrICmp(op,"events"))
@@ -413,7 +464,7 @@ U0 HermesHandle(I64 id,U8 *op,U8 *payload,I64 len)
 
 U0 HermesHandleLine(U8 *line)
 {
-  U8 *p,op[32];
+  U8 *p,op[32],*eo,*ej;
   I64 id,len,i,n;
   U8 *payload,ch;
   p=line;
@@ -431,17 +482,52 @@ U0 HermesHandleLine(U8 *line)
   len=Str2I64(p);
   if (len<0 || len>HERMES_MAX_PAYLOAD)
   {
-    HermesReplyErr(id,"len");
+    eo=HermesEsc(op);
+    ej=MStrPrint(
+      "{\"ok\":0,\"error\":\"too_large\",\"code\":\"too_large\","
+      "\"op\":\"%s\",\"limit\":%d,\"len\":%d}",
+      eo,HERMES_MAX_PAYLOAD,len);
+    HermesReplyErr(id,ej);
+    Free(eo);
+    Free(ej);
     return;
   }
   payload=MAlloc(len+1);
-  for (n=0; n<len; n++)
+  try
   {
-    ch=HermesGetChar;
-    payload[n]=ch;
+    for (n=0; n<len; n++)
+    {
+      ch=HermesGetChar;
+      payload[n]=ch;
+    }
+    payload[len]=0;
   }
-  payload[len]=0;
-  HermesHandle(id,op,payload,len);
+  catch
+  {
+    Fs->catch_except=TRUE;
+    Free(payload);
+    eo=HermesEsc(op);
+    ej=MStrPrint(
+      "{\"ok\":0,\"error\":\"short_read\",\"code\":\"short_read\","
+      "\"op\":\"%s\",\"len\":%d}",eo,len);
+    HermesReplyErr(id,ej);
+    Free(eo);
+    Free(ej);
+    return;
+  }
+  try
+    HermesHandle(id,op,payload,len);
+  catch
+  {
+    Fs->catch_except=TRUE;
+    eo=HermesEsc(op);
+    ej=MStrPrint(
+      "{\"ok\":0,\"error\":\"exception\",\"code\":\"exception\","
+      "\"op\":\"%s\",\"event\":\"uncaught\"}",eo);
+    HermesReplyErr(id,ej);
+    Free(eo);
+    Free(ej);
+  }
   Free(payload);
 }
 
