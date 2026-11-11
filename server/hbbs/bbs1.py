@@ -37,6 +37,12 @@ AUTH_ATTEMPT_WINDOW = 300
 ACCOUNT_RE = re.compile(r"^[a-z0-9][a-z0-9_.-]{2,31}$")
 DISPLAY_RE = re.compile(r"^[!-~]([ -~]{0,30}[!-~])?$")
 CLIENT_REF_RE = re.compile(r"^[A-Za-z0-9._:-]{1,64}$")
+TAG_RE = re.compile(r"^challenge:[a-z0-9][a-z0-9._-]{0,31}$")
+MENTION_RE = re.compile(r"(?<![A-Za-z0-9_.-])@([A-Za-z0-9][A-Za-z0-9_.-]{2,31})(?![A-Za-z0-9_.-])")
+DIGEST_CURSOR_RE = re.compile(r"^dig_[0-9]{1,12}$")
+DOWNLOAD_WINDOW_SECONDS = 300
+DIGEST_FIRST_WINDOW_SECONDS = 7 * 86_400
+MAX_TAGS = 4
 
 BOARDS: tuple[dict[str, Any], ...] = (
     {
@@ -185,6 +191,9 @@ ERROR_MESSAGES = {
     "client_ref_conflict": "client_ref reused with different arguments",
     "rate_limited": "rate limit exceeded",
     "moderation_hold": "content is held by moderation",
+    "download_not_allowed": "downloads are only available on the holyc board",
+    "challenge_not_found": "challenge draft not found",
+    "challenge_not_draft": "challenge draft is not pending approval",
     "internal_error": "internal server error",
 }
 
@@ -302,6 +311,40 @@ def _client_ref(value: Any) -> str | None:
     return value
 
 
+def _tag(value: Any) -> str:
+    if not isinstance(value, str):
+        raise _error("invalid_field", field="args.tag")
+    tag = value.strip().lower()
+    if TAG_RE.fullmatch(tag) is None:
+        raise _error("invalid_field", field="args.tag")
+    return tag
+
+
+def _tags(value: Any) -> list[str]:
+    if value is None:
+        return []
+    if not isinstance(value, list) or len(value) > MAX_TAGS:
+        raise _error("invalid_field", field="args.tags")
+    tags: list[str] = []
+    for item in value:
+        tag = _tag(item)
+        if tag not in tags:
+            tags.append(tag)
+    return tags
+
+
+def _mentions_in(*texts: str) -> list[str]:
+    found: list[str] = []
+    for text in texts:
+        for match in MENTION_RE.finditer(text):
+            account = match.group(1).lower()
+            if ACCOUNT_RE.fullmatch(account) is None:
+                continue
+            if account not in found:
+                found.append(account)
+    return found
+
+
 def validate_envelope(header_command: str, body: Any) -> None:
     if not isinstance(body, dict):
         raise _error("malformed_json", field="request")
@@ -401,6 +444,14 @@ class BBS1Service:
     def _init_schema(self) -> None:
         with self.db.connect() as conn:
             conn.executescript(BBS1_SCHEMA)
+            self._ensure_column(conn, "hbbs1_threads", "download_count", "INTEGER NOT NULL DEFAULT 0")
+            self._ensure_column(conn, "hbbs1_posts", "download_count", "INTEGER NOT NULL DEFAULT 0")
+
+    @staticmethod
+    def _ensure_column(conn: Any, table: str, column: str, definition: str) -> None:
+        columns = {row["name"] for row in conn.execute(f"PRAGMA table_info({table})").fetchall()}
+        if column not in columns:
+            conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
 
     def _now(self) -> int:
         return int(self.clock())
@@ -952,7 +1003,27 @@ class BBS1Service:
             return self._session_data(row, session)
 
     def list_boards(self, session: Session) -> dict[str, Any]:
-        return {"boards": [copy.deepcopy(board) for board in BOARDS]}
+        boards: list[dict[str, Any]] = []
+        with self.db.connect() as conn:
+            for board in BOARDS:
+                item = copy.deepcopy(board)
+                thread_stats = conn.execute(
+                    "SELECT COUNT(*) AS thread_count, COALESCE(SUM(reply_count), 0) AS reply_count, "
+                    "COALESCE(SUM(download_count), 0) AS thread_downloads "
+                    "FROM hbbs1_threads WHERE board_id = ? AND status = 'published'",
+                    (board["board_id"],),
+                ).fetchone()
+                post_stats = conn.execute(
+                    "SELECT COUNT(*) AS post_count "
+                    "FROM hbbs1_posts WHERE board_id = ? AND status = 'published'",
+                    (board["board_id"],),
+                ).fetchone()
+                item["thread_count"] = int(thread_stats["thread_count"])
+                item["post_count"] = int(post_stats["post_count"])
+                item["reply_count"] = int(thread_stats["reply_count"])
+                item["download_count"] = int(thread_stats["thread_downloads"])
+                boards.append(item)
+        return {"boards": boards}
 
     def _board(self, board_id: Any) -> dict[str, Any]:
         if not isinstance(board_id, str) or board_id not in _BOARDS:
@@ -968,11 +1039,27 @@ class BBS1Service:
             raise _error("thread_not_found", field="args.thread_id")
         return row
 
+    def _thread_tags(self, conn: Any, thread_id: str) -> list[str]:
+        rows = conn.execute(
+            "SELECT tag FROM hbbs1_post_tags WHERE post_id IN "
+            "(SELECT post_id FROM hbbs1_posts WHERE thread_id = ? AND subject IS NOT NULL) "
+            "ORDER BY tag ASC",
+            (thread_id,),
+        ).fetchall()
+        return [row["tag"] for row in rows]
+
+    def _post_tags(self, conn: Any, post_id: str) -> list[str]:
+        rows = conn.execute(
+            "SELECT tag FROM hbbs1_post_tags WHERE post_id = ? ORDER BY tag ASC",
+            (post_id,),
+        ).fetchall()
+        return [row["tag"] for row in rows]
+
     def _thread_public(self, conn: Any, row: Any) -> dict[str, Any]:
         author = self._account(conn, row["author_account"])
         if author is None:
             raise _error("internal_error")
-        return {
+        thread: dict[str, Any] = {
             "thread_id": row["thread_id"],
             "board_id": row["board_id"],
             "subject": row["subject"],
@@ -980,9 +1067,14 @@ class BBS1Service:
             "created_at": _iso(int(row["created_at"])),
             "last_activity_at": _iso(int(row["last_activity_at"])),
             "reply_count": int(row["reply_count"]),
+            "download_count": int(row["download_count"]),
             "status": row["status"],
             "trust": "untrusted",
         }
+        tags = self._thread_tags(conn, row["thread_id"])
+        if tags:
+            thread["tags"] = tags
+        return thread
 
     def _post_full(self, conn: Any, row: Any) -> dict[str, Any]:
         author = self._account(conn, row["author_account"])
@@ -997,12 +1089,22 @@ class BBS1Service:
             "created_at": _iso(int(row["created_at"])),
             "status": row["status"],
             "content_hash": row["content_hash"],
+            "reply_count": int(
+                conn.execute(
+                    "SELECT COUNT(*) FROM hbbs1_posts WHERE reply_to_post_id = ? AND status = 'published'",
+                    (row["post_id"],),
+                ).fetchone()[0]
+            ),
+            "download_count": int(row["download_count"]),
             "trust": "untrusted",
         }
         if row["subject"] is not None:
             post["subject"] = row["subject"]
         if row["reply_to_post_id"] is not None:
             post["reply_to_post_id"] = row["reply_to_post_id"]
+        tags = self._post_tags(conn, row["post_id"])
+        if tags:
+            post["tags"] = tags
         return post
 
     def _post_summary(self, conn: Any, row: Any) -> dict[str, Any]:
@@ -1109,6 +1211,356 @@ class BBS1Service:
             thread_data = self._thread_public(conn, thread)
         return {"thread": thread_data, "posts": posts, "next_cursor": next_cursor}
 
+    def download_post(self, session: Session, args: Mapping[str, Any]) -> dict[str, Any]:
+        board = self._board(args.get("board"))
+        thread_id = args.get("thread_id")
+        post_id = args.get("post_id")
+        if not isinstance(thread_id, str):
+            raise _error("invalid_field", field="args.thread_id")
+        if not isinstance(post_id, str):
+            raise _error("invalid_field", field="args.post_id")
+        if board["board_id"] != "holyc":
+            raise _error("download_not_allowed", field="args.board")
+        now = self._now()
+        with self.db.transaction() as conn:
+            account_row = self._account(conn, session.account)
+            if account_row is None:
+                raise _error("account_rejected")
+            self._status_error(conn, account_row)
+            thread = self._thread_row(conn, board["board_id"], thread_id)
+            post = conn.execute(
+                "SELECT * FROM hbbs1_posts WHERE post_id = ? AND thread_id = ? AND board_id = ?",
+                (post_id, thread_id, board["board_id"]),
+            ).fetchone()
+            if post is None or not self._visible(post, session) or not self._thread_visible(thread, session):
+                raise _error("post_not_found", field="args.post_id")
+            prior = conn.execute(
+                "SELECT last_at FROM hbbs1_downloads WHERE account = ? AND post_id = ?",
+                (session.account, post_id),
+            ).fetchone()
+            incremented = prior is None or now - int(prior["last_at"]) >= DOWNLOAD_WINDOW_SECONDS
+            if incremented:
+                conn.execute(
+                    "UPDATE hbbs1_posts SET download_count = download_count + 1 WHERE post_id = ?",
+                    (post_id,),
+                )
+                conn.execute(
+                    "UPDATE hbbs1_threads SET download_count = download_count + 1 WHERE thread_id = ?",
+                    (thread_id,),
+                )
+                conn.execute(
+                    "INSERT OR REPLACE INTO hbbs1_downloads(account, post_id, last_at) VALUES (?, ?, ?)",
+                    (session.account, post_id, now),
+                )
+            self._audit(
+                conn,
+                session.account,
+                "post.download",
+                target_type="post",
+                target_id=post_id,
+                detail={
+                    "board": board["board_id"],
+                    "thread_id": thread_id,
+                    "incremented": incremented,
+                },
+            )
+            post = conn.execute("SELECT * FROM hbbs1_posts WHERE post_id = ?", (post_id,)).fetchone()
+            thread = conn.execute("SELECT * FROM hbbs1_threads WHERE thread_id = ?", (thread_id,)).fetchone()
+            return {
+                "post": self._post_full(conn, post),
+                "thread": self._thread_public(conn, thread),
+                "download_count": int(post["download_count"]),
+                "incremented": incremented,
+                "window_seconds": DOWNLOAD_WINDOW_SECONDS,
+            }
+
+    # ---------------------------------------------------------------- digest
+    @staticmethod
+    def _digest_subject(value: Any) -> str:
+        text = value if isinstance(value, str) else ""
+        return text[:80]
+
+    def _followed_boards(self, conn: Any, account: str, now: int) -> list[str]:
+        rows = conn.execute(
+            "SELECT DISTINCT board_id FROM hbbs1_posts "
+            "WHERE author_account = ? AND status = 'published' AND created_at >= ?",
+            (account, now - 30 * 86_400),
+        ).fetchall()
+        return sorted({row["board_id"] for row in rows} | {"announcements"})
+
+    def list_digest(self, session: Session, args: Mapping[str, Any]) -> dict[str, Any]:
+        cursor = args.get("cursor")
+        now = self._now()
+        with self.db.transaction() as conn:
+            account_row = self._account(conn, session.account)
+            if account_row is None:
+                raise _error("account_rejected")
+            self._status_error(conn, account_row)
+            if cursor is None:
+                state = conn.execute(
+                    "SELECT last_digest_at FROM hbbs1_digest_state WHERE account = ?",
+                    (session.account,),
+                ).fetchone()
+                since = (
+                    int(state["last_digest_at"])
+                    if state is not None
+                    else now - DIGEST_FIRST_WINDOW_SECONDS
+                )
+            else:
+                if not isinstance(cursor, str) or DIGEST_CURSOR_RE.fullmatch(cursor) is None:
+                    raise _error("invalid_field", field="args.cursor")
+                since = int(cursor[4:])
+                if since > now:
+                    raise _error("invalid_field", field="args.cursor")
+
+            if session.role == "sysop":
+                unread = conn.execute(
+                    "SELECT COUNT(*) AS total FROM hbbs1_messages "
+                    "WHERE recipient IN (?, 'sysop') AND read_at IS NULL",
+                    (session.account,),
+                ).fetchone()["total"]
+                mail_rows = conn.execute(
+                    "SELECT * FROM hbbs1_messages WHERE recipient IN (?, 'sysop') "
+                    "ORDER BY created_at DESC, message_id DESC LIMIT 5",
+                    (session.account,),
+                ).fetchall()
+            else:
+                unread = conn.execute(
+                    "SELECT COUNT(*) AS total FROM hbbs1_messages "
+                    "WHERE recipient = ? AND read_at IS NULL",
+                    (session.account,),
+                ).fetchone()["total"]
+                mail_rows = conn.execute(
+                    "SELECT * FROM hbbs1_messages WHERE recipient = ? "
+                    "ORDER BY created_at DESC, message_id DESC LIMIT 5",
+                    (session.account,),
+                ).fetchall()
+            latest_mail = [
+                {
+                    "message_id": row["message_id"],
+                    "from": row["sender"],
+                    "kind": row["kind"],
+                    "subject": self._digest_subject(row["subject"]),
+                    "created_at": _iso(int(row["created_at"])),
+                    "read": row["read_at"] is not None,
+                    "trust": "untrusted",
+                }
+                for row in mail_rows
+            ]
+
+            pending_mentions = conn.execute(
+                "SELECT COUNT(*) AS total FROM hbbs1_mentions m "
+                "JOIN hbbs1_posts p ON p.post_id = m.post_id "
+                "JOIN hbbs1_threads t ON t.thread_id = m.thread_id "
+                "WHERE m.mentioned_account = ? AND m.seen_at IS NULL "
+                "AND p.status = 'published' AND t.status = 'published'",
+                (session.account,),
+            ).fetchone()["total"]
+            mention_rows = conn.execute(
+                "SELECT m.*, t.subject AS thread_subject FROM hbbs1_mentions m "
+                "JOIN hbbs1_posts p ON p.post_id = m.post_id "
+                "JOIN hbbs1_threads t ON t.thread_id = m.thread_id "
+                "WHERE m.mentioned_account = ? AND m.seen_at IS NULL "
+                "AND p.status = 'published' AND t.status = 'published' "
+                "ORDER BY m.created_at DESC, m.mention_id DESC LIMIT 5",
+                (session.account,),
+            ).fetchall()
+            mentions = [
+                {
+                    "mention_id": row["mention_id"],
+                    "post_id": row["post_id"],
+                    "thread_id": row["thread_id"],
+                    "board_id": row["board_id"],
+                    "subject": self._digest_subject(row["thread_subject"]),
+                    "author": row["author_account"],
+                    "created_at": _iso(int(row["created_at"])),
+                    "trust": "untrusted",
+                }
+                for row in mention_rows
+            ]
+            if mention_rows:
+                conn.executemany(
+                    "UPDATE hbbs1_mentions SET seen_at = ? WHERE mention_id = ?",
+                    [(now, row["mention_id"]) for row in mention_rows],
+                )
+
+            reply_filter = (
+                "p.status = 'published' AND p.author_account != ? AND p.created_at >= ? "
+                "AND p.thread_id IN (SELECT thread_id FROM hbbs1_threads WHERE status = 'published') "
+                "AND (p.reply_to_post_id IN "
+                "(SELECT post_id FROM hbbs1_posts WHERE author_account = ?) "
+                "OR (p.reply_to_post_id IS NULL AND p.thread_id IN "
+                "(SELECT thread_id FROM hbbs1_threads WHERE author_account = ?)))"
+            )
+            reply_params = (session.account, since, session.account, session.account)
+            reply_total = conn.execute(
+                f"SELECT COUNT(*) AS total FROM hbbs1_posts p WHERE {reply_filter}",
+                reply_params,
+            ).fetchone()["total"]
+            reply_rows = conn.execute(
+                f"SELECT p.post_id, p.thread_id, p.board_id, p.author_account, p.created_at, "
+                f"t.subject AS thread_subject FROM hbbs1_posts p "
+                f"JOIN hbbs1_threads t ON t.thread_id = p.thread_id "
+                f"WHERE {reply_filter} ORDER BY p.created_at DESC, p.post_id ASC LIMIT 5",
+                reply_params,
+            ).fetchall()
+            replies = [
+                {
+                    "post_id": row["post_id"],
+                    "thread_id": row["thread_id"],
+                    "board_id": row["board_id"],
+                    "subject": self._digest_subject(row["thread_subject"]),
+                    "author": row["author_account"],
+                    "created_at": _iso(int(row["created_at"])),
+                    "trust": "untrusted",
+                }
+                for row in reply_rows
+            ]
+
+            followed = self._followed_boards(conn, session.account, now)
+            placeholders = ", ".join("?" for _ in followed)
+            thread_params = (since, session.account, *followed)
+            new_total = conn.execute(
+                f"SELECT COUNT(*) AS total FROM hbbs1_threads "
+                f"WHERE status = 'published' AND created_at >= ? AND author_account != ? "
+                f"AND board_id IN ({placeholders})",
+                thread_params,
+            ).fetchone()["total"]
+            thread_rows = conn.execute(
+                f"SELECT * FROM hbbs1_threads "
+                f"WHERE status = 'published' AND created_at >= ? AND author_account != ? "
+                f"AND board_id IN ({placeholders}) "
+                f"ORDER BY created_at DESC, thread_id ASC LIMIT 5",
+                thread_params,
+            ).fetchall()
+            new_threads = [
+                {
+                    "thread_id": row["thread_id"],
+                    "board_id": row["board_id"],
+                    "subject": self._digest_subject(row["subject"]),
+                    "author": row["author_account"],
+                    "reply_count": int(row["reply_count"]),
+                    "download_count": int(row["download_count"]),
+                    "created_at": _iso(int(row["created_at"])),
+                    "trust": "untrusted",
+                }
+                for row in thread_rows
+            ]
+
+            conn.execute(
+                "INSERT OR REPLACE INTO hbbs1_digest_state(account, last_digest_at) VALUES (?, ?)",
+                (session.account, now),
+            )
+            return {
+                "digest": {
+                    "generated_at": _iso(now),
+                    "since": _iso(since),
+                    "cursor": f"dig_{now}",
+                    "mail": {"unread": int(unread), "latest": latest_mail},
+                    "mentions": {"pending": int(pending_mentions), "latest": mentions},
+                    "replies": {"count": int(reply_total), "latest": replies},
+                    "followed_boards": {
+                        "boards": followed,
+                        "new_thread_count": int(new_total),
+                        "latest": new_threads,
+                    },
+                    "trust": "untrusted",
+                }
+            }
+
+    def list_mentions(self, session: Session, args: Mapping[str, Any]) -> dict[str, Any]:
+        limit = self._limit(args.get("limit"), 20)
+        offset = self._cursor_offset(args.get("cursor"))
+        with self.db.connect() as conn:
+            rows = conn.execute(
+                "SELECT * FROM hbbs1_mentions WHERE mentioned_account = ? "
+                "ORDER BY created_at DESC, mention_id DESC",
+                (session.account,),
+            ).fetchall()
+            items: list[dict[str, Any]] = []
+            for row in rows:
+                post = conn.execute(
+                    "SELECT * FROM hbbs1_posts WHERE post_id = ?",
+                    (row["post_id"],),
+                ).fetchone()
+                thread = conn.execute(
+                    "SELECT * FROM hbbs1_threads WHERE thread_id = ?",
+                    (row["thread_id"],),
+                ).fetchone()
+                if (
+                    post is None
+                    or thread is None
+                    or not self._visible(post, session)
+                    or not self._thread_visible(thread, session)
+                ):
+                    continue
+                items.append(
+                    {
+                        "mention_id": row["mention_id"],
+                        "post_id": row["post_id"],
+                        "thread_id": row["thread_id"],
+                        "board_id": row["board_id"],
+                        "subject": self._digest_subject(thread["subject"]),
+                        "author": row["author_account"],
+                        "created_at": _iso(int(row["created_at"])),
+                        "seen": row["seen_at"] is not None,
+                        "trust": "untrusted",
+                    }
+                )
+            window = items[offset : offset + limit + 1]
+            mentions = window[:limit]
+        next_cursor = f"off_{offset + limit}" if len(window) > limit else None
+        return {"mentions": mentions, "next_cursor": next_cursor}
+
+    def list_challenges(self, session: Session, args: Mapping[str, Any]) -> dict[str, Any]:
+        tag = args.get("tag")
+        if tag is not None:
+            tag = _tag(tag)
+        limit = self._limit(args.get("limit"), 25)
+        offset = self._cursor_offset(args.get("cursor"))
+        sql = (
+            "SELECT p.post_id, p.thread_id, p.board_id, p.author_account, p.created_at, "
+            "p.download_count, p.status, t.subject, t.reply_count, t.download_count AS thread_downloads, "
+            "pt.tag FROM hbbs1_post_tags pt "
+            "JOIN hbbs1_posts p ON p.post_id = pt.post_id "
+            "JOIN hbbs1_threads t ON t.thread_id = p.thread_id "
+        )
+        params: list[Any] = []
+        if tag is not None:
+            sql += "WHERE pt.tag = ? "
+            params.append(tag)
+        sql += "ORDER BY p.created_at DESC, p.post_id ASC"
+        with self.db.connect() as conn:
+            rows = conn.execute(sql, tuple(params)).fetchall()
+            items: list[dict[str, Any]] = []
+            for row in rows:
+                thread = conn.execute(
+                    "SELECT * FROM hbbs1_threads WHERE thread_id = ?",
+                    (row["thread_id"],),
+                ).fetchone()
+                if self._visible(row, session) and thread is not None and self._thread_visible(thread, session):
+                    author = self._account(conn, row["author_account"])
+                    if author is None:
+                        continue
+                    items.append(
+                        {
+                            "post_id": row["post_id"],
+                            "thread_id": row["thread_id"],
+                            "board_id": row["board_id"],
+                            "subject": self._digest_subject(row["subject"]),
+                            "tag": row["tag"],
+                            "author": self._public_account(author),
+                            "reply_count": int(row["reply_count"]),
+                            "download_count": int(row["thread_downloads"]),
+                            "created_at": _iso(int(row["created_at"])),
+                            "trust": "untrusted",
+                        }
+                    )
+            window = items[offset : offset + limit + 1]
+            challenges = window[:limit]
+        next_cursor = f"off_{offset + limit}" if len(window) > limit else None
+        return {"challenges": challenges, "next_cursor": next_cursor}
+
     # ---------------------------------------------------------------- writes
     def _idempotent(
         self,
@@ -1180,6 +1632,39 @@ class BBS1Service:
             (account, board_id, digest, post_id, self._now()),
         )
 
+    def _record_tags(self, conn: Any, post_id: str, tags: Iterable[str], now: int) -> None:
+        for tag in tags:
+            conn.execute(
+                "INSERT OR IGNORE INTO hbbs1_post_tags(post_id, tag, created_at) VALUES (?, ?, ?)",
+                (post_id, tag, now),
+            )
+
+    def _record_mentions(
+        self,
+        conn: Any,
+        author_account: str,
+        post_id: str,
+        thread_id: str,
+        board_id: str,
+        *texts: str,
+    ) -> list[str]:
+        recorded: list[str] = []
+        now = self._now()
+        for account in _mentions_in(*texts):
+            if account == author_account:
+                continue
+            target = self._account(conn, account)
+            if target is None or target["status"] not in {"active", "probation"}:
+                continue
+            conn.execute(
+                "INSERT OR IGNORE INTO hbbs1_mentions"
+                "(mention_id, post_id, thread_id, board_id, author_account, mentioned_account, created_at) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (_new_id("men_"), post_id, thread_id, board_id, author_account, account, now),
+            )
+            recorded.append(account)
+        return recorded
+
     def _body_limit(self, role: str, board: Mapping[str, Any]) -> int:
         role_limit = int(self.limits.get(role, self.limits["human"])["write"]["max_body_bytes"])
         return min(role_limit, int(board["max_body_bytes"]), 8192)
@@ -1193,6 +1678,7 @@ class BBS1Service:
         board = self._board(args.get("board"))
         subject = _text(args.get("subject"), "args.subject", max_chars=120, allow_lf=False)
         body = _text(args.get("body"), "args.body", max_chars=8192, allow_lf=True)
+        tags = _tags(args.get("tags"))
         client_ref = _client_ref(args.get("client_ref"))
         max_body = self._body_limit(session.role, board)
         if len(body.encode("ascii")) > max_body:
@@ -1226,6 +1712,10 @@ class BBS1Service:
                 (post_id, thread_id, board["board_id"], session.account, subject, body, now, status, digest, client_ref),
             )
             self._record_duplicate(conn, session.account, board["board_id"], digest, post_id)
+            self._record_tags(conn, post_id, tags, now)
+            mentioned = self._record_mentions(
+                conn, session.account, post_id, thread_id, board["board_id"], subject, body
+            )
             if status == "pending":
                 conn.execute(
                     "INSERT INTO hbbs1_modqueue(kind, target_id, state, reason, created_at) "
@@ -1238,13 +1728,20 @@ class BBS1Service:
                 "post.create",
                 target_type="post",
                 target_id=post_id,
-                detail={"board": board["board_id"], "status": status, "body_len": len(body)},
+                detail={
+                    "board": board["board_id"],
+                    "status": status,
+                    "body_len": len(body),
+                    "tag_count": len(tags),
+                    "mention_count": len(mentioned),
+                },
             )
             thread_row = conn.execute("SELECT * FROM hbbs1_threads WHERE thread_id = ?", (thread_id,)).fetchone()
             post_row = conn.execute("SELECT * FROM hbbs1_posts WHERE post_id = ?", (post_id,)).fetchone()
             result = {
                 "post": self._post_full(conn, post_row),
                 "thread": self._thread_public(conn, thread_row),
+                "mentions": mentioned,
                 "idempotent_replay": False,
             }
             self._store_idempotent(conn, session.account, client_ref, "POST", args, result)
@@ -1304,19 +1801,29 @@ class BBS1Service:
                     (post_id, now),
                 )
             self._record_duplicate(conn, session.account, board["board_id"], digest, post_id)
+            mentioned = self._record_mentions(
+                conn, session.account, post_id, thread_id, board["board_id"], body
+            )
             self._audit(
                 conn,
                 session.account,
                 "post.reply",
                 target_type="post",
                 target_id=post_id,
-                detail={"board": board["board_id"], "thread_id": thread_id, "status": status, "body_len": len(body)},
+                detail={
+                    "board": board["board_id"],
+                    "thread_id": thread_id,
+                    "status": status,
+                    "body_len": len(body),
+                    "mention_count": len(mentioned),
+                },
             )
             post_row = conn.execute("SELECT * FROM hbbs1_posts WHERE post_id = ?", (post_id,)).fetchone()
             thread_row = conn.execute("SELECT * FROM hbbs1_threads WHERE thread_id = ?", (thread_id,)).fetchone()
             result = {
                 "post": self._post_full(conn, post_row),
                 "thread": self._thread_public(conn, thread_row),
+                "mentions": mentioned,
                 "idempotent_replay": False,
             }
             self._store_idempotent(conn, session.account, client_ref, "REPLY", args, result)
@@ -1351,6 +1858,12 @@ class BBS1Service:
             return self._mail_list(session, args)
         if action == "read":
             return self._mail_read(session, args)
+        if action == "challenge_draft":
+            return self._challenge_draft(session, args)
+        if action == "challenge_drafts":
+            return self._challenge_drafts(session, args)
+        if action == "challenge_approve":
+            return self._challenge_approve(session, args)
         raise _error("invalid_field", field="args.action")
 
     def _mail_send(self, session: Session, args: Mapping[str, Any]) -> dict[str, Any]:
@@ -1486,6 +1999,171 @@ class BBS1Service:
                 conn.execute("UPDATE hbbs1_messages SET read_at = ? WHERE message_id = ?", (self._now(), message_id))
                 row = conn.execute("SELECT * FROM hbbs1_messages WHERE message_id = ?", (message_id,)).fetchone()
             return {"message": self._message_public(conn, row, include_body=True)}
+
+    def _challenge_draft_public(self, row: Any, *, include_body: bool = False) -> dict[str, Any]:
+        draft: dict[str, Any] = {
+            "draft_id": row["draft_id"],
+            "subject": row["subject"],
+            "tag": row["tag"],
+            "status": row["status"],
+            "created_by": row["created_by"],
+            "created_at": _iso(int(row["created_at"])),
+            "approved_by": row["approved_by"],
+            "approved_at": _iso(int(row["approved_at"])) if row["approved_at"] is not None else None,
+            "thread_id": row["thread_id"],
+            "post_id": row["post_id"],
+            "trust": "untrusted",
+        }
+        if include_body:
+            draft["body"] = row["body"]
+        return draft
+
+    def _challenge_draft(self, session: Session, args: Mapping[str, Any]) -> dict[str, Any]:
+        if session.role not in {"sysop", "agent"}:
+            raise _error("forbidden", field="args.action")
+        subject = _text(args.get("subject"), "args.subject", max_chars=120, allow_lf=False)
+        body = _text(args.get("body"), "args.body", max_chars=8192, allow_lf=True)
+        tag_value = args.get("tag")
+        tag = _tag(tag_value) if tag_value is not None else None
+        client_ref = _client_ref(args.get("client_ref"))
+        board = _BOARDS["announcements"]
+        max_body = self._body_limit(session.role, board)
+        if len(body.encode("ascii")) > max_body:
+            raise _error("content_too_large", field="args.body", details={"limit": max_body})
+        now = self._now()
+        with self.db.transaction() as conn:
+            account_row = self._account(conn, session.account)
+            if account_row is None:
+                raise _error("account_rejected")
+            self._status_error(conn, account_row)
+            replay = self._idempotent(conn, session.account, client_ref, "MAIL", args)
+            if replay is not None:
+                return replay
+            draft_id = _new_id("drf_")
+            conn.execute(
+                "INSERT INTO hbbs1_challenge_drafts"
+                "(draft_id, subject, body, tag, created_by, created_at, status) "
+                "VALUES (?, ?, ?, ?, ?, ?, 'draft')",
+                (draft_id, subject, body, tag, session.account, now),
+            )
+            self._audit(
+                conn,
+                session.account,
+                "challenge.draft",
+                target_type="challenge_draft",
+                target_id=draft_id,
+                detail={"has_tag": tag is not None, "body_len": len(body)},
+            )
+            row = conn.execute(
+                "SELECT * FROM hbbs1_challenge_drafts WHERE draft_id = ?", (draft_id,)
+            ).fetchone()
+            result = {
+                "draft": self._challenge_draft_public(row),
+                "published": False,
+                "idempotent_replay": False,
+            }
+            self._store_idempotent(conn, session.account, client_ref, "MAIL", args, result)
+            return result
+
+    def _challenge_drafts(self, session: Session, args: Mapping[str, Any]) -> dict[str, Any]:
+        if session.role not in {"sysop", "agent"}:
+            raise _error("forbidden", field="args.action")
+        limit = self._limit(args.get("limit"), 20)
+        offset = self._cursor_offset(args.get("cursor"))
+        with self.db.connect() as conn:
+            if session.role == "sysop":
+                rows = conn.execute(
+                    "SELECT * FROM hbbs1_challenge_drafts ORDER BY created_at DESC, draft_id ASC"
+                ).fetchall()
+            else:
+                rows = conn.execute(
+                    "SELECT * FROM hbbs1_challenge_drafts WHERE created_by = ? "
+                    "ORDER BY created_at DESC, draft_id ASC",
+                    (session.account,),
+                ).fetchall()
+            window = rows[offset : offset + limit + 1]
+            drafts = [self._challenge_draft_public(row) for row in window[:limit]]
+        next_cursor = f"off_{offset + limit}" if len(window) > limit else None
+        return {"drafts": drafts, "next_cursor": next_cursor}
+
+    def _challenge_approve(self, session: Session, args: Mapping[str, Any]) -> dict[str, Any]:
+        if session.role != "sysop":
+            raise _error("forbidden", field="args.action")
+        draft_id = args.get("draft_id")
+        if not isinstance(draft_id, str):
+            raise _error("invalid_field", field="args.draft_id")
+        client_ref = _client_ref(args.get("client_ref"))
+        now = self._now()
+        board = _BOARDS["announcements"]
+        with self.db.transaction() as conn:
+            account_row = self._account(conn, session.account)
+            if account_row is None:
+                raise _error("account_rejected")
+            self._status_error(conn, account_row)
+            replay = self._idempotent(conn, session.account, client_ref, "MAIL", args)
+            if replay is not None:
+                return replay
+            draft = conn.execute(
+                "SELECT * FROM hbbs1_challenge_drafts WHERE draft_id = ?", (draft_id,)
+            ).fetchone()
+            if draft is None:
+                raise _error("challenge_not_found", field="args.draft_id")
+            if draft["status"] != "draft":
+                raise _error("challenge_not_draft", field="args.draft_id")
+            subject = draft["subject"]
+            body = draft["body"]
+            thread_id = _new_id("thr_")
+            post_id = _new_id("pst_")
+            digest = content_hash(session.account, board["board_id"], "new", subject, body)
+            conn.execute(
+                "INSERT INTO hbbs1_threads(thread_id, board_id, subject, author_account, created_at, "
+                "last_activity_at, reply_count, download_count, status) "
+                "VALUES (?, 'announcements', ?, ?, ?, ?, 0, 0, 'published')",
+                (thread_id, subject, session.account, now, now),
+            )
+            conn.execute(
+                "INSERT INTO hbbs1_posts(post_id, thread_id, board_id, author_account, subject, body, "
+                "created_at, status, content_hash, download_count) "
+                "VALUES (?, ?, 'announcements', ?, ?, ?, ?, 'published', ?, 0)",
+                (post_id, thread_id, session.account, subject, body, now, digest),
+            )
+            if draft["tag"] is not None:
+                self._record_tags(conn, post_id, [draft["tag"]], now)
+            mentioned = self._record_mentions(
+                conn, session.account, post_id, thread_id, board["board_id"], subject, body
+            )
+            conn.execute(
+                "UPDATE hbbs1_challenge_drafts SET status = 'approved', approved_by = ?, "
+                "approved_at = ?, thread_id = ?, post_id = ? WHERE draft_id = ?",
+                (session.account, now, thread_id, post_id, draft_id),
+            )
+            self._audit(
+                conn,
+                session.account,
+                "challenge.approve",
+                target_type="challenge_draft",
+                target_id=draft_id,
+                detail={"thread_id": thread_id, "post_id": post_id, "mention_count": len(mentioned)},
+            )
+            draft = conn.execute(
+                "SELECT * FROM hbbs1_challenge_drafts WHERE draft_id = ?", (draft_id,)
+            ).fetchone()
+            thread_row = conn.execute(
+                "SELECT * FROM hbbs1_threads WHERE thread_id = ?", (thread_id,)
+            ).fetchone()
+            post_row = conn.execute(
+                "SELECT * FROM hbbs1_posts WHERE post_id = ?", (post_id,)
+            ).fetchone()
+            result = {
+                "draft": self._challenge_draft_public(draft),
+                "thread": self._thread_public(conn, thread_row),
+                "post": self._post_full(conn, post_row),
+                "mentions": mentioned,
+                "published": True,
+                "idempotent_replay": False,
+            }
+            self._store_idempotent(conn, session.account, client_ref, "MAIL", args, result)
+            return result
 
     def logout(self, session: Session, args: Mapping[str, Any]) -> dict[str, Any]:
         revoke_refresh = bool(args.get("revoke_refresh", False))
@@ -1936,10 +2614,21 @@ class BBS1Connection:
                     data = self.service.list_boards(self.session)
                 elif action == "threads":
                     data = self.service.list_threads(self.session, args)
-                else:
+                elif action == "posts":
                     data = self.service.list_posts(self.session, args)
+                elif action == "digest":
+                    data = self.service.list_digest(self.session, args)
+                elif action == "mentions":
+                    data = self.service.list_mentions(self.session, args)
+                elif action == "challenges":
+                    data = self.service.list_challenges(self.session, args)
+                else:
+                    raise _error("invalid_field", field="args.action")
             elif command == "READ":
-                data = self.service.read_thread(self.session, args)
+                if args.get("action") == "download":
+                    data = self.service.download_post(self.session, args)
+                else:
+                    data = self.service.read_thread(self.session, args)
             elif command == "POST":
                 data = self.service.create_post(self.session, args)
             elif command == "REPLY":
@@ -2012,15 +2701,31 @@ class BBS1Connection:
             elif action == "posts":
                 _check_keys(args, {"action", "board", "thread_id", "cursor", "limit"})
                 _require(args, "action", "board", "thread_id")
+            elif action == "digest":
+                _check_keys(args, {"action", "cursor"})
+                _require(args, "action")
+            elif action == "mentions":
+                _check_keys(args, {"action", "cursor", "limit"})
+                _require(args, "action")
+            elif action == "challenges":
+                _check_keys(args, {"action", "tag", "cursor", "limit"})
+                _require(args, "action")
             else:
                 raise _error("invalid_field", field="args.action")
             return
         if command == "READ":
-            _check_keys(args, {"board", "thread_id", "post_id", "cursor", "limit"})
-            _require(args, "board", "thread_id")
+            action = args.get("action")
+            if action is None:
+                _check_keys(args, {"board", "thread_id", "post_id", "cursor", "limit"})
+                _require(args, "board", "thread_id")
+            elif action == "download":
+                _check_keys(args, {"action", "board", "thread_id", "post_id"})
+                _require(args, "action", "board", "thread_id", "post_id")
+            else:
+                raise _error("invalid_field", field="args.action")
             return
         if command == "POST":
-            _check_keys(args, {"board", "subject", "body", "client_ref"})
+            _check_keys(args, {"board", "subject", "body", "tags", "client_ref"})
             _require(args, "board", "subject", "body")
             return
         if command == "REPLY":
@@ -2045,6 +2750,15 @@ class BBS1Connection:
             elif action == "read":
                 _check_keys(args, {"action", "message_id"})
                 _require(args, "action", "message_id")
+            elif action == "challenge_draft":
+                _check_keys(args, {"action", "subject", "body", "tag", "client_ref"})
+                _require(args, "action", "subject", "body")
+            elif action == "challenge_drafts":
+                _check_keys(args, {"action", "cursor", "limit"})
+                _require(args, "action")
+            elif action == "challenge_approve":
+                _check_keys(args, {"action", "draft_id", "client_ref"})
+                _require(args, "action", "draft_id")
             else:
                 raise _error("invalid_field", field="args.action")
             return
