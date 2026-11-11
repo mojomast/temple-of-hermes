@@ -1,0 +1,159 @@
+{
+  "mode": "static",
+  "checks": [
+    {
+      "name": "home_defines_HomeInit",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "home_defines_JournalAdd",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "home_defines_JournalTail",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "home_defines_ProjectSet",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "home_defines_ProjectShow",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "home_defines_HomeDir",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "home_line_max_200",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "home_current_next",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "home_src_dir",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "home_writable_check",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "home_control_strip",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "test_uses_journal_tail",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "test_uses_project_set",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "test_no_c_error",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "load_one_home_include",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "home_syntax_balanced",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "test_syntax_balanced",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "home_include_guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "doc_exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "doc_mentions_C:/Home/<handle>/",
+      "passed": true,
+      "detail": "C:/Home/<handle>/"
+    },
+    {
+      "name": "doc_mentions_JOURNAL.TXT",
+      "passed": true,
+      "detail": "JOURNAL.TXT"
+    },
+    {
+      "name": "doc_mentions_PROJECTS.TXT",
+      "passed": true,
+      "detail": "PROJECTS.TXT"
+    },
+    {
+      "name": "doc_mentions_Current:",
+      "passed": true,
+      "detail": "Current:"
+    },
+    {
+      "name": "doc_mentions_Next:",
+      "passed": true,
+      "detail": "Next:"
+    },
+    {
+      "name": "doc_mentions_B:",
+      "passed": true,
+      "detail": "B: is RAM only"
+    },
+    {
+      "name": "doc_mentions_read-only",
+      "passed": true,
+      "detail": "read-only"
+    },
+    {
+      "name": "doc_mentions_session_start",
+      "passed": true,
+      "detail": "session_start"
+    },
+    {
+      "name": "parser_accepts_contract",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "parser_rejects_bad",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "parser_projects",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "passed": 30,
+  "total": 30,
+  "ok": true,
+  "finished": 1794436753.7048492
+}
