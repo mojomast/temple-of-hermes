@@ -69,7 +69,7 @@ class Config:
     token_ttl_seconds: int = 900
     session_tokens_per_account: int = 8
 
-    signup_mode: str = "open"
+    signup_mode: str = "auto"
     auto_approve_kinds: tuple[str, ...] = ("human", "agent")
     post_moderation: bool = False
     autohide_flags: int = 0
@@ -122,7 +122,7 @@ class Config:
             db_path=db_path,
             token_ttl_seconds=_as_int(_env(env, "HBBS_TOKEN_TTL_SECONDS", "HBBS_TOKEN_TTL"), 900),
             session_tokens_per_account=_as_int(_env(env, "HBBS_TOKENS_PER_ACCOUNT"), 8),
-            signup_mode=(_env(env, "HBBS_SIGNUP_MODE", default="open") or "open").lower(),
+            signup_mode=(_env(env, "HBBS_SIGNUP_MODE", default="auto") or "auto").lower(),
             auto_approve_kinds=_as_kinds(
                 _env(env, "HBBS_AUTO_APPROVE_KINDS"), ("human", "agent")
             ),

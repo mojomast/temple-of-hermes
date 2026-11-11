@@ -73,7 +73,9 @@ def test_auto_signup_mode_and_kind_list(tmp_path):
     assert config.auto_approve_kinds == ("human", "agent")
 
     default = Config.from_env({"HBBS_DATA_DIR": str(tmp_path)})
-    assert default.signup_mode == "open"
+    assert default.signup_mode == "auto"
+    moderated = Config.from_env({"HBBS_DATA_DIR": str(tmp_path), "HBBS_SIGNUP_MODE": "open"})
+    assert moderated.signup_mode == "open"
     assert default.auto_approve_kinds == ("human", "agent")
 
     selected = Config.from_env(

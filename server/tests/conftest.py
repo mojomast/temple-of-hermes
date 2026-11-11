@@ -36,6 +36,8 @@ def clock() -> FakeClock:
 def make_config(tmp_path: Path, **overrides) -> Config:
     base = Config(
         db_path=str(tmp_path / "hbbs.sqlite3"),
+        # These suites exercise the moderated queue; auto is the server default.
+        signup_mode="open",
         sysop_username=SYSOP,
         sysop_password=SYSOP_PASSWORD,
         token_ttl_seconds=900,

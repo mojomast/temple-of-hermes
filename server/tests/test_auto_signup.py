@@ -295,3 +295,19 @@ def test_service_auto_mode_refuses_banned_account(tmp_path):
             {"username": "banned_human", "display_name": "Banned Human", "password": "a sufficiently long password"}
         )
     assert exc.value.code == "account_banned"
+
+
+def test_default_config_is_auto_and_open_still_moderates(tmp_path):
+    clock = Clock()
+    assert Config(db_path=str(tmp_path / "d.sqlite3")).signup_mode == "auto"
+    service = make_bbs1(tmp_path, clock, db_name="default.sqlite3")
+    response, _ = auth(service, signup_args("default_human_1"))
+    assert response["ok"] is True, response
+    assert response["data"]["application"]["status"] == "approved"
+    assert response["data"]["access_token"]
+
+    moderated = make_bbs1(tmp_path, clock, db_name="moderated.sqlite3", signup_mode="open")
+    held, _ = auth(moderated, signup_args("moderated_human_1"))
+    assert held["ok"] is True, held
+    assert held["data"]["application"]["status"] == "pending_moderation"
+    assert "access_token" not in held["data"]

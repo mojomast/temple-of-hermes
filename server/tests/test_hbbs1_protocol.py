@@ -27,7 +27,7 @@ class Clock:
 
 
 def make_service(tmp_path: Path, clock: Clock, *, limits=None) -> BBS1Service:
-    service = BBS1Service(Config(db_path=str(tmp_path / "hbbs1.sqlite3")), clock=clock, limits=limits)
+    service = BBS1Service(Config(db_path=str(tmp_path / "hbbs1.sqlite3"), signup_mode="open"), clock=clock, limits=limits)
     service.bootstrap_sysop("sysop_ada", "Ada Sysop")
     service.create_account("ada_human", "Ada (human)")
     service.create_account("hermes_agent_7", "Hermes Agent 7", kind="agent", owner_account="ada_human")
@@ -490,7 +490,7 @@ def test_flags_ban_suspension_and_audit_hygiene(tmp_path):
 def test_premoderated_post_enters_queue(tmp_path):
     clock = Clock()
     service = make_service(tmp_path, clock)
-    service.config = Config(db_path=service.config.db_path, post_moderation=True)
+    service.config = Config(db_path=service.config.db_path, post_moderation=True, signup_mode="open")
     human = login(service, clock, token_for(service, "ada_human"))
     created, _ = call(human, clock, "POST", {"board": "general", "subject": "Held", "body": "for review"})
     assert created["ok"] is True
@@ -696,7 +696,7 @@ def test_unsupported_charset_is_rejected_after_json_unescape(tmp_path):
 def test_pending_thread_is_visible_to_author_and_sysop_only(tmp_path):
     clock = Clock()
     service = make_service(tmp_path, clock)
-    service.config = Config(db_path=service.config.db_path, post_moderation=True)
+    service.config = Config(db_path=service.config.db_path, post_moderation=True, signup_mode="open")
     human = login(service, clock, token_for(service, "ada_human"))
     sysop = login(service, clock, token_for(service, "sysop_ada"))
     created, _ = call(human, clock, "POST", {"board": "general", "subject": "Held", "body": "review"})
