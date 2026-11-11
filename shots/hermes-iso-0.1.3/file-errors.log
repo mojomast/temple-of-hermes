@@ -1,0 +1,11 @@
+22:29:28 waiting for HBEACON
+22:29:36 beacon: HBEACON TempleOfHermes/0.1.3
+22:29:36 missing_dir: status=err code='missing_dir' ping=ok version=0.1.3 -> PASS
+22:29:37 released_bug_path: status=err code='bad_drive' ping=ok version=0.1.3 -> PASS
+22:29:37 read_only_cd: status=err code='read_only' ping=ok version=0.1.3 -> PASS
+22:29:37 ram_write: status=ok code='' ping=ok version=0.1.3 -> PASS
+22:29:37 ram_pull: status=ok bytes=12 matches=True -> PASS
+22:29:37 huge_payload: status=err code='too_large' ping=ok -> PASS
+22:29:37 bad_drive: status=err code='bad_drive' ping=ok version=0.1.3 -> PASS
+22:29:38 screen bad=[] palette={'size': [640, 480], 'mode': 'P', 'used': 6}
+22:29:38 file-error matrix: 7/7 screen_bad=False

@@ -3,6 +3,7 @@ Cd(__DIR__);;
 #include "Glbls"
 #include "Protocol"
 #include "StateDir"
+#include "FileGuard"
 #include "Text"
 #include "Events"
 #include "Presence"

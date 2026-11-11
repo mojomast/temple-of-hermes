@@ -2,7 +2,7 @@
 // Public-domain work, with credit to Terry A. Davis (TempleOS)
 // and the TinkerOS authors (tinkeros/TinkerOS).
 
-#define HERMES_VERSION		"0.1.0"
+#define HERMES_VERSION		"0.1.3"
 #define HERMES_NAME		"TempleOfHermes"
 #define HERMES_COM		1
 #define HERMES_BAUD		115200

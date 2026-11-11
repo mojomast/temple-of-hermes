@@ -3,7 +3,7 @@ $WW,1$$FG,5$$TX+CX,"About THE TEMPLE OF HERMES"$$FG$
 $FG,5$What this is:$FG$
 THE TEMPLE OF HERMES is a public-domain operating system for a human and an
 AI agent sharing one machine.  It is a rebrand and continuation of TinkerOS
-5.20-rc10, which is a fork of TempleOS.  This image is version 0.1.2.
+5.20-rc10, which is a fork of TempleOS.  This image is version 0.1.3.
 
 $FG,5$Lineage and credit:$FG$
 * $LK,"TempleOS",A="FI:::/Doc/AboutTempleOS.DD"$ was created by $FG,2$Terry A. Davis$FG$ and is public domain.
