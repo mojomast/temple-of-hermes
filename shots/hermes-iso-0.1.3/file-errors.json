@@ -1,0 +1,231 @@
+{
+  "iso": "dist/TempleOfHermes-0.1.3.ISO",
+  "cases": [
+    {
+      "case": "missing_dir",
+      "op": "push",
+      "path": "T:/Hermes/Apps/__HERMES_NO_SUCH_DIR__/marker.txt",
+      "status": "err",
+      "code": "missing_dir",
+      "accepted": [
+        "missing_dir"
+      ],
+      "must_ok": false,
+      "payload": {
+        "ok": 0,
+        "error": "missing_dir",
+        "code": "missing_dir",
+        "op": "push",
+        "drive": "T",
+        "path": "T:/Hermes/Apps/__HERMES_NO_SUCH_DIR__/marker.txt"
+      },
+      "ok": true,
+      "ping_after": {
+        "status": "ok",
+        "pong": 1,
+        "version": "0.1.3",
+        "payload": {
+          "pong": 1,
+          "t": 5.772,
+          "mode": "user",
+          "version": "0.1.3"
+        }
+      }
+    },
+    {
+      "case": "released_bug_path",
+      "op": "push",
+      "path": "C:/Hermes/Apps/HermesBBS/token.txt",
+      "status": "err",
+      "code": "bad_drive",
+      "accepted": [
+        "bad_drive",
+        "missing_dir",
+        "read_only"
+      ],
+      "must_ok": false,
+      "payload": {
+        "ok": 0,
+        "error": "bad_drive",
+        "code": "bad_drive",
+        "op": "push",
+        "drive": "C",
+        "path": "C:/Hermes/Apps/HermesBBS/token.txt"
+      },
+      "ok": true,
+      "ping_after": {
+        "status": "ok",
+        "pong": 1,
+        "version": "0.1.3",
+        "payload": {
+          "pong": 1,
+          "t": 5.816,
+          "mode": "user",
+          "version": "0.1.3"
+        }
+      }
+    },
+    {
+      "case": "read_only_cd",
+      "op": "push",
+      "path": "T:/Hermes/Apps/Launcher/hermes-daemon-0.1.3-marker.txt",
+      "status": "err",
+      "code": "read_only",
+      "accepted": [
+        "read_only"
+      ],
+      "must_ok": false,
+      "payload": {
+        "ok": 0,
+        "error": "read_only",
+        "code": "read_only",
+        "op": "push",
+        "drive": "T",
+        "path": "T:/Hermes/Apps/Launcher/hermes-daemon-0.1.3-marker.txt"
+      },
+      "ok": true,
+      "ping_after": {
+        "status": "ok",
+        "pong": 1,
+        "version": "0.1.3",
+        "payload": {
+          "pong": 1,
+          "t": 5.875,
+          "mode": "user",
+          "version": "0.1.3"
+        }
+      }
+    },
+    {
+      "case": "ram_write",
+      "op": "push",
+      "path": "B:/Tmp/hermes-daemon-fix-0.1.3-marker.txt",
+      "status": "ok",
+      "code": "",
+      "accepted": [
+        ""
+      ],
+      "must_ok": true,
+      "payload": {
+        "ok": 1,
+        "wrote": 155,
+        "path": "B:/Tmp/hermes-daemon-fix-0.1.3-marker.txt"
+      },
+      "ok": true,
+      "ping_after": {
+        "status": "ok",
+        "pong": 1,
+        "version": "0.1.3",
+        "payload": {
+          "pong": 1,
+          "t": 6.035,
+          "mode": "user",
+          "version": "0.1.3"
+        }
+      }
+    },
+    {
+      "case": "ram_pull",
+      "op": "pull",
+      "path": "B:/Tmp/hermes-daemon-fix-0.1.3-marker.txt",
+      "status": "ok",
+      "code": "",
+      "payload": {
+        "bytes": 12,
+        "matches": true
+      },
+      "ok": true,
+      "ping_after": {
+        "status": "ok",
+        "pong": 1,
+        "version": "0.1.3",
+        "payload": {
+          "pong": 1,
+          "t": 6.104,
+          "mode": "user",
+          "version": "0.1.3"
+        }
+      }
+    },
+    {
+      "case": "huge_payload",
+      "op": "push",
+      "path": "",
+      "status": "err",
+      "code": "too_large",
+      "accepted": [
+        "too_large"
+      ],
+      "declared_len": 262145,
+      "payload": {
+        "ok": 0,
+        "error": "too_large",
+        "code": "too_large",
+        "op": "push",
+        "limit": 262144,
+        "len": 262145
+      },
+      "ping_after": {
+        "status": "ok",
+        "pong": 1,
+        "version": "0.1.3",
+        "payload": {
+          "pong": 1,
+          "t": 6.179,
+          "mode": "user",
+          "version": "0.1.3"
+        }
+      },
+      "ok": true
+    },
+    {
+      "case": "bad_drive",
+      "op": "push",
+      "path": "Q:/Hermes/marker.txt",
+      "status": "err",
+      "code": "bad_drive",
+      "accepted": [
+        "bad_drive"
+      ],
+      "must_ok": false,
+      "payload": {
+        "ok": 0,
+        "error": "bad_drive",
+        "code": "bad_drive",
+        "op": "push",
+        "drive": "Q",
+        "path": "Q:/Hermes/marker.txt"
+      },
+      "ok": true,
+      "ping_after": {
+        "status": "ok",
+        "pong": 1,
+        "version": "0.1.3",
+        "payload": {
+          "pong": 1,
+          "t": 6.261,
+          "mode": "user",
+          "version": "0.1.3"
+        }
+      }
+    }
+  ],
+  "beacon": "HBEACON TempleOfHermes/0.1.3",
+  "screen": {
+    "ocr_bad": [],
+    "ocr_tail": "        ?\n                                         ?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                                                                           ?????\n                                                                          ??????\n                                                                          ??????\n THE TEMPLE OF HERMES  [user]  v0.1.3                                     ??????",
+    "palette": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "used": 6
+    },
+    "png": "file-errors-after.png"
+  },
+  "passed": 7,
+  "total": 7,
+  "ok": true,
+  "finished": 1794436178.066265
+}

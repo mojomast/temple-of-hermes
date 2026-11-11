@@ -1,0 +1,209 @@
+{
+  "apps": {
+    "hermes-chat": {
+      "click": {
+        "ok": true,
+        "diff": 0.96,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.96,
+        "return_ok": true
+      }
+    },
+    "worldsim": {
+      "click": {
+        "ok": true,
+        "diff": 0.84,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.84,
+        "return_ok": true
+      }
+    },
+    "codex": {
+      "click": {
+        "ok": true,
+        "diff": 0.92,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.92,
+        "return_ok": true
+      }
+    },
+    "psyche": {
+      "click": {
+        "ok": true,
+        "diff": 0.97,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.97,
+        "return_ok": true
+      }
+    },
+    "capybara": {
+      "click": {
+        "ok": true,
+        "diff": 0.93,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.93,
+        "return_ok": true
+      }
+    },
+    "messenger": {
+      "click": {
+        "ok": true,
+        "diff": 0.25,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.25,
+        "return_ok": true
+      }
+    },
+    "bbs": {
+      "click": {
+        "ok": true,
+        "diff": 0.14,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.13,
+        "return_ok": true
+      }
+    },
+    "threshold": {
+      "click": {
+        "ok": true,
+        "diff": 0.18,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.18,
+        "return_ok": true
+      }
+    },
+    "dojo": {
+      "click": {
+        "ok": true,
+        "diff": 0.82,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.82,
+        "return_ok": true
+      }
+    },
+    "offerings": {
+      "click": {
+        "ok": true,
+        "diff": 0.84,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.84,
+        "return_ok": true
+      }
+    },
+    "southpaw": {
+      "click": {
+        "ok": true,
+        "diff": 0.84,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.83,
+        "return_ok": true
+      }
+    },
+    "modem-net": {
+      "click": {
+        "ok": true,
+        "diff": 0.97,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.97,
+        "return_ok": true
+      }
+    },
+    "caduceus": {
+      "click": {
+        "ok": true,
+        "diff": 0.76,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.76,
+        "return_ok": true
+      }
+    },
+    "token-rain": {
+      "click": {
+        "ok": true,
+        "diff": 0.25,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.25,
+        "return_ok": true
+      }
+    },
+    "spoon": {
+      "click": {
+        "ok": true,
+        "diff": 0.3,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.3,
+        "return_ok": true
+      }
+    },
+    "dojo-duel": {
+      "click": {
+        "ok": true,
+        "diff": 0.16,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.16,
+        "return_ok": true
+      }
+    },
+    "about": {
+      "click": {
+        "ok": true,
+        "diff": 0.97,
+        "return_ok": true
+      },
+      "key": {
+        "ok": true,
+        "diff": 0.97,
+        "return_ok": true
+      }
+    }
+  },
+  "note": "Temple checked separately by temple_check.py"
+}
