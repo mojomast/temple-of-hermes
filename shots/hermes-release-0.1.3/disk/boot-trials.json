@@ -1,0 +1,762 @@
+[
+  {
+    "trial": 1,
+    "ok": true,
+    "seconds": 10.7,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x72486A28",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-01.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 2,
+    "ok": true,
+    "seconds": 10.8,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x723ED428",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-02.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 3,
+    "ok": true,
+    "seconds": 9.7,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x723FEA28",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-03.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 4,
+    "ok": true,
+    "seconds": 10.4,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x723D2428",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-04.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 5,
+    "ok": true,
+    "seconds": 10.4,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x723ED428",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-05.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 6,
+    "ok": true,
+    "seconds": 9.9,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x72400A28",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-06.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 7,
+    "ok": true,
+    "seconds": 10.0,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x72400A28",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-07.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 8,
+    "ok": true,
+    "seconds": 10.7,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x72400828",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-08.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 9,
+    "ok": true,
+    "seconds": 9.7,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x723C2628",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-09.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 10,
+    "ok": true,
+    "seconds": 10.0,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x723FE828",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-10.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 11,
+    "ok": true,
+    "seconds": 10.6,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x72400828",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-11.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 12,
+    "ok": true,
+    "seconds": 10.3,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x723C2428",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-12.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 13,
+    "ok": true,
+    "seconds": 10.4,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x72400828",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-13.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 14,
+    "ok": true,
+    "seconds": 10.0,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x723FE828",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-14.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 15,
+    "ok": true,
+    "seconds": 8.9,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x723ED428",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-15.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 16,
+    "ok": true,
+    "seconds": 6.9,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x72400828",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-16.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 17,
+    "ok": true,
+    "seconds": 6.9,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x723ED428",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-17.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 18,
+    "ok": true,
+    "seconds": 10.7,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x723D2428",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-18.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 19,
+    "ok": true,
+    "seconds": 10.3,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x72400828",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-19.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  {
+    "trial": 20,
+    "ok": true,
+    "seconds": 10.6,
+    "reason": "",
+    "windows": [
+      {
+        "addr": "0x723ED428",
+        "name": "DocTerm",
+        "title": "Hermes Apps",
+        "win": [
+          0,
+          1,
+          79,
+          59
+        ],
+        "show": 1,
+        "focus": 1,
+        "z": 2,
+        "cursor": {
+          "x": 0,
+          "y": 0,
+          "line": 1,
+          "col": 0
+        }
+      }
+    ],
+    "shot": "boot-20.png",
+    "shot_meta": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  }
+]

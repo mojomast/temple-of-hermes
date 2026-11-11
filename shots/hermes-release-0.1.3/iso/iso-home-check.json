@@ -1,0 +1,49 @@
+{
+  "iso": "dist/TempleOfHermes-0.1.3.ISO",
+  "iso_bytes": 14053376,
+  "iso_sha256": "fbaa3d6f0a8f9190f295e933c32cb833a61b3cb43a708309acb6c98ff51ac4fd",
+  "volume_id": "THE_TEMPLE_OF_HERMES",
+  "checks": [
+    {
+      "name": "beacon",
+      "ok": true,
+      "detail": "HBEACON TempleOfHermes/0.1.3"
+    },
+    {
+      "name": "iso_home",
+      "ok": true,
+      "detail": "4077 bytes sha=496b817469e1b1362700dc7b7d8f93b84d7bdec8c1462f685c4cf6863ab11f7f"
+    },
+    {
+      "name": "iso_home_defines_homeinit",
+      "ok": true,
+      "detail": "HomeInit definition present"
+    },
+    {
+      "name": "iso_load",
+      "ok": true,
+      "detail": "286 bytes sha=643e4bd484eff70e114e7c62ef5f274ba868e2c3113689e62e29355ce315981e"
+    },
+    {
+      "name": "iso_load_include_home",
+      "ok": true,
+      "detail": "exactly one #include \"Home\""
+    },
+    {
+      "name": "iso_version",
+      "ok": true,
+      "detail": "6 bytes sha=2d2454ef0edeb462a6ce8b25d387aaa74df08093d5cea0428a10ce55510c6326"
+    },
+    {
+      "name": "iso_registry_present",
+      "ok": true,
+      "detail": "4557 bytes"
+    },
+    {
+      "name": "daemon_alive",
+      "ok": true,
+      "detail": "ok"
+    }
+  ],
+  "ok": true
+}

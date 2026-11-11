@@ -1,0 +1,7 @@
+PASS boot-01.png size=(640, 480) mode=P max=15
+PASS boot-20.png size=(640, 480) mode=P max=15
+PASS errors-phase3.png size=(640, 480) mode=P max=15
+PASS journal-phase1.png size=(640, 480) mode=P max=15
+PASS journal-phase2.png size=(640, 480) mode=P max=15
+PASS persistence-launcher.png size=(640, 480) mode=P max=15
+RESULT PASS shots=6

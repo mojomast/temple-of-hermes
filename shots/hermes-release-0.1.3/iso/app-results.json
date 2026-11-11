@@ -1,0 +1,359 @@
+{
+  "hermes-chat": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app text, diff=0.96, colors=6, diff=0.96",
+      "diff": 0.96
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app text, diff=0.96, colors=5, diff=0.96",
+      "diff": 0.96
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "worldsim": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app window Hermes App, diff=0.84, colors=9, diff=0.84",
+      "diff": 0.84
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app window Hermes App, diff=0.84, colors=9, diff=0.84",
+      "diff": 0.84
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "codex": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app text, diff=0.92, colors=9, diff=0.92",
+      "diff": 0.92
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app text, diff=0.92, colors=9, diff=0.92",
+      "diff": 0.92
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "psyche": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app text, diff=0.97, colors=6, diff=0.97",
+      "diff": 0.97
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app text, diff=0.97, colors=5, diff=0.97",
+      "diff": 0.97
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "capybara": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app window Hermes App, diff=0.93, colors=9, diff=0.93",
+      "diff": 0.93
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app window Hermes App, diff=0.93, colors=9, diff=0.93",
+      "diff": 0.93
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "messenger": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app window Hermes App, diff=0.25, colors=9, diff=0.25",
+      "diff": 0.25
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app window Hermes App, diff=0.25, colors=9, diff=0.25",
+      "diff": 0.25
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "bbs": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app text, diff=0.14, colors=5, diff=0.14",
+      "diff": 0.14
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app text, diff=0.14, colors=5, diff=0.14",
+      "diff": 0.14
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "threshold": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app window Hermes App, diff=0.18, colors=9, diff=0.18",
+      "diff": 0.18
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app window Hermes App, diff=0.18, colors=9, diff=0.18",
+      "diff": 0.18
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "dojo": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app window Hermes App, diff=0.82, colors=9, diff=0.82",
+      "diff": 0.82
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app window Hermes App, diff=0.82, colors=9, diff=0.82",
+      "diff": 0.82
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "offerings": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app text, diff=0.84, colors=9, diff=0.84",
+      "diff": 0.84
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app text, diff=0.84, colors=9, diff=0.84",
+      "diff": 0.84
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "southpaw": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app text, diff=0.84, colors=9, diff=0.84",
+      "diff": 0.84
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app text, diff=0.84, colors=9, diff=0.84",
+      "diff": 0.84
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "modem-net": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app text, diff=0.97, colors=6, diff=0.97",
+      "diff": 0.97
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app text, diff=0.97, colors=6, diff=0.97",
+      "diff": 0.97
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "caduceus": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app window Hermes App, diff=0.76, colors=7, diff=0.76",
+      "diff": 0.76
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app window Hermes App, diff=0.76, colors=7, diff=0.76",
+      "diff": 0.76
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "token-rain": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app window Hermes App, diff=0.25, colors=9, diff=0.25",
+      "diff": 0.25
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app window Hermes App, diff=0.25, colors=9, diff=0.25",
+      "diff": 0.25
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "spoon": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app window Spoon, diff=0.30, colors=9, diff=0.30",
+      "diff": 0.3
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app window Spoon, diff=0.30, colors=9, diff=0.30",
+      "diff": 0.3
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "dojo-duel": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app text, diff=0.16, colors=9, diff=0.16",
+      "diff": 0.16
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app text, diff=0.16, colors=9, diff=0.16",
+      "diff": 0.16
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  },
+  "about": {
+    "ok": true,
+    "click": {
+      "ok": true,
+      "detail": "app text, diff=0.97, colors=5, diff=0.97",
+      "diff": 0.97
+    },
+    "click_return": {
+      "ok": true,
+      "detail": "launcher back"
+    },
+    "key": {
+      "ok": true,
+      "detail": "app text, diff=0.97, colors=6, diff=0.97",
+      "diff": 0.97
+    },
+    "key_return": {
+      "ok": true,
+      "detail": "launcher back"
+    }
+  }
+}

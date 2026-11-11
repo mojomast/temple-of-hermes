@@ -1,0 +1,985 @@
+
+<< H
+<< BEACON TempleOfHermes/0.1.3
+<< 
+
+>> HREQ 1 pull 22
+T:/Adam/Hermes/Home.HC
+<< HEVT
+<<  1 ready 51
+{"seq"
+<< :1,"t":  5.008,
+<< "kind":"r
+<< eady","
+<< data":
+<< "0.1.
+<< 3"
+<< }
+<< HRPL 1 ok 4077
+// Hermes home layout helpers. 
+<< Returns allocated "OK ..."/"ERR code" strings.
+// Paths
+<< : <d
+<< rv>:/Ho
+<< me/<han
+<< dle>
+<< /{JOURNAL
+<< .TXT,PROJECTS.TXT,Src/}.
+#ifndef
+<<  HERMES_HO
+<< ME_HC
+#
+<< define
+<<  HERMES_HOME_HC
+#de
+<< fine HER
+<< MES_HOME_LINE_MAX 200
+U8 hermes_h
+<< ome_
+<< ha
+<< ndle[3
+<< 3];
+U8 he
+<< rmes_ho
+<< me_driv
+<< e='C'
+<< ;
+Bool
+<<  herme
+<< s_home
+<< _read
+<< y=FALSE
+<< ;
+U0 HMClean(U8 
+<< *d,U8 *s,I64 m)
+{
+<< I64 p=0;if(!d||m<1)re
+<< turn;if(
+<< !s)s
+<< ="";
+ while(*s&&p<m-1)
+<< {if(*s>=3
+<< 2&&*s!
+<< =127)d
+<< [p++]=*s;
+<< s++;}d
+<< [p
+<< ]=0;
+<< }
+Bool HMDrv(U8 
+<< d)
+{Bool ok=FALSE
+<< ;try{if(L
+<< et2Drv
+<< (d,FAL
+<< SE))ok
+<< =D
+<< rvIsWritable(d,FALSE
+<< )!=NULL;}
+<< 
+ catch
+<< {Fs->c
+<< atch_e
+<< xcept=
+<< TRUE;o
+<< k=
+<< FA
+<< LSE;}retur
+<< n ok;}
+U
+<< 8 *HMPath(U8 *l
+<< eaf)
+{if(!hermes
+<< _home_rea
+<< dy)r
+<< etur
+<< n StrNew("");
+ retu
+<< rn MStrPrint("
+<< %c:/Hom
+<< e/%s/%
+<< s",her
+<< mes_ho
+<< me
+<< _dri
+<< ve,hermes_home_
+<< handle,leaf);}
+U
+<< 8 *HomeI
+<< nit(U8 *ha
+<< ndle=NU
+<< LL,U
+<< 8 
+<< drv='C')
+{U8 *bas
+<< e,*dir,*
+<< src,*r,c
+<< ;Boo
+<< l ok
+<< =TRUE;I64 i,l;
+ i
+<< f(drv>='
+<< a'
+<< &
+<< &
+<< drv<='z')drv
+<< -=32;
+ i
+<< f(drv
+<< <'A'
+<< ||dr
+<< v>'Z'
+<< )ret
+<< urn S
+<< trNew("ER
+<< R b
+<< ad_drive");
+ if(!
+<< handle||
+<< !*handl
+<< e)hand
+<< le="her
+<< mes";
+<< 
+ l=St
+<< rLen(
+<< ha
+<< ndle);
+ if(l<1||
+<< l>32)retu
+<< rn StrN
+<< ew("ER
+<< R bad
+<< _handl
+<< e");
+ 
+<< for(
+<< i=0
+<< ;i
+<< <l;i++){c=handle
+<< [i];
+  if(!((c
+<< >='A'&&c
+<< <='Z')
+<< ||(c>=
+<< 'a'&&c<=
+<< 'z')
+<< ||
+<< (c>='0'&&c<='9')
+<< ||
+   
+<<  
+<<  
+<<   
+<< c=='.'|
+<< |c=='-'||c=='_'))
+   return S
+<< trNe
+<< w("ERR bad_handle
+<< ");}
+ hermes_home_
+<< ready=FALSE;
+ if(
+<< !HMDrv(d
+<< rv))return MStrPrint("ERR drive
+<< _not_writable:%c",drv);
+ 
+<< base=MSt
+<< rPrint("%c:/Home",drv);
+ dir=MStrPrint("%s
+<< /%s",base,handle);
+ src=MStrPrint("%s/
+<< Src",dir);
+ try
+ {
+  DirM
+<< k(base);DirMk(dir);
+<< DirM
+<< k(src
+<< );
+  if(!(FileFind(dir,NULL,FUF_JUS
+<< T_DIRS)&&F
+<< ileFin
+<< d(src,
+<< NU
+<< LL
+<< ,FUF_J
+<< UST_DIRS)))ok=
+<< FALSE;
+ }
+<< 
+ catch{Fs->catc
+<< h_except=TRUE;ok
+<< =
+<< FAL
+<< SE;}
+ Free(src);
+
+<<  if(!ok){Free(bas
+<< e);Free(dir);ret
+<< urn StrNew(
+<< "ERR mkdir_fai
+<< led");}
+ StrCpy(h
+<< ermes_home_handl
+<< e,handle);
+ herme
+<< s_
+<< home_drive=drv;he
+<< rmes_home_ready=T
+<< RUE;
+ r=MStrPrint
+<< ("OK %s",di
+<< r);Free(base);
+<< Free(dir);return
+<<  r;}
+U8 *HomeDir(
+<< )
+{if(!hermes_ho
+<< m
+<< e_ready)return StrNew("ERR not_initialized");
+ re
+<< turn MStrPrint("%c:/Home/%s",hermes
+<< _home_drive,hermes_home_
+<< handle);}
+U8 *Jou
+<< rna
+<< lAdd(U8 *text
+<< )
+{U8 *path,*ol
+<< d,*out,line[HERMES_HOME_LINE_MAX+1];
+<< CDateStruct ds;I64 p,size
+<< =0,wrote=-1;
+ if(!her
+<< mes_home_ready)r
+<< et
+<< urn S
+<< trNew("ERR not_in
+<< itialized");
+ if(!
+<< text)text="";
+ D
+<< ate2Stru
+<< ct
+<< (&ds,Now+local_ti
+<< me_offset);
+ StrP
+<< rint(line,"%04d-%0
+<< 2d-%02d %0
+<< 2d:%
+<< 02d ",ds.year,ds.
+<< mon,ds.day_of_mon
+<< ,ds.hour,ds.min);
+<< 
+ p=StrLe
+<< n(line);
+
+<<  while(*text&&p<HERMES_HOME_L
+<< INE_MAX){if(*text
+<< >=32&&*te
+<< xt!=127)line
+<< [
+<< p++]=*text;text++;}
+<< 
+ line[p]=
+<< 0;
+ pat
+<< h=HMPath(
+<< "JOURN
+<< AL.TXT");o
+<< ld=NULL;
+ try{i
+<< f(FileFind
+<< (path))
+<< old=Fi
+<< leRead(
+<< path,&
+<< siz
+<< e);
+<< }
+ catch{Fs->catch_
+<< except=TR
+<< UE;old=
+<< NULL;}
+<< 
+ if(!
+<< old)ol
+<< d=StrNe
+<< w
+<< ("");
+
+<<  out=MStrPrint("
+<< %s%s\n",old,line)
+<< ;Free(old);
+ try 
+<< wrote=Fi
+<< le
+<< Write(path,out,St
+<< rLen(out));
+ cat
+<< ch{Fs->catch_exce
+<< pt=TRUE;wrot
+<< e=-1;}
+ Free(
+<< out);Free(path);
+
+<<  if(wrote<=0)
+<< retur
+<< n StrNew("ERR wr
+<< ite_failed");
+ re
+<< turn StrNew("OK jo
+<< urnal_added");}
+U
+<< 8 *JournalTa
+<< il(I64 n=5)
+{U
+<< 8 
+<< *path,*data,*r;I
+<< 64 size=0,i,lines
+<< =0,start=0;
+ if
+<< (!h
+<< ermes_home_ready)retur
+<< n StrNew("
+<< ERR not
+<< _initia
+<< lized");
+ if(n<
+<< 1)
+<< n=1;if(n>100)n=10
+<< 0;
+ path=HMPath("J
+<< OURNAL.TXT");data
+<< =NULL;
+ tr
+<< y{if(
+<< FileFind(
+<< p
+<< at
+<< h))data=FileRea
+<< d(path,&size);}
+ c
+<< atch{Fs->catch
+<< _except=TRUE
+<< ;data=NULL;}
+ Free
+<< (path);
+ if(!data
+<< )return StrNew("E
+<< R
+<< R no_journal");
+ i=
+<< size-1;if(i>=0&&d
+<< ata[i]=='\n')i--;
+<< 
+ while(i>
+<< =0
+<< ){if(data[i]=='\n'
+<< ){lines++;if(lines
+<< >=n){start=i+1;br
+<< eak;}}i--
+<< ;}
+ r=StrNew(data
+<< +start);Free(data
+<< );return r;}
+U8 *
+<< ProjectSet(U8
+<<  *
+<< current,U8 *nex
+<< t)
+{U8 *path,
+<< *out,c[
+<< HERMES_HOME_
+<< LINE_MAX+1],n[H
+<< ER
+<< MES_HOME_LINE_MA
+<< X+1];I64 wrote=-
+<< 1;
+ if(!hermes_hom
+<< e_ready)retu
+<< rn StrNew("
+<< ERR not_initialize
+<< d");
+ HMClean(c,curren
+<< t,HERMES_HOME
+<< _L
+<< INE_MAX+1);
+ HMClea
+<< n(n,next,HERMES_H
+<< OME_LINE_MAX+1);
+ 
+<< out=MStr
+<< Pr
+<< int("Curre
+<< nt: %s\nNext: %s\
+<< n",c,n);
+ path=HMP
+<< ath("PROJECTS.TXT
+<< ");
+ try
+<<  wrote=FileWrite(
+<< path,out,StrLen(ou
+<< t));
+ catc
+<< h{Fs
+<< ->catch
+<< _e
+<< xcept=TRUE;wrote=-
+<< 1;}
+ Free(out);Fr
+<< ee(path);
+ if(wr
+<< ote<=0)ret
+<< u
+<< rn St
+<< rNew("ERR write_failed");
+ return 
+<< StrNew("OK project
+<< s_set")
+<< ;}
+U8 *Proje
+<< ctShow()
+{U8 *pa
+<< th,*data;I64 size
+<< =0;
+ if(!hermes_h
+<< om
+<< e_r
+<< eady)return StrNe
+<< w("ERR not_initia
+<< lized");
+ path=HM
+<< Path("PROJ
+<< ECTS.TXT"
+<< );data=NULL;
+ tr
+<< y{if(FileFind(pat
+<< h))data=FileRead(
+<< path,&size
+<< );}
+ catch{Fs->c
+<< atch_except=TRUE;
+<< data=NULL
+<< ;}
+ F
+<< ree(path);
+ 
+<< if(
+<< !data)return StrNew("ERR no_proj
+<< ects")
+<< ;
+ 
+<< return data;}
+#end
+<< if
+<< 
+
+>> HREQ 2 pull 22
+T:/Adam/Hermes/Load.HC
+<< HRPL 2 ok 286
+// Adam include entry for THE
+<<  TEMPLE OF HERMES.
+Cd(__DIR__);;
+#include "Glbls"
+#include 
+<< "Prot
+<< oco
+<< l"
+#include "Stat
+<< eDir"
+#include "H
+<< ome"
+#include "Fi
+<< leGuard"
+#
+<< in
+<< clude "Text"
+#in
+<< clude "Events"
+#
+<< include "Presenc
+<< e"
+#include "G
+<< uards"
+<< 
+#include "Files
+<< "
+#include "Daemo
+<< n"
+Cd("..");;
+He
+<< rmesInit;
+<< 
+
+>> HREQ 3 pull 22
+T:/Adam/Hermes/VERSION
+<< HRPL 3 ok 6
+0.1.3
+<< 
+
+>> HREQ 4 pull 26
+T:/Hermes/Apps/Registry.HC
+<< HRPL 4 ok 455
+<< 7
+#ifndef HERMES_APPS_REGISTRY_HC
+#define HERM
+<< ES_APPS_REGISTRY_HC
+
+//The
+<<  Herme
+<< s app registry.  The launcher and PersonalMenu
+<<  both read this
+//table.  "planned"
+<<  e
+<< ntries are placeh
+<< olders whose Run.
+<< HC files ar
+<< e n
+<< ot in
+//this tree y
+<< et.  Icons are th
+<< e existing files 
+<< under ::
+<< /Hermes/Art/I
+<< cons/32
+//(16 fo
+<< r the PersonalMen
+<< u sprites); no ar
+<< t
+<<  is generated
+<<  here.
+
+#define HERMES_APPS_MAX 24
+
+class CHermesAp
+<< p
+{
+
+<<   U8 *id;
+  U8 *title;
+ 
+<<  U8 *icon;
+<< 
+  U8 
+<< *desc;
+<< 
+  U8 
+<< *run;
+
+<<   
+<< Bool planned;
+  I64 shortcut;
+};
+
+CHerm
+<< esApp hermes_apps[HERMES_
+<< APPS_MA
+<< X];
+I64 hermes_apps_num=0;
+
+U0 HermesAppsR
+<< egistryAdd(U
+<< 8 *
+<< id
+<< ,U8 *t
+<< itle,U
+<< 8 *icon,U8 *desc
+<< ,U8 *run,Bool pla
+<< nned,I64 
+<< shortcu
+<< t
+<< )
+
+<< {
+  C
+<< Hermes
+<< App *a
+<< ;
+  i
+<< f (her
+<< mes_apps
+<< _
+<< num>=
+<< HERMES_APPS_MAX)
+   
+<<  re
+<< turn;
+  a=&herm
+<< es_apps[her
+<< mes_apps_n
+<< um++];
+
+<<   a->id=id;
+  a->
+<< t
+<< itle=title;
+  a
+<< ->icon=icon;
+  a->de
+<< sc=desc;
+<< 
+  a->run=run;
+
+<<   a->p
+<< lanned=planned;
+
+<<   a->shortcut=sh
+<< ortcut;
+}
+
+U0 Herm
+<< esAppsRegistry
+<< Init()
+{
+  if (hermes_apps_
+<< num)
+    return;
+  H
+<< ermesApps
+<< Regist
+<< ry
+<< Ad
+<< d("hom
+<< e-temple", 
+<<  
+<<  "Temple",     
+<<  "home-temple",
+ 
+<<             
+<<   
+<<          "The Tem
+<< ple of Hermes hom
+<< e screen.", NULL
+<< , FALSE,'T')
+<< ;
+  Hermes
+<< AppsRegistryAdd
+<< ("
+<< he
+<< rmes-chat",   "He
+<< rmes Chat", "herm
+<< e
+<< s-chat",
+   
+<<                  
+<<     "Talk with th
+<< e Hermes agent ove
+<< r COM2."
+<< ,
+               
+<<          "::/Her
+<< mes/Apps/HermesCh
+<< at/Run
+<< .H
+<< C", FALSE,'H');
+ 
+<<  HermesAppsRegist
+<< ryAdd("worldsim",
+<<       "Worl
+<< dS
+<< im",    "worldsim
+<< ",
+              
+<<           "Agent 
+<< world simul
+<< ati
+<< on.",
+ 
+<<                
+<<         "::/Herme
+<< s/Apps/WorldSim/R
+<< un.HC
+<< ",
+<<  FALSE,'W');
+  He
+<< rmesAppsRegistry
+<< Add("codex-of-nou
+<< s", "Codex",
+<<    
+<<     "codex-of-nou
+<< s",
+             
+<<            "Read 
+<< the Codex 
+<< of Nous from ::
+<< /Hermes/Lore.",
+ 
+<<                  
+<<       "::/Herme
+<< s/
+<< Apps/Codex/Run.
+<< HC", FALSE,'C');
+
+<<   HermesAppsRegis
+<< tryAdd("psych
+<< e",  
+<<       "Psyche",      "p
+<< syche",
+         
+<<                "
+<< Decen
+<< tralized trainin
+<< g monitor.",
+   
+<<                   
+<<    "
+<< T:/
+<< Herme
+<< s/Ap
+<< ps/Psyche/Run.HC", FALSE,'P');
+  Her
+<< mesAppsRegi
+<< stryAdd(
+<< "capyb
+<< ara-pet",  "Capyba
+<< ra",    "capybara
+<< -pet",
+          
+<<       
+<<      
+<<    "The Te
+<< mple capybara."
+<< ,
+       
+<<                  "
+<< ::/Hermes/Ap
+<< ps
+<< /Capybara/Run.HC
+<< ", FALSE,'B');
+  
+<< HermesAppsRegistr
+<< yAdd("messen
+<< ger
+<< -run", "Mes
+<< s
+<< enger",   "messen
+<< ger-run",
+       
+<<                
+<<   "Her
+<< mes messenger run.",
+                        "::/Hermes/A
+<< p
+<< ps/
+<< MessengerRun/Run.HC",
+<<  FALSE,'M');
+  Her
+<< mesAppsRegistryAd
+<< d("hermes
+<< -bbs",    "BBS", 
+<<         "modem-ne
+<< t",
+             
+<<          
+<<   "Temple o
+<< f Hermes BBS (HBB
+<< S/1) over Hermes/
+<< Net.",
+   
+<<   
+<<       
+<<  
+<<   
+<<           "::/Herm
+<< es/Apps/HermesBBS/Run.
+<< HC", FALSE,'S');
+ 
+<<  Her
+<< mesApp
+<< sRegi
+<< stryAdd("thr
+<< eshold", 
+<<     "Threshold"
+<< ,   "home-temple"
+<< ,
+
+<<                  
+<<        "The Thres
+<< hold: the temple g
+<< ate and ci
+<< ne
+<< matic splash.",
+
+<<                   
+<<       "::/Hermes/Ap
+<< ps/Thresh
+<< old/Ru
+<< n.HC", FALSE,'R')
+<< ;
+  HermesAppsReg
+<< istryAdd("dojo", 
+<<         
+<<  "Dojo",        "
+<< teknium",
+       
+<<                  "
+<< Teknium's D
+<< oj
+<< o: game-trainer c
+<< hallenges.",
+    
+<<                   
+<<   "::/Herm
+<< es/Ap
+<< ps/Dojo/Run.HC", FALSE,'J');
+  HermesAppsRe
+<< gistr
+<< yAdd("offer
+<< i
+<< ngs",     "Offerin
+<< gs",   "do
+<< n-
+<< piedro",
+       
+<<                  
+<< "D
+<< on Piedro's Offeri
+<< ngs.",
+           
+<<              "::/
+<< Hermes/Ap
+<< ps
+<< /Offerings/Run.HC
+<< ", FALSE,
+<< 'O');
+  He
+<< rmesAppsRegis
+<< tryAdd("south
+<< paw
+<< ",      "Southpaw",   
+<<  "sout
+<< hpaw",
+          
+<<               "S
+<< ou
+<< thpaw: an announc
+<< er-fronted view o
+<< f BBS highlights.
+<< ",
+        
+<<                 
+<< "::/Hermes/App
+<< s/
+<< Southpaw/Run.HC",
+<<  FALSE,'U');
+  
+<< Hermes
+<< AppsRegistryAdd("
+<< modem-net",     "
+<< Modem / Net", "mod
+<< em-net
+<< ",
+                        "COM2
+<<  serial modem sta
+<< tu
+<< s and loopbac
+<< k 
+<< tools.",
+        
+<<                 ":
+<< :/Hermes/Apps/Net/
+<< Run.HC", 
+<< FALSE,'N
+<< ');
+  HermesAppsR
+<< egistryAdd("caduceus
+<< ",      "Caduceus
+<< ",
+<<    
+<<  "capy-caduceus",
+<< 
+        
+<<        
+<<        
+<<   "Cadu
+<< ceus: guide the temple serp
+<< ent.",
+              
+<<           "::/Herm
+<< es/Apps/Cadu
+<< ceus/Run.HC"
+<< , FALSE,'D');
+  H
+<< ermesAppsRegistryA
+<< dd("token-rai
+<< n", 
+<<   
+<<  "Token Rain",  "
+<< nous-girl",
+     
+<<                   
+<<  "Token Ra
+<< in: Nou
+<< s Girl at the Thr
+<< eshold.",
+        
+<<                 "
+<< ::/Her
+<< mes/Apps/TokenRa
+<< in/Run.HC", FALSE
+<< ,'K');
+  HermesAp
+<< psRegistryAdd
+<< ("
+<< sp
+<< oon",   
+<<       "Spoon",   
+<<     "don-piedro",
+
+<<                  
+<<   
+<<      "Spoon: Don
+<<  Piedro's catch ar
+<< cade.",
+          
+<<           
+<<     "::/Hermes/
+<< Apps/Spoon/Run.HC
+<< ", FALSE,'Q');
+  
+<< HermesAppsRegis
+<< tryAdd
+<< ("dojo-duel",     "Dojo Duel",   "tekniu
+<< m",
+              
+<<        
+<<    "Dojo Duel: Te
+<< knium's challenge 
+<< mode.",
+         
+<<      
+<<           "::/He
+<< rmes/Apps/DojoDue
+<< l/Run.HC", FALSE,
+<< 'L');
+  Hermes
+<< AppsRegistryAdd("about",         "About",      
+<<  "nous-girl",
+   
+<<   
+<<                   
+<<  "About the
+<<  Temple of Hermes
+<< .",
+            
+<<           
+<<   "::/Hermes/Apps
+<< /About/Run
+<< .HC", F
+<< ALSE,'A
+<< ');
+}
+
+#endif
+<< 
+
+>> HREQ 5 ping 0
+
+<< HEVT 2 task_spawned 75
+{"seq":2,"
+<< t":  5.618,"kind":"task_spawned","data":"0x6D490A28 Hermes Apps"}
+<< HRPL 5 ok 5
+<< 4
+{"pong":1,"t":  5.641,"mode":"user","version":"0.1.3"
+<< }
