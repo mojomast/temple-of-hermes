@@ -1,0 +1,208 @@
+{
+  "image": "/output/TempleOfHermes-0.1.3-disk.qcow2",
+  "image_sha256": "d81a3c189093bd0edddad50b7a55d6582d0490204d63720e14fc5fb9d901f1aa",
+  "checks": [
+    {
+      "name": "launcher_no_cd",
+      "passed": true,
+      "detail": "Hermes Apps only"
+    },
+    {
+      "name": "home_hc_from_image",
+      "passed": true,
+      "detail": "4077 bytes"
+    },
+    {
+      "name": "load_inc_home_from_image",
+      "passed": true,
+      "detail": "286 bytes include=True"
+    },
+    {
+      "name": "homeinit_loaded_not_pushed",
+      "passed": true,
+      "detail": "eval=True init=b'OK C:/Home/hermes'"
+    },
+    {
+      "name": "homeinit_created_layout",
+      "passed": true,
+      "detail": "C:/Home/hermes/Src present"
+    },
+    {
+      "name": "src_marker_written",
+      "passed": true,
+      "detail": "13 bytes"
+    },
+    {
+      "name": "journal_writes",
+      "passed": true,
+      "detail": "{'ok': 1, 'text': '', 'error': None}"
+    },
+    {
+      "name": "journal_readback",
+      "passed": true,
+      "detail": "2 lines"
+    },
+    {
+      "name": "journal_entries",
+      "passed": true,
+      "detail": "['2026-11-11 23:46 release journal entry one', '2026-11-11 23:46 release journal entry two']"
+    },
+    {
+      "name": "projects_readback",
+      "passed": true,
+      "detail": "b'Current: Temple of Hermes 0.1.3\\nNext: Verify home journal on C\\n'"
+    },
+    {
+      "name": "journal_timestamp_utc",
+      "passed": true,
+      "detail": "guest=2026-11-11 23:46 skew_s=33.907335"
+    },
+    {
+      "name": "writable_missing_parent_autocreate",
+      "passed": true,
+      "detail": "status=ok"
+    },
+    {
+      "name": "ping_after_phase1",
+      "passed": true,
+      "detail": "version=0.1.3"
+    },
+    {
+      "name": "journal_survived_reboot",
+      "passed": true,
+      "detail": "86 bytes sha=9398d8cb9699c0dd241e496d60be19c8acf587926ab5c08310968f1b0ffae21c"
+    },
+    {
+      "name": "projects_survived_reboot",
+      "passed": true,
+      "detail": "63 bytes sha=30801018ac78b11159c3c5da8d6c38ab2c6cd040ff0c324e909f057260b41b0d"
+    },
+    {
+      "name": "src_survived_reboot",
+      "passed": true,
+      "detail": "Src/ present, marker 13 bytes byte-identical"
+    },
+    {
+      "name": "homeinit_after_reboot",
+      "passed": true,
+      "detail": "{'ok': 1, 'text': '', 'error': None}"
+    },
+    {
+      "name": "append_after_reboot",
+      "passed": true,
+      "detail": "2 -> 3 lines"
+    },
+    {
+      "name": "journal_shape_after_append",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "project_show_after_reboot",
+      "passed": true,
+      "detail": "{'ok': 1, 'text': '', 'error': None}"
+    },
+    {
+      "name": "ping_after_phase2",
+      "passed": true,
+      "detail": "version=0.1.3"
+    },
+    {
+      "name": "iso_missing_dir_structured",
+      "passed": true,
+      "detail": "status=err code='missing_dir'"
+    },
+    {
+      "name": "iso_read_only_structured",
+      "passed": true,
+      "detail": "status=err code='read_only'"
+    }
+  ],
+  "phase1": {
+    "home_hc_sha256": "496b817469e1b1362700dc7b7d8f93b84d7bdec8c1462f685c4cf6863ab11f7f",
+    "load_hc_sha256": "643e4bd484eff70e114e7c62ef5f274ba868e2c3113689e62e29355ce315981e",
+    "journal_sha256": "9398d8cb9699c0dd241e496d60be19c8acf587926ab5c08310968f1b0ffae21c",
+    "journal_lines": [
+      "2026-11-11 23:46 release journal entry one",
+      "2026-11-11 23:46 release journal entry two"
+    ],
+    "journal_bytes": 86,
+    "projects_sha256": "30801018ac78b11159c3c5da8d6c38ab2c6cd040ff0c324e909f057260b41b0d",
+    "projects_bytes": 63,
+    "timestamp_skew_seconds": 33.907335,
+    "writable_autocreate": {
+      "status": "ok",
+      "body": {
+        "ok": 1,
+        "wrote": 4756,
+        "path": "C:/Home/RELEASE-AUTO-DIR/child.txt"
+      }
+    },
+    "ping": {
+      "status": "ok",
+      "pong": 1,
+      "version": "0.1.3"
+    },
+    "shot": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  "phase2": {
+    "journal_sha256": "9398d8cb9699c0dd241e496d60be19c8acf587926ab5c08310968f1b0ffae21c",
+    "journal_lines": [
+      "2026-11-11 23:46 release journal entry one",
+      "2026-11-11 23:46 release journal entry two"
+    ],
+    "projects_sha256": "30801018ac78b11159c3c5da8d6c38ab2c6cd040ff0c324e909f057260b41b0d",
+    "journal_after_append_sha256": "6cc40ffc4bb0425541111bc0b81c6c774a32c70956f9e49bda4e78e9a07869fe",
+    "ping": {
+      "status": "ok",
+      "pong": 1,
+      "version": "0.1.3"
+    },
+    "shot": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  "phase3": {
+    "missing_dir": {
+      "status": "err",
+      "code": "missing_dir"
+    },
+    "read_only": {
+      "status": "err",
+      "code": "read_only"
+    },
+    "ping_after": {
+      "status": "ok",
+      "pong": 1,
+      "version": "0.1.3"
+    },
+    "shot": {
+      "size": [
+        640,
+        480
+      ],
+      "mode": "P",
+      "max_index": 15,
+      "off_palette_pixels": 0
+    }
+  },
+  "image_sha256_after": "d81a3c189093bd0edddad50b7a55d6582d0490204d63720e14fc5fb9d901f1aa",
+  "source_unchanged": true,
+  "passed": 23,
+  "total": 23,
+  "ok": true
+}

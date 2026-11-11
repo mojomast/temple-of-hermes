@@ -1,0 +1,25 @@
+23:46:19 image copy from /output/TempleOfHermes-0.1.3-disk.qcow2
+23:46:33 launcher_no_cd: PASS Hermes Apps only
+23:46:33 home_hc_from_image: PASS 4077 bytes
+23:46:33 load_inc_home_from_image: PASS 286 bytes include=True
+23:46:33 homeinit_loaded_not_pushed: PASS eval=True init=b'OK C:/Home/hermes'
+23:46:33 homeinit_created_layout: PASS C:/Home/hermes/Src present
+23:46:33 src_marker_written: PASS 13 bytes
+23:46:33 journal_writes: PASS {'ok': 1, 'text': '', 'error': None}
+23:46:33 journal_readback: PASS 2 lines
+23:46:33 journal_entries: PASS ['2026-11-11 23:46 release journal entry one', '2026-11-11 23:46 release journal entry two']
+23:46:33 projects_readback: PASS b'Current: Temple of Hermes 0.1.3\nNext: Verify home journal on C\n'
+23:46:33 journal_timestamp_utc: PASS guest=2026-11-11 23:46 skew_s=33.907335
+23:46:33 writable_missing_parent_autocreate: PASS status=ok
+23:46:33 ping_after_phase1: PASS version=0.1.3
+23:46:48 journal_survived_reboot: PASS 86 bytes sha=9398d8cb9699c0dd241e496d60be19c8acf587926ab5c08310968f1b0ffae21c
+23:46:48 projects_survived_reboot: PASS 63 bytes sha=30801018ac78b11159c3c5da8d6c38ab2c6cd040ff0c324e909f057260b41b0d
+23:46:48 src_survived_reboot: PASS Src/ present, marker 13 bytes byte-identical
+23:46:48 homeinit_after_reboot: PASS {'ok': 1, 'text': '', 'error': None}
+23:46:48 append_after_reboot: PASS 2 -> 3 lines
+23:46:48 journal_shape_after_append: PASS 
+23:46:48 project_show_after_reboot: PASS {'ok': 1, 'text': '', 'error': None}
+23:46:48 ping_after_phase2: PASS version=0.1.3
+23:47:04 iso_missing_dir_structured: PASS status=err code='missing_dir'
+23:47:04 iso_read_only_structured: PASS status=err code='read_only'
+23:47:06 extras: 23/23 source_unchanged=True
