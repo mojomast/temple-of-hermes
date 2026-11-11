@@ -29,6 +29,8 @@ U0 DojoTask(U8 *)
   WinToTop;
   DocCursor;
   Fs->draw_it=&DojoDrawIt;
+  TaskDerivedValsUpdate(Fs);
+  WinZBufUpdate;
   if (dojo_demo)
   {
     try { DojoCheck(2); } catch PutExcept;
@@ -53,6 +55,7 @@ U0 DojoTask(U8 *)
         else if (key=='p'||key=='P') DojoPlaque();
         else if (key=='r'||key=='R') { DojoLoadScores(); DojoReport(); }
       }
+      Refresh;
       Sleep(5);
     }
   }

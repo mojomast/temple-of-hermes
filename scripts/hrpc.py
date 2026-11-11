@@ -140,7 +140,8 @@ class Hrpc:
                 data = self._pending_payload or b""
                 self._pending_rpl = None
                 return status, data
-        raise TimeoutError(f"no HRPL for {op} id={req_id}, buf={self.buf[-400]!r}")
+        tail = self.buf[-400:] if self.buf else b""
+        raise TimeoutError(f"no HRPL for {op} id={req_id}, buf={tail!r}")
 
     def text(self) -> str:
         return self.transcript.decode("utf-8", "replace")

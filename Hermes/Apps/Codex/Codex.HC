@@ -338,6 +338,8 @@ U0 Codex()
   cx_running=TRUE;
   Fs->draw_it=&CxDrawIt;
   h=Fs->pix_height;
+  TaskDerivedValsUpdate(Fs);
+  WinZBufUpdate;
 
   try
   {
@@ -383,6 +385,7 @@ U0 Codex()
         }
       }
       CxClampScroll(h);
+      Refresh;
     }
   }
   catch

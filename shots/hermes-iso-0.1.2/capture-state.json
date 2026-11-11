@@ -1,0 +1,890 @@
+{
+  "01-boot-splash.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 2
+  },
+  "02-home-launcher.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "apps": {
+    "hermes-chat": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.96, colors=5",
+        "return": "launcher back",
+        "diff": 0.964
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.96, colors=6",
+        "return": "launcher back",
+        "diff": 0.964
+      }
+    },
+    "worldsim": {
+      "click": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.84, colors=9",
+        "return": "launcher back",
+        "diff": 0.842
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.84, colors=9",
+        "return": "launcher back",
+        "diff": 0.842
+      }
+    },
+    "codex": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.92, colors=9",
+        "return": "launcher back",
+        "diff": 0.917
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.92, colors=9",
+        "return": "launcher back",
+        "diff": 0.917
+      }
+    },
+    "psyche": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.97, colors=5",
+        "return": "launcher back",
+        "diff": 0.966
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.97, colors=6",
+        "return": "launcher back",
+        "diff": 0.966
+      }
+    },
+    "capybara": {
+      "click": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.93, colors=9",
+        "return": "launcher back",
+        "diff": 0.926
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.93, colors=9",
+        "return": "launcher back",
+        "diff": 0.925
+      }
+    },
+    "messenger": {
+      "click": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.25, colors=9",
+        "return": "launcher back",
+        "diff": 0.247
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.25, colors=9",
+        "return": "launcher back",
+        "diff": 0.247
+      }
+    },
+    "bbs": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.14, colors=5",
+        "return": "launcher back",
+        "diff": 0.14
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.13, colors=5",
+        "return": "launcher back",
+        "diff": 0.134
+      }
+    },
+    "threshold": {
+      "click": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.18, colors=9",
+        "return": "launcher back",
+        "diff": 0.182
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.18, colors=9",
+        "return": "launcher back",
+        "diff": 0.182
+      }
+    },
+    "dojo": {
+      "click": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.82, colors=9",
+        "return": "launcher back",
+        "diff": 0.821
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.82, colors=9",
+        "return": "launcher back",
+        "diff": 0.82
+      }
+    },
+    "offerings": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.84, colors=9",
+        "return": "launcher back",
+        "diff": 0.843
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.84, colors=9",
+        "return": "launcher back",
+        "diff": 0.843
+      }
+    },
+    "southpaw": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.84, colors=9",
+        "return": "launcher back",
+        "diff": 0.835
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.83, colors=9",
+        "return": "launcher back",
+        "diff": 0.835
+      }
+    },
+    "modem-net": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.97, colors=5",
+        "return": "launcher back",
+        "diff": 0.965
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.97, colors=6",
+        "return": "launcher back",
+        "diff": 0.965
+      }
+    },
+    "caduceus": {
+      "click": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.76, colors=7",
+        "return": "launcher back",
+        "diff": 0.76
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.76, colors=7",
+        "return": "launcher back",
+        "diff": 0.76
+      }
+    },
+    "token-rain": {
+      "click": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.25, colors=9",
+        "return": "launcher back",
+        "diff": 0.253
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.25, colors=9",
+        "return": "launcher back",
+        "diff": 0.254
+      }
+    },
+    "spoon": {
+      "click": {
+        "ok": true,
+        "launch": "app window Spoon, diff=0.30, colors=9",
+        "return": "launcher back",
+        "diff": 0.299
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Spoon, diff=0.30, colors=9",
+        "return": "launcher back",
+        "diff": 0.299
+      }
+    },
+    "dojo-duel": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.16, colors=9",
+        "return": "launcher back",
+        "diff": 0.155
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.16, colors=9",
+        "return": "launcher back",
+        "diff": 0.155
+      }
+    },
+    "about": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.97, colors=5",
+        "return": "launcher back",
+        "diff": 0.967
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.97, colors=6",
+        "return": "launcher back",
+        "diff": 0.967
+      }
+    }
+  },
+  "app-hermes-chat-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 6
+  },
+  "return-hermes-chat-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-hermes-chat-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 6
+  },
+  "return-hermes-chat-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-worldsim-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 13
+  },
+  "return-worldsim-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-worldsim-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 13
+  },
+  "return-worldsim-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-codex-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 12
+  },
+  "return-codex-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-codex-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 12
+  },
+  "return-codex-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-psyche-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 6
+  },
+  "return-psyche-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-psyche-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 6
+  },
+  "return-psyche-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-capybara-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 12
+  },
+  "return-capybara-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-capybara-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 12
+  },
+  "return-capybara-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-messenger-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 13
+  },
+  "return-messenger-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-messenger-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 13
+  },
+  "return-messenger-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-bbs-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 8
+  },
+  "return-bbs-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-bbs-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 8
+  },
+  "return-bbs-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-threshold-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 14
+  },
+  "return-threshold-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-threshold-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 14
+  },
+  "return-threshold-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-dojo-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 16
+  },
+  "return-dojo-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-dojo-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 16
+  },
+  "return-dojo-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-offerings-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "return-offerings-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-offerings-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "return-offerings-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-southpaw-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 14
+  },
+  "return-southpaw-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-southpaw-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 14
+  },
+  "return-southpaw-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-modem-net-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 6
+  },
+  "return-modem-net-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-modem-net-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 6
+  },
+  "return-modem-net-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-caduceus-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 8
+  },
+  "return-caduceus-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-caduceus-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 8
+  },
+  "return-caduceus-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-token-rain-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "return-token-rain-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-token-rain-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "return-token-rain-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-spoon-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 16
+  },
+  "return-spoon-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-spoon-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 16
+  },
+  "return-spoon-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-dojo-duel-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "return-dojo-duel-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-dojo-duel-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "return-dojo-duel-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-about-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 10
+  },
+  "return-about-click.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "app-about-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 10
+  },
+  "return-about-key.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  },
+  "19-net-echo.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 6
+  },
+  "20-shell.png": {
+    "ok": true,
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15
+  }
+}

@@ -234,8 +234,8 @@ U0 HermesChatTask(U8 *)
 }
 
 U0 HermesChatRun()
-{//Open Hermes Chat in its own task.
-  Spawn(&HermesChatTask,NULL,"Hermes Chat");
+{//Run Hermes Chat in the calling task so the launcher can restore after Esc.
+  HermesChatTask(NULL);
 }
 
 #help_index ""

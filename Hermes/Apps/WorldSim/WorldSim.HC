@@ -571,6 +571,8 @@ U0 WorldSim()
   WsInit;
   Fs->draw_it=&WsDrawIt;
   ws_anim_task=Spawn(&WsAnimateTask,NULL,"WorldSim Anim",,Fs);
+  TaskDerivedValsUpdate(Fs);
+  WinZBufUpdate;
 
   try
   {

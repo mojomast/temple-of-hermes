@@ -402,17 +402,25 @@ U0 CapDrawHud(CDC *dc,I64 w,I64 h)
   }
 }
 
+U0 CapybaraDrawIt(CTask *task,CDC *dc)
+{
+  I64 w=task->pix_width,h=task->pix_height;
+  CapDrawScene(dc,w,h);
+  CapDrawHud(dc,w,h);
+}
+
 public U0 Capybara()
 {
   I64 ch,w,h,mx,my,lb;
-  CDC *dc;
   SettingsPush;
   WinMax;
   DocClear;
-  dc=DCAlias;
   w=Fs->pix_width;
   h=Fs->pix_height;
   CapInit(w,h);
+  Fs->draw_it=&CapybaraDrawIt;
+  TaskDerivedValsUpdate(Fs);
+  WinZBufUpdate;
   try
   {
     while (TRUE)
@@ -447,9 +455,7 @@ public U0 Capybara()
       }
       cap_last_lb=lb;
       CapStep(w,h);
-      CapDrawScene(dc,w,h);
-      CapDrawHud(dc,w,h);
-      Refresh;
+      WinZBufUpdate;
       Sleep(33);
       Yield;
     }
@@ -463,7 +469,6 @@ public U0 Capybara()
   }
   Free(cap_icon_buf);
   cap_icon_buf=NULL;
-  DCFill(dc);
-  DCDel(dc);
+  Fs->draw_it=NULL;
   SettingsPop;
 }

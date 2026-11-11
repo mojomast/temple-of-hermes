@@ -269,8 +269,8 @@ U0 OfferingsTask(U8 *data)
 }
 
 U0 OfferingsRun()
-{//Open Don Piedro's shop in its own window.
-  Spawn(&OfferingsTask,NULL,"Offerings");
+{//Run Don Piedro's shop in the calling task.
+  OfferingsTask(NULL);
 }
 
 U0 OfferingsOpen()

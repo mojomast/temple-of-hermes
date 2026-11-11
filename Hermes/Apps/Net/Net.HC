@@ -82,27 +82,6 @@ U0 HermesNetUsage()
   "small frame, and checks the host echo.  It never dials a hostname.\n";
 }
 
-U0 HermesNetApp()
-{//Entry point for Run.HC.  Prints status and returns to the shell.
-  if (!comm_ports[HERMES_NET_COM].base)
-  {
-    try
-    {
-      HermesNetInit;
-    }
-    catch
-    {
-      Fs->catch_except=TRUE;
-    }
-  }
-  HERMES_NET_APP_TITLE;
-  "\n";
-  HermesNetPrintStatus;
-  "\n";
-  HermesNetUsage;
-  "Run.HC returns to the shell; the link stays idle until a tool dials.\n";
-}
-
 I64 HermesNetEchoTest()
 {//Dial "hermes", send one frame, and compare the host echo.
   U8 tx[HERMES_NET_ECHO_MAX+1];
@@ -155,6 +134,55 @@ I64 HermesNetEchoTest()
   else
     hermes_net_echo_result=1;
   return hermes_net_echo_result;
+}
+
+U0 HermesNetApp()
+{//Interactive status window.  E runs the loopback test; Esc returns.
+  I64 ch;
+  if (!comm_ports[HERMES_NET_COM].base)
+  {
+    try
+    {
+      HermesNetInit;
+    }
+    catch
+    {
+      Fs->catch_except=TRUE;
+    }
+  }
+  SettingsPush;
+  DocTermNew;
+  AutoComplete(FALSE);
+  StrCpy(Fs->task_title,"Modem / Net");
+  Fs->title_src=TTS_LOCKED_CONST;
+  Fs->win_inhibit=WIG_USER_TASK_DFT;
+  WinBorder(TRUE);
+  WinMax;
+  LBts(&Fs->display_flags,DISPLAYf_SHOW);
+  WinToTop;
+  WinFocus;
+  DocClear;
+  HERMES_NET_APP_TITLE;
+  "\n";
+  HermesNetPrintStatus;
+  "\n";
+  HermesNetUsage;
+  "Press E for the COM2 loopback echo test.  Esc returns to the launcher.\n";
+  Refresh;
+  while (TRUE)
+  {
+    ch=ScanChar;
+    if (ch==CH_ESC || ch==CH_SHIFT_ESC)
+      break;
+    if (ch=='e' || ch=='E')
+    {
+      HermesNetEchoTest;
+      Refresh;
+    }
+    Sleep(50);
+    Yield;
+  }
+  SettingsPop;
 }
 
 #help_index ""

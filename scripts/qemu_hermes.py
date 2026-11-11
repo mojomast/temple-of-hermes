@@ -94,6 +94,33 @@ class QMP:
             self.send_qcodes(*_qcodes_for(ch))
             time.sleep(delay)
 
+    def mouse_move_rel(self, dx: int, dy: int) -> None:
+        self.hmp(f"mouse_move {int(dx)} {int(dy)}")
+
+    def mouse_button(self, down: bool) -> None:
+        self.hmp(f"mouse_button {1 if down else 0}")
+
+    def mouse_home(self) -> None:
+        for _ in range(3):
+            self.mouse_move_rel(-900, -900)
+            time.sleep(0.03)
+
+    def mouse_click_at(self, x: int, y: int) -> None:
+        """Absolute VMMouse click in 640x480 guest pixels (QMP input-send-event)."""
+        ax = int(x * 32767 / 639)
+        ay = int(y * 32767 / 479)
+        self.cmd("input-send-event", events=[
+            {"type": "abs", "data": {"axis": "x", "value": ax}},
+            {"type": "abs", "data": {"axis": "y", "value": ay}},
+        ])
+        time.sleep(0.25)
+        self.cmd("input-send-event",
+                 events=[{"type": "btn", "data": {"down": True, "button": "left"}}])
+        time.sleep(0.20)
+        self.cmd("input-send-event",
+                 events=[{"type": "btn", "data": {"down": False, "button": "left"}}])
+        time.sleep(0.10)
+
     def quit(self) -> None:
         try:
             self.cmd("quit")

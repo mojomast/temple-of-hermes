@@ -43,4 +43,9 @@ LBts(&sys_run_level,RLf_HOME);
 #help_index ""
 #include "~/MakeHome"
 
+//The live-ISO desktop is the Hermes launcher.  Keep the Adam boot terminal
+//alive for diagnostics, but off-screen so it cannot cover the icon grid.
+LBtr(&Fs->display_flags,DISPLAYf_SHOW);
+WinZBufUpdate;
+
 //After this file, the Adam task enters $LK,"server mode",A="HI:Job"$.

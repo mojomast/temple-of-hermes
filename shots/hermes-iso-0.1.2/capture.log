@@ -1,0 +1,96 @@
+05:49:03 boot trial 01: ok=True 11.6s
+05:49:17 boot trial 02: ok=True 11.8s
+05:49:30 boot trial 03: ok=True 11.6s
+05:49:44 boot trial 04: ok=True 11.6s
+05:49:58 boot trial 05: ok=True 11.6s
+05:50:11 boot trial 06: ok=True 11.6s
+05:50:25 boot trial 07: ok=True 11.6s
+05:50:39 boot trial 08: ok=True 11.6s
+05:50:52 boot trial 09: ok=True 11.6s
+05:51:06 boot trial 10: ok=True 11.8s
+05:51:20 boot trial 11: ok=True 11.6s
+05:51:33 boot trial 12: ok=True 11.6s
+05:51:47 boot trial 13: ok=True 11.8s
+05:52:01 boot trial 14: ok=True 11.6s
+05:52:14 boot trial 15: ok=True 11.7s
+05:52:28 boot trial 16: ok=True 11.6s
+05:52:41 boot trial 17: ok=True 11.6s
+05:52:55 boot trial 18: ok=True 11.6s
+05:53:09 boot trial 19: ok=True 11.6s
+05:53:22 boot trial 20: ok=True 11.6s
+05:53:22 boot trials: 20/20
+05:53:29 splash captured from 006-boot.png
+05:53:44 home launcher captured: ok
+05:54:02 hermes-chat click: PASS (app text, diff=0.96, colors=5, diff=0.96)
+05:54:06 hermes-chat click return: PASS (launcher back)
+05:54:24 hermes-chat key: PASS (app text, diff=0.96, colors=6, diff=0.96)
+05:54:28 hermes-chat key return: PASS (launcher back)
+05:54:46 worldsim click: PASS (app window Hermes App, diff=0.84, colors=9, diff=0.84)
+05:54:51 worldsim click return: PASS (launcher back)
+05:55:08 worldsim key: PASS (app window Hermes App, diff=0.84, colors=9, diff=0.84)
+05:55:13 worldsim key return: PASS (launcher back)
+05:55:31 codex click: PASS (app text, diff=0.92, colors=9, diff=0.92)
+05:55:36 codex click return: PASS (launcher back)
+05:55:53 codex key: PASS (app text, diff=0.92, colors=9, diff=0.92)
+05:55:58 codex key return: PASS (launcher back)
+05:56:16 psyche click: PASS (app text, diff=0.97, colors=5, diff=0.97)
+05:56:20 psyche click return: PASS (launcher back)
+05:56:38 psyche key: PASS (app text, diff=0.97, colors=6, diff=0.97)
+05:56:42 psyche key return: PASS (launcher back)
+05:57:00 capybara click: PASS (app window Hermes App, diff=0.93, colors=9, diff=0.93)
+05:57:05 capybara click return: PASS (launcher back)
+05:57:22 capybara key: PASS (app window Hermes App, diff=0.93, colors=9, diff=0.93)
+05:57:27 capybara key return: PASS (launcher back)
+05:57:45 messenger click: PASS (app window Hermes App, diff=0.25, colors=9, diff=0.25)
+05:57:50 messenger click return: PASS (launcher back)
+05:58:07 messenger key: PASS (app window Hermes App, diff=0.25, colors=9, diff=0.25)
+05:58:12 messenger key return: PASS (launcher back)
+05:58:30 bbs click: PASS (app text, diff=0.14, colors=5, diff=0.14)
+05:58:34 bbs click return: PASS (launcher back)
+05:58:52 bbs key: PASS (app text, diff=0.13, colors=5, diff=0.13)
+05:58:56 bbs key return: PASS (launcher back)
+05:59:14 threshold click: PASS (app window Hermes App, diff=0.18, colors=9, diff=0.18)
+05:59:19 threshold click return: PASS (launcher back)
+05:59:36 threshold key: PASS (app window Hermes App, diff=0.18, colors=9, diff=0.18)
+05:59:41 threshold key return: PASS (launcher back)
+05:59:59 dojo click: PASS (app window Hermes App, diff=0.82, colors=9, diff=0.82)
+06:00:04 dojo click return: PASS (launcher back)
+06:00:21 dojo key: PASS (app window Hermes App, diff=0.82, colors=9, diff=0.82)
+06:00:26 dojo key return: PASS (launcher back)
+06:00:44 offerings click: PASS (app text, diff=0.84, colors=9, diff=0.84)
+06:00:48 offerings click return: PASS (launcher back)
+06:01:06 offerings key: PASS (app text, diff=0.84, colors=9, diff=0.84)
+06:01:11 offerings key return: PASS (launcher back)
+06:01:29 southpaw click: PASS (app text, diff=0.84, colors=9, diff=0.84)
+06:01:33 southpaw click return: PASS (launcher back)
+06:01:51 southpaw key: PASS (app text, diff=0.83, colors=9, diff=0.83)
+06:01:55 southpaw key return: PASS (launcher back)
+06:02:13 modem-net click: PASS (app text, diff=0.97, colors=5, diff=0.97)
+06:02:18 modem-net click return: PASS (launcher back)
+06:02:35 modem-net key: PASS (app text, diff=0.97, colors=6, diff=0.97)
+06:02:40 modem-net key return: PASS (launcher back)
+06:02:58 caduceus click: PASS (app window Hermes App, diff=0.76, colors=7, diff=0.76)
+06:03:03 caduceus click return: PASS (launcher back)
+06:03:20 caduceus key: PASS (app window Hermes App, diff=0.76, colors=7, diff=0.76)
+06:03:25 caduceus key return: PASS (launcher back)
+06:03:43 token-rain click: PASS (app window Hermes App, diff=0.25, colors=9, diff=0.25)
+06:03:47 token-rain click return: PASS (launcher back)
+06:04:05 token-rain key: PASS (app window Hermes App, diff=0.25, colors=9, diff=0.25)
+06:04:09 token-rain key return: PASS (launcher back)
+06:04:27 spoon click: PASS (app window Spoon, diff=0.30, colors=9, diff=0.30)
+06:04:32 spoon click return: PASS (launcher back)
+06:04:50 spoon key: PASS (app window Spoon, diff=0.30, colors=9, diff=0.30)
+06:04:54 spoon key return: PASS (launcher back)
+06:05:12 dojo-duel click: PASS (app text, diff=0.16, colors=9, diff=0.16)
+06:05:17 dojo-duel click return: PASS (launcher back)
+06:05:34 dojo-duel key: PASS (app text, diff=0.16, colors=9, diff=0.16)
+06:05:39 dojo-duel key return: PASS (launcher back)
+06:05:57 about click: PASS (app text, diff=0.97, colors=5, diff=0.97)
+06:06:02 about click return: PASS (launcher back)
+06:06:19 about key: PASS (app text, diff=0.97, colors=6, diff=0.97)
+06:06:24 about key return: PASS (launcher back)
+06:06:26 app suite: 17/17 apps passed both click and key
+06:06:45 net echo ok=True
+06:07:04 shell: User() ok
+06:07:22 shell captured
+06:07:24 capture pass complete

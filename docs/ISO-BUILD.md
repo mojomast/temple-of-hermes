@@ -1,18 +1,18 @@
-# Building TempleOfHermes-0.1.1 from the 5.20-rc10 base
+# Building TempleOfHermes-0.1.2 from the 5.20-rc10 base
 
-This is the same in-guest build path used for 0.1.0: install stock TinkerOS to
-a qcow2, deliver the Hermes sources with a FAT32 overlay disk, then let the
-guest's own `Adam/Hermes/MakeDistro.HC` run `BootDVDIns` / `RedSeaISO`.
+This is the same in-guest build path used for 0.1.0 and 0.1.1: install stock
+TinkerOS to a qcow2, deliver the Hermes sources with a FAT32 overlay disk, then
+let the guest's own `Adam/Hermes/MakeDistro.HC` run `BootDVDIns` / `RedSeaISO`.
 
 No host-side ISO tool is used. `xorriso`, `mkisofs`, and remastering the stock
 ISO are explicitly not part of this path.
 
 ## Inputs
 
-- Base tree: `hermes/iso-0.1` at
-  `99d5e88159f5cb2193c03c429bc0474bfff7f203` (the packed sandbox clone records
+- Base tree: `hermes/iso-0.1.1` at
+  `2ee750e9205809c405aa5494cdfe8d49b35a07d5` (the packed sandbox clone records
   that tree as its single `base` commit; no `origin` remote is present).
-- Work branch: `hermes/iso-0.1.1`, created from that packed `HEAD` only.
+- Work branch: `hermes/iso-0.1.2`, created from that packed `HEAD` only.
 - Stock CD: `TinkerOS_5.20-rc10.ISO`
   - sha256 `feb5cb570a79fefbefeb7d7a7133e3eac0e3b4ffcd6adf8a0fd29049476a1cc4`
   - from the public `tinkeros/TinkerOS` 5.20-rc10 release
@@ -31,10 +31,8 @@ ISO are explicitly not part of this path.
 - extra ISO files -> `n`
 - wait for `Reboot Now`, answer `n`, then stop the VM.
 
-Do **not** type the CommInit serial receiver at that shell. The overlay never
-uses the serial file channel; an earlier attempt failed because the installer
-terminal dropped the `CommIn` prefix and the line compiled as
-`ERROR: Undefined identifier at ";"`.
+Do **not** type the CommInit serial receiver. The overlay never uses the
+serial file channel; it uses the FAT32 `D:/RUN.HC` channel.
 
 ## 2. FAT32 overlay
 
@@ -50,24 +48,26 @@ a `RUN.HC` that:
 
 The overlay list is `scripts/build_iso.OVERLAY_PATHS` extended by
 `build_integration_iso.hermes_overlay()`: every `.HC`, `.DD`, `.GR`, `.TXT`,
-and `.PAL` under `Hermes/`. For 0.1.1 that is 249 files (including
-`Adam/Hermes/StateDir.HC`, the edited Hermes daemon files, and the five fixed
-apps/games). The 64 MiB image is not shrunk.
+and `.PAL` under `Hermes/`. The 0.1.2 build overlays 254 files.
 
-The 0.1.1 source changes are:
+The 0.1.2 launcher and boot changes are:
 
-- `Adam/Hermes/Events.HC`: `Yield` plus a bounded iteration cap in the
-  `HermesPollTasks` task-ring walk.
-- `Adam/Hermes/Text.HC`: the same `Yield` and bound on every `next_task`
-  `do/while` walk.
-- `Adam/Hermes/StateDir.HC` (new), included from `Adam/Hermes/Load.HC`:
-  writable `C:/Tmp` on an installed disk, otherwise a `B:/Tmp/Hermes/<App>`
-  RAM folder (creating/mounting the B: RAM drive if needed), with empty-path
-  fallbacks so apps still launch when no state can be written.
-- BBS, Caduceus, Spoon, Token Rain, and Dojo Duel: every state `DirMk` and
-  state-file write is wrapped in `try`; BBS also creates its own terminal
-  document, marks its window visible, and raises it so the UI presents on the
-  live disc (including when spawned from the launcher).
+- `Hermes/Apps/Launcher/`: six-column, three-row borderless full-screen grid
+  with all 18 registry entries, a visible selection, per-entry key hints, a
+  single ASCII footer help line, mouse hit-testing, arrow/Enter/Space
+  navigation, and F1 for About. `RunFile.HC` runs each app in its own visible
+  task and restores the launcher when the app exits.
+- `Hermes/Apps/Registry.HC`: one unique shortcut per entry and the About run.
+- `HomeSys.HC` / `Once.HC` / `StartOS.HC`: one hidden user terminal, the Adam
+  boot terminal docked off-screen, and the launcher left as the only visible
+  window.
+- `Adam/AutoComplete/DoACInit.HC`: the dictionary initializes but the
+  AutoComplete / System Keys guide does not open at boot (Alt-A still toggles
+  it).
+- `Hermes/Apps/Psyche/Run.HC`, `Capybara`, `Codex`, `Dojo`, `WorldSim`, `Net`:
+  redraw and return-to-launcher fixes; `Psyche` uses a small text signal-field
+  view so the live disc stays responsive.
+- `Doc/Start.DD`, `Doc/AboutHermes.DD`, `Once.HC`: 0.1.2 wording.
 
 ## 3. In-guest MakeDistro / DoDistro / RedSeaISO
 
@@ -86,16 +86,13 @@ then type slowly (0.14 s/key) at the real HolyC shell:
 ```
 Mount(FALSE,TRUE);      // wizard: C, Enter, s, 1, Enter, Enter
 Mount(FALSE,TRUE);      // wizard: D, Enter, s, 3, Enter, Enter
-Dir("C:/");
 Cd("D:/");
 #include "D:/RUN.HC";   // wait for OVERLAY DONE
 Cd("C:/");
 #include "C:/Adam/Hermes/MakeDistro";   // wait for "ISO written"
 ```
 
-`Once.HC` is part of the overlay, so the built disc still autostarts the Hermes
-home launcher (`Hermes/Apps/Launcher/Run.HC`). `MakeDistro.HC` is INT-owned and
-was not edited.
+`MakeDistro.HC` is INT-owned and was not edited.
 
 ## 4. Extract
 
@@ -104,9 +101,9 @@ convert the qcow2 to raw, and use `scripts/fat32_read.extract` on
 `/Tmp/TempleOfHermes.ISO.C` (fallbacks `/Tmp/TempleOfHermes.ISO.C.Z` and
 `/Tmp/TempleOfHermes.ISO`). The result of this build:
 
-- `dist/TempleOfHermes-0.1.1.ISO`
-- size `14026752` bytes
-- sha256 `70ded88b90de9ff2f5fe43de562e99aeac2e329aa73b03a8eccbad4f07a1110f`
+- `dist/TempleOfHermes-0.1.2.ISO`
+- size `14030848` bytes
+- sha256 `8bcf43c31689e328716ca42f0255f1ede834dd39cd0fa345bc96719d60f74c60`
 - ISO9660 volume id `THE_TEMPLE_OF_HERMES`
 
 The ISO is a PC/snapshot artifact. `dist/*.ISO` is gitignored; it is not
@@ -117,7 +114,7 @@ committed, released, or deployed.
 ```
 qemu-system-x86_64 -accel tcg -display none -nic none \
   -machine pc,kernel-irqchip=off -m 2G \
-  -cdrom dist/TempleOfHermes-0.1.1.ISO \
+  -cdrom dist/TempleOfHermes-0.1.2.ISO \
   -serial unix:run/com1.sock,server=on,wait=off \
   -serial unix:run/com2.sock,server=on,wait=off
 ```
@@ -127,7 +124,7 @@ PIL-only capture uses a local unix-socket stub that answers `ATZ`, `ATD hermes`,
 `AT+SEND`, `AT+RECV`, and `ATH` and echoes the guest frame. No BBS, VPS, or
 network destination is contacted.
 
-`shots/hermes-iso-0.1.1/capture.py` boots the built ISO with no writable guest
-disk, runs 20 independent launcher trials, and writes the 640x480 16-colour
-shots. It uses one VM per target and bounded waits. See
-`shots/hermes-iso-0.1.1/VERIFY.md` for the 0.1.1 results.
+`shots/hermes-iso-0.1.2/capture.py` boots the built ISO with no writable guest
+disk, runs 20 independent launcher trials, launches every app by mouse and by
+key, and writes the 640x480 16-colour shots. It uses bounded waits and PIL/OCR
+only. See `shots/hermes-iso-0.1.2/VERIFY.md` for the 0.1.2 results.

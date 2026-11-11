@@ -26,7 +26,7 @@ from fat32_read import extract, open_first_fat  # noqa: E402
 
 DISK = RUN / "hermes-build.qcow2"
 OVERLAY = RUN / "hermes-overlay.img"
-ISO_OUT = ROOT / "dist" / "TempleOfHermes-0.1.1.ISO"
+ISO_OUT = ROOT / "dist" / "TempleOfHermes-0.1.2.ISO"
 LOG = RUN / "integration-build2.log"
 
 

@@ -4,15 +4,15 @@ Cd(__DIR__);;
 
 // THE TEMPLE OF HERMES - Modem / Net app.
 //
-// This includes the real Hermes/Net library from the sibling Net directory;
-// there is no inline copy of the modem code here.  COM2 is the modem link and
-// COM1 remains the Hermes HRPC console.
+// Include the real Hermes/Net library explicitly so a compressed .Z twin can
+// never shadow the checked-in source.  COM2 is the modem link; COM1 remains
+// the Hermes HRPC console.
 
-#help_index "Hermes/Apps"
-#include "../../Net/Load.HC"
+#include "../../Net/Glbls.HC"
+#include "../../Net/Protocol.HC"
+#include "../../Net/Modem.HC"
 Cd(__DIR__);;
-#include "Net"
+#include "Net.HC"
 Cd(__DIR__);;
-#help_index ""
 
 #endif

@@ -1570,6 +1570,6 @@ U0 HbbsUiTask(U8 *unused)
 }
 
 U0 HermesBBSUI()
-{
-  Spawn(&HbbsUiTask,NULL,"Hermes BBS",,Fs);
+{//Run in the calling task so the home launcher returns after Q/Esc.
+  HbbsUiTask(NULL);
 }

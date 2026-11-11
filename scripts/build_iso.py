@@ -31,7 +31,7 @@ SHOT = SHOTS / "_raw" / "build"
 LOG = RUN / "build.log"
 SERIAL_LOG = RUN / "build-com1.bin"
 DIST = ROOT / "dist"
-ISO_NAME = "TempleOfHermes-0.1.1.ISO"
+ISO_NAME = "TempleOfHermes-0.1.2.ISO"
 
 OVERLAY_PATHS = [
     "Adam/Hermes/Glbls.HC",
@@ -46,12 +46,15 @@ OVERLAY_PATHS = [
     "Adam/Hermes/Load.HC",
     "Adam/Hermes/MakeDistro.HC",
     "Adam/Hermes/VERSION",
+    "Adam/AutoComplete/DoACInit.HC",
     "Once.HC",
+    "StartOS.HC",
     "HomeSys.HC",
     "MakeHome.HC",
     "Home/MakeHome.HC",
     "Home/DoDistro.HC",
     "Doc/Start.DD",
+    "Doc/AboutHermes.DD",
     "Kernel/StrC.HC",
     "Kernel/KGlbls.HC",
     "Kernel/KernelC.HH",

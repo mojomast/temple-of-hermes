@@ -3,7 +3,7 @@
 
 U0 SpoonRun()
 {
-  Spawn(&SpoonTask,NULL,"Spoon");
+  SpoonTask(NULL);
 }
 
 U0 Spoon(Bool agent=FALSE)
