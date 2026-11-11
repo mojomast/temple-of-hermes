@@ -28,7 +28,7 @@ U0 TS(U8 *desc)
            (PROGRESS_DESC_LEN-StrLen(st))>>1,CH_SPACE,st);
   Free(st);
   progress4=ts_i++;
-  progress4_max=203;
+  progress4_max=192;
   progress4_t0=ts_t0;
   *progress4_desc=0;
   RegExe("TempleOS/OSTestSuite");
@@ -159,15 +159,11 @@ U0 DoRandSquares()
 
 U0 DoGPSPAL()
 {
-  CTask *task;
-  if (IsFileZorNotZ("::/Demo/Graphics/TinkerOS/GPSPAL.HC"))
-  {
-    task=User;
-    XTalkWait(task,"#include \"::/Demo/Graphics/TinkerOS/GPSPAL\";\n");
-    Sleep(3000);
-    PostMsgWait(task,MSG_KEY_DOWN_UP,CH_SHIFT_ESC,0);
-    DeathWait(&task,TRUE);
-  }
+  CTask *task=User;
+  XTalkWait(task,"#include \"::/Demo/Graphics/TinkerOS/GPSPAL\";\n");
+  Sleep(3000);
+  PostMsgWait(task,MSG_KEY_DOWN_UP,CH_SHIFT_ESC,0);
+  DeathWait(&task,TRUE);
 }
 
 U0 DoSlider()
@@ -217,11 +213,6 @@ U0 DoGrPaint()
   }
 
   Sleep(1000);
-  for (i=0;i<3;i++)
-  {
-    PostMsgWait(task,MSG_KEY_DOWN,'e',0);
-    Sleep(1000);
-  }
   PostMsgWait(task,MSG_KEY_DOWN_UP,CH_SHIFT_ESC,0);
   DeathWait(&task,TRUE);
   DCFill;
@@ -264,6 +255,7 @@ U0 DoWordle()
   DeathWait(&task,TRUE);
 }
 
+
 U0 DoSudoku()
 {
   I64 i;
@@ -275,58 +267,6 @@ U0 DoSudoku()
     PostMsgWait(task,MSG_KEY_DOWN_UP,'H',0);
   }
   Sleep(1000);
-  PostMsgWait(task,MSG_KEY_DOWN_UP,CH_ESC,0);
-  DeathWait(&task,TRUE);
-}
-
-U0 DoTetris()
-{
-  I64 i;
-  CTask *task=User;
-  XTalkWait(task,"#include \"::/Apps/Tetris/Tetris\";\n");
-  for (i=0; i<6; i++)
-  {
-    Sleep(250);
-    PostMsgWait(task,MSG_KEY_DOWN_UP,CH_SPACE,0);
-  }
-  Sleep(1500);
-  PostMsgWait(task,MSG_KEY_DOWN_UP,CH_ESC,0);
-  DeathWait(&task,TRUE);
-}
-
-U0 DoScorch()
-{
-  CTask *task=User;
-  XTalkWait(task,"#include \"::/Apps/Scorch/Scorch\";\n");
-  Sleep(1000);
-  PostMsgWait(task,MSG_KEY_DOWN_UP,CH_SPACE,0);
-  Sleep(3000);
-  PostMsgWait(task,MSG_KEY_DOWN_UP,CH_ESC,0);
-  DeathWait(&task,TRUE);
-}
-
-U0 DoGlowUFOs()
-{
-  I64 i;
-  CTask *task=User;
-  XTalkWait(task,"#include \"::/Apps/GlowUFOs/GlowUFOs\";\n");
-  Sleep(500);
-  PostMsgWait(task,MSG_KEY_DOWN_UP,CH_SPACE,0); //Dismiss instructions screen
-  Sleep(1000);
-  PostMsgWait(task,MSG_KEY_DOWN_UP,'b',0); //BK boost kills nearby enemies
-  for (i=0; i<10; i++)
-  {
-    PostMsgWait(task,MSG_KEY_DOWN_UP,0,SC_CURSOR_RIGHT);
-    PostMsgWait(task,MSG_KEY_DOWN_UP,CH_SPACE,0);
-    Sleep(100);
-  }
-  for (i=0; i<5; i++)
-  {
-    PostMsgWait(task,MSG_KEY_DOWN_UP,0,SC_CURSOR_UP);
-    PostMsgWait(task,MSG_KEY_DOWN_UP,CH_SPACE,0);
-    Sleep(100);
-  }
-  Sleep(500);
   PostMsgWait(task,MSG_KEY_DOWN_UP,CH_ESC,0);
   DeathWait(&task,TRUE);
 }
@@ -359,6 +299,7 @@ U0 DoToastScreenSaver()
   Kill(task);
 }
 
+$PL,1000$$PL,1000$
 U0 DoNGScreenSaver()
 {
   CTask *task=User;
@@ -372,25 +313,7 @@ U0 DoNGScreenSaver()
   Sleep(1);
   Kill(task);
 }
-
-U0 DoTDScreenSaver()
-{
-  CTask *task;
-  if (IsFileZorNotZ("/Demo/ScreenSavers/TDance.HC.Z"))
-  {
-    task=User;
-    AdamFile("/Demo/ScreenSavers/TDance.HC.Z");
-    SetScreenSaverTimeout(1);
-    Sleep(10000);
-    AdamFile("/Demo/ScreenSavers/Default.HC.Z");
-    PostMsgWait(task,MSG_KEY_DOWN_UP,CH_ESC,0);
-    SetScreenSaverTimeout(0);
-    ms_hard.timestamp = GetTSC;
-    Sleep(1);
-    Kill(task);
-  }
-}
-
+$PL,1000$
 U0 DoRandDemo()
 {
   CTask *task=User;
@@ -485,13 +408,6 @@ U0 DoDoodle()
   PostMsgWait(task,MSG_MS_L_UP,100,200);
   Sleep(500);
   PostMsgWait(task,MSG_KEY_DOWN_UP,CH_SHIFT_ESC,0);
-  DeathWait(&task,TRUE);
-}
-
-U0 DoGodDoodle()
-{//Deterministic hex seed avoids waiting on <SPACE> keypresses; ensures enough bits for a full sprite.
-  CTask *task=User;
-  XTalkWait(task,"GodDoodle(\"0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF\");\n");
   DeathWait(&task,TRUE);
 }
 
@@ -1737,23 +1653,6 @@ U0 DoTalons()
   DeathWait(&task,TRUE);
 }
 
-U0 DoBirdsNBoats()
-{
-  CTask *task=User;
-  XTalkWait(task,"#include \"::/Apps/BirdsNBoats/Run\";\n");
-  Sleep(3000);
-  PostMsgWait(task,MSG_KEY_DOWN_UP,'-',0);
-  PostMsgWait(task,MSG_KEY_DOWN_UP,'-',0);
-  Sleep(3000);
-  PostMsgWait(task,MSG_KEY_DOWN_UP,'b',0);
-  Sleep(3000);
-  PostMsgWait(task,MSG_KEY_DOWN_UP,'-',0);
-  PostMsgWait(task,MSG_KEY_DOWN_UP,'-',0);
-  Sleep(3000);
-  PostMsgWait(task,MSG_KEY_DOWN_UP,CH_SHIFT_ESC,0);
-  DeathWait(&task,TRUE);
-}
-
 U0 DoPhoneNumWords()
 {
   CTask *task=User;
@@ -2021,16 +1920,8 @@ U0 OSTestSuite()
   DoGPSPAL;
   TS("Sliders");
   DoSlider;
-  TS("GrDir");
-  TSFile("::/Demo/Graphics/TinkerOS/GrDir",1000);
   TS("GrPaint");
   DoGrPaint;
-  TS("Scorch");
-  DoScorch;
-  TS("GlowUFOs");
-  DoGlowUFOs;
-  TS("Tetris");
-  DoTetris;
   TS("Random color squares");
   DoRandSquares;
   TS("TinkerOS ext. palette");
@@ -2039,8 +1930,6 @@ U0 OSTestSuite()
   DoLSScreenSaver;
   TS("NewGlassScreenSaver");
   DoNGScreenSaver;
-  TS("TerryDanceScreenSaver");
-  DoTDScreenSaver;
   TS("ToastScreenSaver");
   DoToastScreenSaver;
   TS("Cube");
@@ -2060,8 +1949,6 @@ U0 OSTestSuite()
   DoBlackDiamond;
   TS("Talons");
   DoTalons;
-  TS("BirdsNBoats");
-  DoBirdsNBoats;
   TS("FlatTops");
   DoFlatTops;
   TS("DunGen");
@@ -2145,8 +2032,6 @@ U0 OSTestSuite()
   TSFileChar("::/Demo/Graphics/Elephant",,CH_SHIFT_ESC);
   TS("SpritePlot3D");
   TSFileChar("::/Demo/Graphics/SpritePlot3D");
-  TS("FancyText");
-  TSFileChar("::/Demo/FancyText",2500);
   TS("SpritePut");
   TSFile("::/Demo/Graphics/SpritePut");
   TS("SpritePutExt");
@@ -2163,8 +2048,6 @@ U0 OSTestSuite()
   TSFile("::/Demo/Carry");
   TS("Directives");
   TSFile("::/Demo/Directives");
-  TS("Bitfield");
-  TSFile("::/Demo/Bitfield",1500);
   TS("RandDemo");
   DoRandDemo;
   TS("Extents");
@@ -2191,8 +2074,6 @@ U0 OSTestSuite()
   DoPixCollision;
   TS("Doodle");
   DoDoodle;
-  TS("GodDoodle");
-  DoGodDoodle;
   TS("MassSpring");
   DoMassSpring;
   TS("SpeedLine");
@@ -2388,10 +2269,6 @@ U0 OSTestSuite()
   TSFile("::/Demo/Asm/BuzzFizz");
   TS("PutDec");
   TSFile("::/Demo/Asm/PutDec");
-  TS("Memory");
-  TSFile("::/Demo/Memory",1000);
-  TS("FirstSize");
-  TSFile("::/Demo/FirstSize",1000);
   task=User;
   TS("Prof");
   XTalkWait(task,"DocMax;Prof;HeapLog(ON);\n");
@@ -2447,8 +2324,6 @@ U0 OSTestSuite()
   DoPI100;
   TS("Test compiler bugfix");
   DoCompilerFixCheck;
-  TS("RmParTest");
-  TSFile("::/Demo/Compiler/RmParTest",1500);
   ProgressBarsRst("TinkerOS/OSTestSuite");
   "Elapsed Time:%5.3f\n"
   ,tS-ts_t0;

@@ -1,0 +1,34 @@
+$WW,1$$FG,5$$TX+CX,"About THE TEMPLE OF HERMES"$$FG$
+
+$FG,5$What this is:$FG$
+THE TEMPLE OF HERMES is a public-domain operating system for a human and an
+AI agent sharing one machine.  It is a rebrand and continuation of TinkerOS
+5.20-rc10, which is a fork of TempleOS.  This image is version 0.1.2.
+
+$FG,5$Lineage and credit:$FG$
+* $LK,"TempleOS",A="FI:::/Doc/AboutTempleOS.DD"$ was created by $FG,2$Terry A. Davis$FG$ and is public domain.
+* $LK,"TinkerOS",A="FI:::/Doc/AboutTinkerOS.DD"$ is the TempleOS-compatible base by its authors and is released under the Unlicense.
+* ZealOS supplied code that TinkerOS already credits.
+* Spirit is credited as prior art for a boot-time serial guest agent.
+
+$FG,5$New in this fork:$FG$
+The Hermes agent daemon on COM1, exact DolDoc text export, the presence banner
+and agent cursor, the event stream, the skip-install boot, the agent-aware
+input guards, and the Temple of Hermes branding and art are new work in this
+fork.  They are placed in the public domain under the Unlicense.
+
+$FG,5$Modes:$FG$
+The presence banner shows USER, SHARED, or AGENT.  In AGENT mode the kernel
+input gate refuses $FG,2$YorN$FG$, $FG,2$AreYouSure$FG$, $FG,2$Fmt$FG$,
+$FG,2$OSInstall$FG$, and $FG,2$BootHDIns$FG$.  SHARED allows an ordinary
+$FG,2$YorN$FG$ for the human but still refuses format and install.
+
+$FG,5$More:$FG$
+* $LK,"Features",A="FI:::/Doc/Features.DD"$
+* $LK,"Help & Index",A="FI:::/Doc/HelpIndex.DD"$
+* $LK,"Credits",A="FI:::/Doc/Credits.DD"$
+* Agent guide on the host: $FG,2$docs/USING-WITH-HERMES-AGENTS.md$FG$
+* Protocol and research: $FG,2$docs/HERMES-FEATURES.md$FG$
+
+$FG,8$This page is new in the hermes/rebrand branch.  It does not replace the
+TempleOS or TinkerOS About pages, which remain available above.$FG$

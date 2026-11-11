@@ -31,7 +31,4 @@ Bool net_log_dbg=FALSE;
 
 #include "Protocols/DHCP"
 
-#include "Utilities/NetHandler"
-
-#include "Utilities/CommTCP"
-#include "Utilities/TOSSrvNet"
+#include "Utilities/NetHandler" // needs IPV4, UDP, ICMP

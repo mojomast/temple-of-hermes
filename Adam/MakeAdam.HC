@@ -2,9 +2,6 @@ Cd(__DIR__);;
 #include "/Kernel/KCfg.HH"
 #include "BootRAM"
 #include "AExts"
-#include "AMisc"
-#include "AGlbls"
-#include "AStr"
 #include "AMath"
 #include "AMathODE"
 #include "Device/MakeDev"
@@ -33,7 +30,6 @@ LBts(&sys_run_level,RLf_DOC);
 #include "TaskSettings"
 #include "ADefine"
 #include "WallPaper"
-#include "ABlkDev/UsbPlug"
 #include "AMouse"
 #include "Host"
 Cd("..");;

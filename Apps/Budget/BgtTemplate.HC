@@ -201,7 +201,7 @@ CBgtTemplate *BgtTemplatePmt(CBgtTemplate *dft_t=NULL,CBgtEntry *dft_b=NULL)
       {
         tmpt=CAlloc(sizeof(CBgtTemplate));
         MemCpy(&tmpt->start,&t.start,BT_SIZE);
-        ClassCpy(&tmpt->b,tmpb);
+        MemCpy(&tmpt->b,tmpb,sizeof(CBgtEntry));
         Free(tmpb);
         return tmpt;
       }

@@ -1,0 +1,2 @@
+HBBS/1 RSP e-020 POST 213
+{"v":1,"ok":false,"command":"POST","error":{"code":"rate_limited","message":"rate limit exceeded","retry_after":37,"details":{"scope":"posts_per_thread","limit":3,"remaining":0,"reset_at":"2026-11-10T00:01:00Z"}}}

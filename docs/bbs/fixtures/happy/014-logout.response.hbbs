@@ -1,0 +1,2 @@
+HBBS/1 RSP r-014 LOGOUT 81
+{"v":1,"ok":true,"command":"LOGOUT","data":{"revoked":true,"all_sessions":false}}

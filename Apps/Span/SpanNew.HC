@@ -89,7 +89,7 @@ U0 SpanLoad(CMathODE *ode,U8 *src)
   MySpring *tmps;
   SpanHeader h;
   if (!src) return;
-  ClassCpy(&h,src);
+  MemCpy(&h,src,sizeof(SpanHeader));
   src+=sizeof(SpanHeader);
   for (i=0; i<h.num_masses; i++)
   {

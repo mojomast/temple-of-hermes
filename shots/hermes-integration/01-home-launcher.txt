@@ -1,0 +1,60 @@
+ HERMES/user   :26 FPS: 30 CPU69
+ MENU                        6D55D628[X] MENU                       6D4B7428[X]
+T            TinkerOS V5.20                          TinkerOS V5.20
+e
+r   MENU                                         6D40A428                 [X]
+m TT                                                                          d
+   e  THE TEMPLE OF HERMES
+   r
+   m  Apps
+
+ He
+ Ab
+ Qu                                                MENU                  6D2[X]
+                                                  T AutoComplete is in StandBy
+ Te                                               e
+ it                                               r  System Keys Quick Guide
+                                                  m     (Works Everywhere)
+ Di            Temple             Hermes Chat        <SPACE>   Left-Click
+ DA                                                  <ENTER>   Right-Click
+ 11                                                   <F1>     Help
+ 11                                                 <CTRL-m>   Personal Menu
+ 11                                                   <ESC>    Save  & Exit
+ 11                                                <SHIFT-ESC> Abort & Exit
+ 11                                                 <WINDOWS>  Pull-Down Menu
+ 11
+ T:                                                     (Works Everywhere)
+                                                      <F7>     Random Word
+                                                   <SHIFT-F7>  Random Passage
+                                                      <F6>     Random Song
+                                                   <SHIFT-F6>  Random Doodle
+ A
+ ag                                                               EOF
+ sh
+ is
+ at
+ wh
+ US
+                                   Vtt
+ Ho               _
+ HE
+ St
+ Ag
+ at
+
+ Te                   `                  `
+ it
+ Pu   Art icons: 14/14
+ up   Click an icon or press 1-9.  ESC closes.
+
+ In                                                             EOF
+ To install later, run OSInstall;
+ from USER mode only.
+
+ 0.292001s
+ T:/Hermes/Apps/Launcher>
+
+
+
+
+                           EOF                                    EOF

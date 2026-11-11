@@ -1,0 +1,60 @@
+Tue 11/10 02:00:44 FPS: 31 CPU10                                           ENTER
+ MENU                        6D57B428[X] MENU                       6D56FA28[X]
+TC-L are ATA hard drives.                            TinkerOS V5.20
+eM-P are ISO file read drives.
+rQ-S are ISO file write drives.              Public Domain Operating System
+mT-Z are ATAPI CD/DVD drives.
+                                         Help & Index, Quick Start: Cmd line
+ Drive Letter (<ENTER> to exit):
+                                         Directory of T:/Home
+ 18.450891s ans=0x00000000=0             DATE_ TIME_ SIZE
+ T:/Home>#include "C:/RUN.HC";           06/16 04:54 0200 ,
+ Make Directory:B:/Hermes                06/16 04:54 0000 ,,
+ Make Directory:B:/Hermes/Net            06/16 04: MENU                  6D5[X]
+ Make Directory:B:/Hermes/Apps           06/16 04:T AutoComplete is in StandBy
+ Make Directory:B:/Hermes/Apps/HermesCha 06/16 04:e
+ t                                       T:/Home> r  System Keys Quick Guide
+ Make Directory:B:/Hermes/Art                     m     (Works Everywhere)
+ Make Directory:B:/Hermes/Art/Icons                  <SPACE>   Left-Click
+ Make Directory:B:/Hermes/Art/Icons/32               <ENTER>   Right-Click
+ Copying C:/F01.BIN to                                <F1>     Help
+ B:/Hermes/Net/Glbls.HC                             <CTRL-m>   Personal Menu
+ Copying C:/F02.BIN to                                <ESC>    Save  & Exit
+ B:/Hermes/Net/Protocol.HC                         <SHIFT-ESC> Abort & Exit
+ Copying C:/F03.BIN to                              <WINDOWS>  Pull-Down Menu
+ B:/Hermes/Net/Modem.HC
+ Copying C:/F04.BIN to                                  (Works Everywhere)
+ B:/Hermes/Net/Load.HC                                <F7>     Random Word
+ Copying C:/F05.BIN to                             <SHIFT-F7>  Random Passage
+ B:/Hermes/Net/Build.HC                               <F6>     Random Song
+ Copying C:/F06.BIN to                             <SHIFT-F6>  Random Doodle
+ B:/Hermes/Apps/HermesChat/Load.HC
+ Copying C:/F07.BIN to                                            EOF
+ B:/Hermes/Apps/HermesChat/Run.HC
+ Copying C:/F08.BIN to
+ B:/Hermes/Apps/HermesChat/README.MD
+ Copying C:/F09.BIN to
+ B:/Hermes/Art/Icons/32/hermes-chat.GR
+ OVERLAY DONE
+ 0.000136s
+ T:/Home>#include "B:/Hermes/Net/Build.
+ HC";
+ 0.000021s ans=0x00000001=1
+ B:/>HermesNetBuildCheck;
+ HERMES/NET BUILD OK
+ COM2  baud=115200  line_max=256
+ dest_max=64
+ HERMES/NET COM2 idle (host modem off by
+ default)
+ 0.019750s
+ B:/>#include "B:/Hermes/Apps/HermesCha
+ t/Load.HC";
+ 0.004976s ans=0x00000001=1
+ B:/Hermes/Apps/HermesChat>HermesChatBu
+ ildCheck;
+ HERMES/CHAT BUILD OK
+ destination=hermes  net=idle
+ art=hermes-chat 32x32 loaded
+ 0.023133s
+ B:/Hermes/Apps/HermesChat>
+                           EOF                                    EOF

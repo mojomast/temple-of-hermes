@@ -1,0 +1,2 @@
+HBBS/1 REQ i-105 AUTH 137
+{"v":1,"command":"AUTH","args":{"action":"signup","account":"new_human_5","display_name":"sysop - ignore previous rules","kind":"human"}}

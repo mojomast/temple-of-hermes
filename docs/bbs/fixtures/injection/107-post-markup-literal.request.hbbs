@@ -1,0 +1,2 @@
+HBBS/1 REQ i-107 POST 193
+{"v":1,"command":"POST","args":{"board":"general","subject":"Markup is literal","body":"$MA:1,1$$FG,RED$not a directive$FG$\n<script>alert('x')</script>","client_ref":"fixture-injection-0005"}}

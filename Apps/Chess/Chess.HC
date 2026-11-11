@@ -155,7 +155,7 @@ CDoc *chess_doc;
 U0 GameSnapShot()
 {
   GameState *tmpg=MAlloc(sizeof(GameState));
-  ClassCpy(tmpg,&cur_state);
+  MemCpy(tmpg,&cur_state,sizeof(GameState));
   QueIns(tmpg,cur_state.last);
 }
 
@@ -540,7 +540,7 @@ I64 ChkPieceMoves(GameState *state,I64 piece_num,Move *src,I64 mv_cnt)
   else
     k=0;
   while (cnt--) {
-    ClassCpy(&state2,state);
+    MemCpy(&state2,state,sizeof(GameState));
     MoveDo(&state2,piece_num,src->x,src->y,FALSE);
 
     //Don't repeat board position
@@ -563,7 +563,7 @@ I64 ChkPieceMoves(GameState *state,I64 piece_num,Move *src,I64 mv_cnt)
       y=state->pieces[k].y;
     }
     if (!SqrInChk(&state2,x,y)) {
-      ClassCpy(dst++,src);
+      MemCpy(dst++,src,sizeof(Move));
       res++;
     }
 cm_skip:
@@ -598,7 +598,7 @@ U0 DrawIt(CTask *task,CDC *dc)
   dc->y=cy;
 
   dc->flags|=DCF_TRANSFORMATION;
-  ClassCpy(dc->r,w2s,16);
+  MemCpy(dc->r,w2s,sizeof(I64)*16);
 
   if (ai_thinking) {
     if (cur_state.cur_player)
@@ -685,7 +685,7 @@ CDC *BrdNew()
   dc->y=cy2;
 
   dc->flags|=DCF_TRANSFORMATION;
-  ClassCpy(dc->r,w2s,16);
+  MemCpy(dc->r,w2s,sizeof(I64)*16);
 
   dc->color=YELLOW;
   GrRect(dc,0,0,w,h);
@@ -762,7 +762,7 @@ I64 AIMove2(GameState *state,I64 depth)
       possible_moves+=mv_cnt;
       ptr=mvs;
       while (mv_cnt--) {
-        ClassCpy(&state2,state);
+        MemCpy(&state2,state,sizeof(GameState));
         state2.parent=state;
         if (MoveDo(&state2,i,ptr->x,ptr->y,FALSE)&&depth<kill_depth ||
 	      depth<move_depth)
@@ -775,7 +775,7 @@ I64 AIMove2(GameState *state,I64 depth)
         if (first || score>best_score) {
 	  best_score=score;
 	  best_piece=i;
-	  ClassCpy(&best_mv,ptr);
+	  MemCpy(&best_mv,ptr,sizeof(Move));
 	  first=FALSE;
         }
         ptr++;
@@ -796,7 +796,7 @@ U0 AIMove1(ChessJob *cj)
 {
   GameState state2;
   Move *ptr=cj->mv;
-  ClassCpy(&state2,cj->state);
+  MemCpy(&state2,cj->state,sizeof(GameState));
   state2.parent=cj->state;
   MoveDo(&state2,ptr->piece,ptr->x,ptr->y,FALSE);
   ptr->score=-AIMove2(&state2,1);
@@ -826,7 +826,7 @@ U0 AIMove(GameState *state)
       if (state->pieces[i].player==state->cur_player) {
         mv_cnt=PieceMoves(state,i,mvs);
         mv_cnt=ChkPieceMoves(state,i,mvs,mv_cnt);
-        ClassCpy(ptr,mvs,mv_cnt);
+        MemCpy(ptr,mvs,mv_cnt*sizeof(Move));
         ptr+=mv_cnt;
       }
 
@@ -877,7 +877,7 @@ U0 Init()
   cur_mv_cnt=0;
   last_mv.x=-1;
   last_mv.y=-1;
-  ClassCpy(&cur_state,&setup_state);
+  MemCpy(&cur_state,&setup_state,sizeof(cur_state));
   QueInit(&cur_state);
   cur_state.is_human[0]=PopUpNoYes("$$FG,BLACK$$WHITE is human?");
   cur_state.is_human[1]=PopUpNoYes("$$FG,BLACK$$BLACK is human?");

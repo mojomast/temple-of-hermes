@@ -13,7 +13,6 @@
 #exe {Option(OPTf_KEEP_PRIVATE,OFF);};
 #include "Templates"
 #include "CExts"
-#include "QSort"
 CCmpGlbls	cmp;
 #include "CAsm"
 #include "CInit"

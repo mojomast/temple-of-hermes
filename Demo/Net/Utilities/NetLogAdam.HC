@@ -15,7 +15,7 @@ U0 NetLog(U8 *fmt,...)
   if (net_log_log)
   {
     buf = StrPrintJoin(NULL, fmt, argc, argv);
-    AdamLog("%s\n", buf);
+    AdamLog(net_log_task->put_doc, "%s\n", buf);
     Free(buf);
   }
 }

@@ -1,12 +1,8 @@
 #help_index "Install;File/Cmd Line (Typically);Cmd Line (Typically);"
 U8 Mount2(U8 boot_drv_let,CDoc *_doc,Bool _caller_is_prtdsk, Bool just_ide=FALSE,
-    I64 *cur_drv_hint=NULL,Bool skip_fmt=FALSE)
+    I64 *cur_drv_hint=NULL)
 {//If _doc, called by $LK,"::/Kernel/KCfg.HC"$ else called by $LK,"Mount",A="MN:Mount"$().
- //skip_fmt allows skipping zeroing the entire whole drive on install.
- //MountWholeDrvNoFmt() skips formatting the placeholder partition for the whole drive
- //since AtaMkPrt will repartition/format the drive itself anyway.
-  I64 cnt,total=0,num_hints,drv_let,type,unit,prt_num,port,usb_k,usb_ser;
-  F64 percent;
+  I64 cnt,total=0,num_hints,drv_let,type,unit,prt_num,port;
   U8 blks_buf[STR_LEN],addr_buf[STR_LEN],base0_buf[STR_LEN],base1_buf[STR_LEN],
   *filename=NULL,*filename2=NULL,res=0,port_str[STR_LEN];
   CATARep *head=NULL,*tmpha;
@@ -29,16 +25,15 @@ U8 Mount2(U8 boot_drv_let,CDoc *_doc,Bool _caller_is_prtdsk, Bool just_ide=FALSE
     else {
     "$$GREEN$$C$$FG$$-$$GREEN$$L$$FG$$ are ATA hard drives.\n";
     }
-    "$$GREEN$$M$$FG$$-$$GREEN$$N$$FG$$ are ISO file read drives.\n";
-    "$$GREEN$$O$$FG$$-$$GREEN$$P$$FG$$ are ISO file write drives.\n";
-    "$$GREEN$$Q$$FG$$-$$GREEN$$T$$FG$$ are ATAPI CD/DVD drives ($$GREEN$$T$$FG$$ first).\n";
+    "$$GREEN$$M$$FG$$-$$GREEN$$P$$FG$$ are ISO file read drives.\n";
+    "$$GREEN$$Q$$FG$$-$$GREEN$$S$$FG$$ are ISO file write drives.\n";
     if (Let2BlkDevType('W')==BDT_SDHCI)
     {
-    "$$GREEN$$U$$FG$$-$$GREEN$$V$$FG$$ are USB drives.\n"
+    "$$GREEN$$T$$FG$$-$$GREEN$$V$$FG$$ are ATAPI CD/DVD drives.\n"
     "$$GREEN$$W$$FG$$-$$GREEN$$Z$$FG$$ are SDHCI drives.\n";
     }
     else {
-    "$$GREEN$$U$$FG$$-$$GREEN$$Z$$FG$$ are USB drives.\n";
+    "$$GREEN$$T$$FG$$-$$GREEN$$Z$$FG$$ are ATAPI CD/DVD drives.\n";
     }
     "\nDrive Letter ($$PURPLE$$<ENTER>$$FG$$ to exit):";
     drv_let=Let2Let(GetChar);
@@ -60,8 +55,6 @@ U8 Mount2(U8 boot_drv_let,CDoc *_doc,Bool _caller_is_prtdsk, Bool just_ide=FALSE
       unit=0;
       prt_num=I64_MIN;
       port = -1;
-      usb_k=-1;
-      usb_ser=0;
       switch (type)
       {
       case BDT_RAM:
@@ -75,24 +68,6 @@ U8 Mount2(U8 boot_drv_let,CDoc *_doc,Bool _caller_is_prtdsk, Bool just_ide=FALSE
         break;
       case BDT_ISO_FILE_READ:
         filename=GetStr("File Name:");
-        break;
-      case BDT_USB:
-        num_hints=UsbMsdRep;
-        if (num_hints)
-        {
-          usb_k=GetI64("USB Device Num ($$PURPLE$$-1$$FG$$=first unmounted):",-1,-1,15);
-          if (usb_k>=0)
-          {
-            usb_ser=UsbVolSerial(usb_k);
-            if (usb_ser)
-              "\nVol serial 0x%016X -- this stick will be found\n"
-              "again on any port.\n",usb_ser;
-            else
-              "\nThat stick carries no vol serial (not formatted by\n"
-              "TinkerOS), so it can only be named by device number,\n"
-              "which moves with the port.\n";
-          }
-        }
         break;
       case BDT_ATA:
       case BDT_AHCI_SATA:
@@ -170,66 +145,56 @@ U8 Mount2(U8 boot_drv_let,CDoc *_doc,Bool _caller_is_prtdsk, Bool just_ide=FALSE
           break;
         }
       }
-      if (type==BDT_USB)
+      if (type == BDT_SDHCI)
+        DocPrint(doc,"SetDrvLetType(\'%C\',%d);sdhci_drv=SdhciInit;\n",drv_let,type);
+      DocPrint(doc,"bd=BlkDevNextFreeSlot(\'%C\',%d);bd->unit=%d;\n",
+          drv_let,type,unit);
+      if (AHCIMode && port != -1 && *port_str)
       {
-        if (usb_ser)
-          DocPrint(doc,"UsbMountVol(0x%X,\'%C\');\n",usb_ser,drv_let);
-        else
-          DocPrint(doc,"UsbMountAt(%d,\'%C\');\n",usb_k,drv_let);
+        DocPrint(doc, "AHCIPortInit(bd, &blkdev.ahci_hba->ports[%d], %d);\n", port, port);
       }
+      switch (type)
+      {
+      case BDT_RAM:
+        if (!*addr_buf) StrCpy(addr_buf,"0");
+        DocPrint(doc,"bd->RAM_dsk=%s;\n",addr_buf);
+      case BDT_ISO_FILE_WRITE:
+        if (!*blks_buf) StrCpy(blks_buf,"0");
+        DocPrint(doc,"bd->max_blk=(%s)-1;\n",blks_buf);
+        DocPrint(doc,"bd->drv_offset=19<<2+"
+                 "(DVD_BLK_SIZE*2+DVD_BOOT_LOADER_SIZE)/BLK_SIZE;\n");
+        break;
+      case BDT_ISO_FILE_READ:
+        filename2=FileNameAbs(filename);
+        DocPrint(doc,"bd->file_dsk_name=AStrNew(\"%s\");\n",filename2);
+        DocPrint(doc,"bd->drv_offset=19<<2+"
+                 "(DVD_BLK_SIZE*2+DVD_BOOT_LOADER_SIZE)/BLK_SIZE;\n");
+        break;
+      case BDT_ATA:
+      case BDT_ATAPI:
+      case BDT_AHCI_SATA:
+      case BDT_AHCI_SATAPI:
+        if ((type==BDT_ATAPI || type==BDT_AHCI_SATAPI) && !*base0_buf)
+        {
+          DocPrint(doc,"GetBaseUnit(bd);\n"); //Only $LK,"::/Kernel/KCfg.HC"$
+          if (drv_let==boot_drv_let)
+            make_free=TRUE;
+        }
+        else if (!AHCIMode)
+        {
+          DocPrint(doc,"bd->base0=%s;bd->base1=%s;\n",base0_buf,base1_buf);
+        }
+        if ((type==BDT_ATA || type==BDT_AHCI_SATA) && _caller_is_prtdsk)
+        {
+          "\nReformat WHOLE drive!";
+          whole_drv=YorN;
+        }
+        break;
+      }
+      if (type==BDT_SDHCI)
+        DocPrint(doc,"SDHCIMount(\'%C\',%d);\n",drv_let,type);
       else
-      {
-        if (type == BDT_SDHCI)
-          DocPrint(doc,"SetDrvLetType(\'%C\',%d);sdhci_drv=SdhciInit;\n",drv_let,type);
-        DocPrint(doc,"bd=BlkDevNextFreeSlot(\'%C\',%d);bd->unit=%d;\n",
-            drv_let,type,unit);
-        if (AHCIMode && port != -1 && *port_str)
-        {
-          DocPrint(doc, "AHCIPortInit(bd, &blkdev.ahci_hba->ports[%d], %d);\n", port, port);
-        }
-        switch (type)
-        {
-        case BDT_RAM:
-          if (!*addr_buf) StrCpy(addr_buf,"0");
-          DocPrint(doc,"bd->RAM_dsk=%s;\n",addr_buf);
-        case BDT_ISO_FILE_WRITE:
-          if (!*blks_buf) StrCpy(blks_buf,"0");
-          DocPrint(doc,"bd->max_blk=(%s)-1;\n",blks_buf);
-          DocPrint(doc,"bd->drv_offset=19<<2+"
-                   "(DVD_BLK_SIZE*2+DVD_BOOT_LOADER_SIZE)/BLK_SIZE;\n");
-          break;
-        case BDT_ISO_FILE_READ:
-          filename2=FileNameAbs(filename);
-          DocPrint(doc,"bd->file_dsk_name=AStrNew(\"%s\");\n",filename2);
-          DocPrint(doc,"bd->drv_offset=19<<2+"
-                   "(DVD_BLK_SIZE*2+DVD_BOOT_LOADER_SIZE)/BLK_SIZE;\n");
-          break;
-        case BDT_ATA:
-        case BDT_ATAPI:
-        case BDT_AHCI_SATA:
-        case BDT_AHCI_SATAPI:
-          if ((type==BDT_ATAPI || type==BDT_AHCI_SATAPI) && !*base0_buf)
-          {
-            DocPrint(doc,"GetBaseUnit(bd);\n"); //Only $LK,"::/Kernel/KCfg.HC"$
-            if (drv_let==boot_drv_let)
-              make_free=TRUE;
-          }
-          else if (!AHCIMode)
-          {
-            DocPrint(doc,"bd->base0=%s;bd->base1=%s;\n",base0_buf,base1_buf);
-          }
-          if ((type==BDT_ATA || type==BDT_AHCI_SATA) && _caller_is_prtdsk)
-          {
-            "\nReformat WHOLE drive!";
-            whole_drv=YorN;
-          }
-          break;
-        }
-        if (type==BDT_SDHCI)
-          DocPrint(doc,"SDHCIMount(\'%C\',%d);\n",drv_let,type);
-        else
-          DocPrint(doc,"BlkDevAdd(bd,%d,%d,%d);\n",prt_num,whole_drv,make_free);
-      }
+        DocPrint(doc,"BlkDevAdd(bd,%d,%d,%d);\n",prt_num,whole_drv,make_free);
       if (_doc) //Called by $LK,"::/Kernel/KCfg.HC"$
         cnt++;
       else   //Called by $LK,"Mount",A="MN:Mount"$()
@@ -239,8 +204,7 @@ U8 Mount2(U8 boot_drv_let,CDoc *_doc,Bool _caller_is_prtdsk, Bool just_ide=FALSE
           if (_caller_is_prtdsk)
           {
             res=drv_let;
-            percent=1.0;
-            DskPrtExt(drv_let,0,1,&percent,skip_fmt); //First mount whole drive.
+            DskPrt(drv_let,1.0); //First mount whole drive.
           }
           else
             DskPrt(drv_let);
@@ -260,11 +224,5 @@ U8 Mount2(U8 boot_drv_let,CDoc *_doc,Bool _caller_is_prtdsk, Bool just_ide=FALSE
 public U8 Mount(Bool caller_is_prtdsk=FALSE,Bool just_ide=FALSE)
 {//Mount drives. Called from $LK,"DskPrt(Mount)",A="FF:::/Adam/ABlkDev/DskPrt.HC,Mount("$.
   return Mount2(0,NULL,caller_is_prtdsk, just_ide=FALSE);
-}
-
-public U8 MountWholeDrvNoFmt(Bool just_ide=FALSE)
-{//For $LK,"AtaMkPrt",A="MN:AtaMkPrt"$ only.  Same as Mount(TRUE,just_ide),
- //but skips formatting the placeholder whole-drive partition.
-  return Mount2(0,NULL,TRUE,just_ide,,TRUE);
 }
 

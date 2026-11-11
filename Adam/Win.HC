@@ -12,8 +12,6 @@ public CWinMgrGlbls winmgr= {0,0,0,WINMGR_FPS,tS,tS,NULL,FALSE,FALSE,FALSE};
 
 CTaskSettings *last_max_win_pos=NULL;
 
-public Bool ms_xor_invert=TRUE;
-
 F64 cur_tS=tS;
 SetFPS(30);
 winmgr.fps=WINMGR_FPS;
@@ -197,11 +195,6 @@ public U0 WinScrollRestore(CTask *task,CD3I64 *s)
   task->scroll_z=s->z;
 }
 
-U0 ToggleMsXorInvert()
-{
-  ms_xor_invert^=1;
-}
-
 U0 DrawMs(CDC *dc)
 {
   I64 x,y;
@@ -210,7 +203,7 @@ U0 DrawMs(CDC *dc)
   x=ms.pos.x;
   y=ms.pos.y;
   POPFD
-  if (ms.show && (ms_hard.installed || ms_inject))
+  if (ms.show && ms_hard.installed)
   {
     if (!Bt(&sys_run_level,RLf_VGA)) //if text mode
       gr.text_base[ms.pos_text.x+ms.pos_text.y*TEXT_COLS]^=0x7F00;
@@ -218,14 +211,12 @@ U0 DrawMs(CDC *dc)
     {
       if (gr.fp_draw_ms)
       {
-        if (!ms_xor_invert)
-          dc->color=BLACK;
-        else if (ms.lb)
-          dc->color=ROP_XOR+(LTPURPLE^TRANSPARENT)&0xf;
+        if (ms.lb)
+          dc->color=ROP_XOR+LTPURPLE^TRANSPARENT;
         else if (ms.rb)
-          dc->color=ROP_XOR+(LTCYAN^TRANSPARENT)&0xf;
+          dc->color=ROP_XOR+LTCYAN^TRANSPARENT;
         else
-          dc->color=ROP_XOR+(BLACK^TRANSPARENT)&0xf;
+          dc->color=ROP_XOR+BLACK^TRANSPARENT;
         if (winmgr.grab_scroll && gr.fp_draw_grab_ms)
           (*gr.fp_draw_grab_ms)(dc,x,y,winmgr.grab_scroll_closed);
         else
@@ -271,9 +262,9 @@ U0 WinMsUpdate()
 {
   I64 dd;
   Bool set=FALSE;
-  if (ms_hard.installed || ms_inject)
+  if (ms_hard.installed)
   {
-    ms.has_wheel=ms_hard.has_wheel || ms_inject;
+    ms.has_wheel=ms_hard.has_wheel;
     if (ms_hard.evt)
     {
       MsUpdate(ms_hard.pos.x,ms_hard.pos.y,ms_hard.pos.z,
@@ -284,7 +275,7 @@ U0 WinMsUpdate()
   }
   if (set)
   {
-    if (ms_hard.installed || ms_inject)
+    if (ms_hard.installed)
     {
       ms.speed=ms_hard.speed;
       ms.timestamp=ms_hard.timestamp;

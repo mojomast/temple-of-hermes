@@ -14,14 +14,14 @@ Bool DrvTypeSet(U8 drv_let,I64 type=FSt_REDSEA)
   case BDT_SERIAL:
   case BDT_SDHCI:
   case BDT_VIRTUAL:
-  case BDT_USB:
     offset=0;
     ext_base=INVALID_CLUS;
     while (TRUE)
     {
       if (bd->type>=BDT_OTHER)
       {
-        BlkDevFnRw(bd,&mbr,offset,1,FALSE);
+        if (bd->read_func)
+          (*bd->read_func)(&mbr, offset, 1);
       }
       else if (BDT_ATA==bd->type)
         ATAReadBlks(bd,&mbr,offset,1);
@@ -53,7 +53,8 @@ Bool DrvTypeSet(U8 drv_let,I64 type=FSt_REDSEA)
               mbr.p[i].active=0x80;
               if (bd->type>=BDT_OTHER)
               {
-                BlkDevFnRw(bd,&mbr,offset,1,TRUE);
+                if (bd->write_func)
+                  (*bd->write_func)(&mbr, offset, 1);
               }
               else if (BDT_ATA==bd->type)
                 ATAWriteBlks(bd,&mbr,offset,1);
@@ -89,6 +90,8 @@ U0 Fmt(I64 drv_let,Bool quick=TRUE,Bool confirm=TRUE,I64 type=FSt_FAT32)
   //You don't format a CD/DVD with this.
   CDrv *dv=Let2Drv(drv_let);
   Bool old_silent=IsSilent;
+  if (fp_input_gate && !(*fp_input_gate)("Fmt"))
+    return;
   if (confirm && !AreYouSure)
     return;
   if (!dv)
@@ -101,7 +104,6 @@ U0 Fmt(I64 drv_let,Bool quick=TRUE,Bool confirm=TRUE,I64 type=FSt_FAT32)
   case FSt_FAT32:
     if (dv->bd->type==BDT_ATA
         || dv->bd->type==BDT_SDHCI
-        || dv->bd->type==BDT_USB
         || dv->bd->type==BDT_AHCI_SATA)
     {
       Silent;
@@ -134,3 +136,4 @@ U0 Fmt(I64 drv_let,Bool quick=TRUE,Bool confirm=TRUE,I64 type=FSt_FAT32)
     PrintErr("File System Not Supported\n");
   }
 }
+

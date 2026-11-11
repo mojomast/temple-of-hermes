@@ -17,19 +17,19 @@
     Some code is inclded for IPV6, currently
     unused. */
 
-#define SOCK_STATE_READY          0
-#define SOCK_STATE_BIND_REQ       1
-#define SOCK_STATE_CONNECT_REQ    2
-#define SOCK_STATE_BOUND          3
-#define SOCK_STATE_LISTEN_REQ     4
-#define SOCK_STATE_LISTENING      5
-#define SOCK_STATE_OPEN           6
-#define SOCK_STATE_CLOSE_REQ      7
-#define SOCK_STATE_CLOSED         8
+#define SOCKET_STATE_READY          0
+#define SOCKET_STATE_BIND_REQ       1
+#define SOCKET_STATE_CONNECT_REQ    2
+#define SOCKET_STATE_BOUND          3
+#define SOCKET_STATE_LISTEN_REQ     4
+#define SOCKET_STATE_LISTENING      5
+#define SOCKET_STATE_OPEN           6
+#define SOCKET_STATE_CLOSE_REQ      7
+#define SOCKET_STATE_CLOSED         8
 
-#define SOCK_STREAM   1
-#define SOCK_DATAGRAM 2
-#define SOCK_RAW      3
+#define SOCKET_STREAM   1
+#define SOCKET_DATAGRAM 2
+#define SOCKET_RAW      3
 
 #define AF_UNSPEC   0
 #define AF_INET     2
@@ -37,49 +37,49 @@
 
 #define INADDR_ANY  0
 
-#define INET_ADDRSTRLEN     16
+#define INET_ADDRSTRLEN     16 //pubs.opengroup.com netinit/in.h
 #define INET6_ADDRSTRLEN    46
 
-#define INET_MIN_ADDRSTRLEN     7
-#define INET6_MIN_ADDRSTRLEN    2
+#define INET_MIN_ADDRSTRLEN     7 // ex: len of 0.0.0.0
+#define INET6_MIN_ADDRSTRLEN    2 // ie: len of ::
 
 
 #define IP_PARSE_STATE_NUM          0
 #define IP_PARSE_STATE_DOT          1
 
-class CIPV4Addr
+class CIPV4Address
 {
-  U32 addr;
+  U32 address;  // 'in Network Byte order' ... Big Endian
 };
 
-class CIPV6Addr
+class CIPV6Address
 {
-  U8    addr[16];
+  U8    address[16]; // a clear #define would be nice
 };
 
-class CIPAddrStorage
+class CIPAddressStorage
 {// class specifically meant to be generic casted either IPV4 or IPV6 Address.
   U8    padding[16];
 };
 
-class CSockAddrIPV4
+class CSocketAddressIPV4
 {
-  U16               family;
-  U16               port;
-  CIPV4Addr  addr;
-  U8                zeroes[8];
+  U16               family;     // 'AF_INET'
+  U16               port;       // 'in Network Byte order' ... Big Endian
+  CIPV4Address  address;
+  U8                zeroes[8];  // 'same size as socket address'
 };
 
-class CSockAddrIPV6
+class CSocketAddressIPV6
 {
-  U16               family;
-  U16               port;
+  U16               family; // 'AF_INET6'
+  U16               port;   // 'in Network Byte order'... Big Endian
   U32               flow_info;
-  CIPV6Addr  addr;
+  CIPV6Address  address;
   U32               scope_id;
 };
 
-class CSockAddrStorage
+class CSocketAddressStorage
 {
   /*    'designed to be large enough to
   hold both IPV4 and IPV6 structures.' */
@@ -88,19 +88,19 @@ class CSockAddrStorage
   U8    padding[26];
 };
 
-class CAddrInfo
+class CAddressInfo
 {
   I32                        flags;
   I32                        family;
-  I32                        sock_type;
+  I32                        socket_type;
   I32                        protocol;
-  I64                        addr_len;
-  CSockAddrStorage *addr;
+  I64                        address_length;
+  CSocketAddressStorage *address;
   U8                        *canonical_name;
-  CAddrInfo          *next;
+  CAddressInfo          *next;
 };
 
-class CSock
+class CSocket
 {
   U8    state;
 
@@ -108,43 +108,44 @@ class CSock
   U16 domain;
 };
 
-U0 AddrInfoCpy(CAddrInfo *out, CAddrInfo *in, CTask *mem_task=NULL)
-{//Assumes *out already exists. mem_task owns the copied buffers.
-  ClassCpy(out, in);
-  if (in->addr)
+U0 AddressInfoCpy(CAddressInfo *out, CAddressInfo *in)
+{// assumes *out already exists
+  MemCpy(out, in, sizeof(CAddressInfo));
+  if (in->address)
   {
-    out->addr = CAlloc(in->addr_len, mem_task);
-    MemCpy(out->addr, in->addr, in->addr_len);
+    out->address = CAlloc(in->address_length);
+    MemCpy(out->address, in->address, in->address_length);
   }
   if (in->canonical_name)
   {
-    out->canonical_name = StrNew(in->canonical_name, mem_task);
+    out->canonical_name = StrNew(in->canonical_name);
   }
 }
 
-U0 AddrInfoFree(CAddrInfo *info)
+U0 AddressInfoFree(CAddressInfo *info)
 {
-  CAddrInfo *next;
+  CAddressInfo *next;
   while (info)
   {
     next = info->next;
-    Free(info->addr);
+    Free(info->address);
     Free(info->canonical_name);
     Free(info);
     info = next;
   }
 }
 
-Bool IPV4AddrPrs(U8 *str, U32 *dst)
+Bool IPV4AddressPrs(U8 *string, U32 *destination)
 {
-  U8 *lexable_str = StrNew(str);
-  lexable_str = StrReplace(lexable_str, ".", ",");
-  CCmpCtrl *cc = CmpCtrlNew(lexable_str);
+  U8 *lexable_string = StrNew(string);
+  lexable_string = StrReplace(lexable_string, ".", ","); // swap dots with commas since Lex is easier with them.
+  CCmpCtrl *cc = CmpCtrlNew(lexable_string);
+  //Bts(&cc->opts, OPTf_DECIMAL_ONLY);
   cc->opts |= 1 << OPTf_DECIMAL_ONLY;
   I64 tk;
   I64 state = IP_PARSE_STATE_NUM;
-  U32 temp_dst = 0;
-  I64 current_section = 0;
+  U32 temp_destination = 0;
+  I64 current_section = 0; // IPV4 address has 4 total sections
   while (tk = Lex(cc))
   {
     switch (state)
@@ -163,7 +164,7 @@ Bool IPV4AddrPrs(U8 *str, U32 *dst)
           NetErr("IPV4 ADDRESS PARSE: IP Address can only have 4 sections.");
           return FALSE;
         }
-        temp_dst |= cc->cur_i64 << (current_section * 8);
+        temp_destination |= cc->cur_i64 << (current_section * 8);
         current_section++;
         state = IP_PARSE_STATE_DOT;
         break;
@@ -186,40 +187,40 @@ Bool IPV4AddrPrs(U8 *str, U32 *dst)
     }
   }
   CmpCtrlDel(cc);
-  temp_dst = EndianU32(temp_dst);
-  *dst = temp_dst;
+  temp_destination = EndianU32(temp_destination); // store the address in Network Byte Order (Big-Endian)
+  *destination = temp_destination;
   return TRUE;
 }
 
-I64 PresToNet(I64 addr_family, U8 *str, CIPAddrStorage *dst)
+I64 PresentationToNetwork(I64 address_family, U8 *string, CIPAddressStorage *destination)
 {
   /*    Converts IP string to internet address class, our inet_pton().
     Destination written as CIPV4Address or CIPV6Address depending
     on value of address_family.
     The destination address is the generic class, functions
     calling this method must cast their classes in the params. */
-  CIPV4Addr *ipv4_addr;
-  CIPV6Addr *ipv6_addr;
-  I64 str_len = StrLen(str);
-  switch (addr_family)
+  CIPV4Address *ipv4_address;
+  CIPV6Address *ipv6_address;
+  I64 string_length = StrLen(string);
+  switch (address_family)
   {
   case AF_INET:
-    if (str_len > INET_ADDRSTRLEN || str_len < INET_MIN_ADDRSTRLEN)
+    if (string_length > INET_ADDRSTRLEN || string_length < INET_MIN_ADDRSTRLEN)
     {
       NetErr("IP to Socket Address failed: Invalid Input String Size.");
       return -1;
     }
-    ipv4_addr = dst;
-    if (!IPV4AddrPrs(str, &ipv4_addr->addr))
+    ipv4_address = destination;
+    if (!IPV4AddressPrs(string, &ipv4_address->address))
       return -1;
     break;
   case AF_INET6:
-    if (str_len > INET6_ADDRSTRLEN || str_len < INET6_MIN_ADDRSTRLEN)
+    if (string_length > INET6_ADDRSTRLEN || string_length < INET6_MIN_ADDRSTRLEN)
     {
       NetErr("IP to Socket Address failed: Invalid Input String Size.");
       return -1;
     }
-    ipv6_addr = dst;
+    ipv6_address = destination;
     NetErr("IP to Socket Address failed: FIXME, IPV6 support not implemented yet.\n");
     return -1;
   default:
@@ -229,23 +230,23 @@ I64 PresToNet(I64 addr_family, U8 *str, CIPAddrStorage *dst)
   return 0;
 }
 
-U8 *NetToPres(I64 addr_family, CIPAddrStorage *src)
+U8 *NetworkToPresentation(I64 address_family, CIPAddressStorage *source)
 {// converts socket address to IP string, our inet_ntop. Taking Shrine approach of function returns U8* .
-  U8             *ip_str = NULL;
-  CIPV4Addr *ipv4_src;
-  CIPV4Addr *ipv6_src;
-  switch (addr_family)
+  U8             *ip_string = NULL;
+  CIPV4Address *ipv4_source;
+  CIPV4Address *ipv6_source;
+  switch (address_family)
   {
   case AF_INET:
-    ipv4_src = src;
-    ip_str = MStrPrint("%d.%d.%d.%d",
-                          ipv4_src->addr.u8[0],
-                          ipv4_src->addr.u8[1],
-                          ipv4_src->addr.u8[2],
-                          ipv4_src->addr.u8[3]);
+    ipv4_source = source;
+    ip_string = MStrPrint("%d.%d.%d.%d",
+                          ipv4_source->address.u8[0],
+                          ipv4_source->address.u8[1],
+                          ipv4_source->address.u8[2],
+                          ipv4_source->address.u8[3]);
     break;
   case AF_INET6:
-    ipv6_src = src;
+    ipv6_source = source;
     NetErr("Socket Address to IP failed: FIXME, IPV6 support not implemented yet.\n");
     return -1;
     break;
@@ -253,175 +254,175 @@ U8 *NetToPres(I64 addr_family, CIPAddrStorage *src)
     NetErr("Socket Address to IP failed: Invalid Address Family.");
     break;
   }
-  return ip_str;
+  return ip_string;
 }
 
 
-CSock *Sock(U16 domain, U16 type, CTask *mem_task=NULL)
-{//mem_task owns the socket: adam_task when NetHandler reaches it by tree.
-  CSock *sock = CAlloc(sizeof(CSock), mem_task);
-  sock->domain = domain;
-  sock->type = type;
-  sock->state = SOCK_STATE_READY;
-  return sock;
-}
-
-U0 SockStateErr(U8 *req, U8 state)
+CSocket *Socket(U16 domain, U16 type)
 {
-  U8 *state_str;
+  CSocket *socket = CAlloc(sizeof(CSocket));
+  socket->domain = domain;
+  socket->type = type;
+  socket->state = SOCKET_STATE_READY;
+  return socket;
+}
+
+U0 SocketStateErr(U8 *request, U8 state)
+{
+  U8 *state_string;
   switch (state)
   {
-  case SOCK_STATE_READY:
-    state_str = StrNew("READY");
+  case SOCKET_STATE_READY:
+    state_string = StrNew("READY");
     break;
-  case SOCK_STATE_BIND_REQ:
-    state_str = StrNew("BIND REQUEST");
+  case SOCKET_STATE_BIND_REQ:
+    state_string = StrNew("BIND REQUEST");
     break;
-  case SOCK_STATE_CONNECT_REQ:
-    state_str = StrNew("CONNECT REQUEST");
+  case SOCKET_STATE_CONNECT_REQ:
+    state_string = StrNew("CONNECT REQUEST");
     break;
-  case SOCK_STATE_BOUND:
-    state_str = StrNew("BOUND");
+  case SOCKET_STATE_BOUND:
+    state_string = StrNew("BOUND");
     break;
-  case SOCK_STATE_LISTEN_REQ:
-    state_str = StrNew("LISTEN REQUEST");
+  case SOCKET_STATE_LISTEN_REQ:
+    state_string = StrNew("LISTEN REQUEST");
     break;
-  case SOCK_STATE_LISTENING:
-    state_str = StrNew("LISTENING");
+  case SOCKET_STATE_LISTENING:
+    state_string = StrNew("LISTENING");
     break;
-  case SOCK_STATE_OPEN:
-    state_str = StrNew("OPEN");
+  case SOCKET_STATE_OPEN:
+    state_string = StrNew("OPEN");
     break;
-  case SOCK_STATE_CLOSE_REQ:
-    state_str = StrNew("CLOSE REQUEST");
+  case SOCKET_STATE_CLOSE_REQ:
+    state_string = StrNew("CLOSE REQUEST");
     break;
-  case SOCK_STATE_CLOSED:
-    state_str = StrNew("CLOSED");
+  case SOCKET_STATE_CLOSED:
+    state_string = StrNew("CLOSED");
     break;
   }
-  NetErr("Socket attempted %s while in %s state.", req, state_str);
+  NetErr("Socket attempted %s while in %s state.", request, state_string);
 }
 
-Bool SockAccept(CSock *sock)
+Bool SocketAccept(CSocket *socket)
 {
-  switch (sock->state)
+  switch (socket->state)
   {
-  case SOCK_STATE_LISTENING:
+  case SOCKET_STATE_LISTENING:
     /*  Socket expected to stay listening.
         At protocol level, a new socket 'connected'
         to this one is expected to be made. */
     return TRUE;
   default:
-    SockStateErr("ACCEPT", sock->state);
+    SocketStateErr("ACCEPT", socket->state);
     return FALSE;
   }
 }
 
-Bool SockClose(CSock *sock)
+Bool SocketClose(CSocket *socket)
 {
   /* Sockets attempting close will enter close
   request state before destroying the socket at
   the protocol level. */
-  sock->state = SOCK_STATE_CLOSE_REQ;
+  socket->state = SOCKET_STATE_CLOSE_REQ;
   return TRUE;
 }
 
-Bool SockBind(CSock *sock)
+Bool SocketBind(CSocket *socket)
 {
-  switch (sock->state)
+  switch (socket->state)
   {
-  case SOCK_STATE_READY:
+  case SOCKET_STATE_READY:
     /*  Sockets can only be bound
         if they are in initial state. */
-    sock->state = SOCK_STATE_BIND_REQ;
+    socket->state = SOCKET_STATE_BIND_REQ;
     return TRUE;
   default:
-    SockStateErr("BIND", sock->state);
+    SocketStateErr("BIND", socket->state);
     return FALSE;
   }
 }
 
-Bool SockConnect(CSock *sock)
+Bool SocketConnect(CSocket *socket)
 {
-  switch (sock->state)
+  switch (socket->state)
   {
-  case SOCK_STATE_READY:
+  case SOCKET_STATE_READY:
     /*  Sockets can only be connected
         if they are in initial state. */
-    sock->state = SOCK_STATE_CONNECT_REQ;
+    socket->state = SOCKET_STATE_CONNECT_REQ;
     return TRUE;
   default:
-    SockStateErr("CONNECT", sock->state);
+    SocketStateErr("CONNECT", socket->state);
     return FALSE;
   }
 }
 
-Bool SockLsten(CSock *sock)
+Bool SocketLsten(CSocket *socket)
 {
-  switch (sock->state)
+  switch (socket->state)
   {
-  case SOCK_STATE_BOUND:
+  case SOCKET_STATE_BOUND:
     /*  A socket must be bound to
         set it to listening. */
-    sock->state = SOCK_STATE_LISTEN_REQ;
+    socket->state = SOCKET_STATE_LISTEN_REQ;
     return TRUE;
   default:
-    SockStateErr("LISTEN", sock->state);
+    SocketStateErr("LISTEN", socket->state);
     return FALSE;
   }
 }
 
-Bool SockRx(CSock *sock)
+Bool SocketReceive(CSocket *socket)
 {
-  switch (sock->state)
+  switch (socket->state)
   {
-  case SOCK_STATE_OPEN:
-  case SOCK_STATE_BOUND:
+  case SOCKET_STATE_OPEN:
+  case SOCKET_STATE_BOUND:
     /*  Sockets can only recv when
         connected to or bound. */
     return TRUE;
   default:
-    SockStateErr("RECEIVE", sock->state);
+    SocketStateErr("RECEIVE", socket->state);
     return FALSE;
   }
 }
 
-Bool SockRxFrom(CSock *sock)
+Bool SocketReceiveFrom(CSocket *socket)
 {
-  switch (sock->state)
+  switch (socket->state)
   {
-  case SOCK_STATE_OPEN:
-  case SOCK_STATE_BOUND:
+  case SOCKET_STATE_OPEN:
+  case SOCKET_STATE_BOUND:
     /*  Sockets can only recvfrom when
         connected to or bound. */
     return TRUE;
   default:
-    SockStateErr("RECEIVE FROM", sock->state);
+    SocketStateErr("RECEIVE FROM", socket->state);
     return FALSE;
   }
 }
 
-Bool SockSend(CSock *sock)
+Bool SocketSend(CSocket *socket)
 {
-  switch (sock->state)
+  switch (socket->state)
   {
-  case SOCK_STATE_OPEN:
+  case SOCKET_STATE_OPEN:
     /*  Sockets can only send when
         they have been connected to. */
     return TRUE;
   default:
-    SockStateErr("SEND", sock->state);
+    SocketStateErr("SEND", socket->state);
     return FALSE;
   }
 }
 
-Bool SockSendTo(CSock *sock)
+Bool SocketSendTo(CSocket *socket)
 {
-  switch (sock->state)
+  switch (socket->state)
   {
-  case SOCK_STATE_OPEN:
-  case SOCK_STATE_BOUND:
-  case SOCK_STATE_READY:
+  case SOCKET_STATE_OPEN:
+  case SOCKET_STATE_BOUND:
+  case SOCKET_STATE_READY:
     /*  Sockets can only sendto when
         connected to, bound, or in
         initial state. Protocol logic
@@ -429,7 +430,7 @@ Bool SockSendTo(CSock *sock)
         state based on params. */
     return TRUE;
   default:
-    SockStateErr("SEND TO", sock->state);
+    SocketStateErr("SEND TO", socket->state);
     return FALSE;
   }
 }

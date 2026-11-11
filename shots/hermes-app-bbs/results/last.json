@@ -1,0 +1,1 @@
+{"v":1,"hbbs":"HBBS/1","dest":"bbs","transport":"hermes-net/com2","op":"DIAL","command":"DIAL","request_id":"","ok":0,"error":"dial_failed","trust":"untrusted","data":{"v":1,"ok":false,"command":"DIAL","error":{"code":"dial_failed"}}}

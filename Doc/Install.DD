@@ -1,10 +1,12 @@
-$WW,1$$FG,5$$TX+CX,"Installing TinkerOS"$$FG$
+$WW,1$$FG,5$$TX+CX,"Installing THE TEMPLE OF HERMES"$$FG$
 
-Welcome to TinkerOS live! You can look around without installing.
+Welcome to THE TEMPLE OF HERMES live! You can look around without
+installing.  This image is based on TinkerOS 5.20-rc10 and keeps the TempleOS
+and TinkerOS install paths below.
 
-If you want to install TinkerOS and you do not care about anything on the computer you are running on you can try the automated installer.  This will replace all data on the first hard drive it finds with TinkerOS so be sure you that is ok with you!  If you want to try alternative graphics modes you should consider first booting Super Grub and using the vbeinfo tool to figure out which modes your hardware supports or better yet boot the VBE tool from the USB image.  The TinkerOS installer does not filter out invalid modes unfortunately, so if you pick one graphics will fail to initialize and you will end up in text mode.  This not a big deal, you can simply do a re-install on just that partition with a different graphics mode.
+If you want to install THE TEMPLE OF HERMES and you do not care about anything on the computer you are running on you can try the automated installer.  This will replace all data on the first hard drive it finds with THE TEMPLE OF HERMES so be sure you that is ok with you!  If you want to try alternative graphics modes you should consider first booting Super Grub and using the vbeinfo tool to figure out which modes your hardware supports or better yet boot the VBE tool from the USB image.  The Temple of Hermes installer does not filter out invalid modes unfortunately, so if you pick one graphics will fail to initialize and you will end up in text mode.  This not a big deal, you can simply do a re-install on just that partition with a different graphics mode.
 
-Hopefully the automated installer will work for you, however if it does not you may still be able to install TinkerOS.  The original TempleOS hard drive probing code and disk partitioner are not always up to the task.  TinkerOS has attempted to improve upon the process a bit, but sometimes a manual partitioning and entering of I/O ports is required.  Usually all that needs to be done is to create a msdos (not GPT) partition table on the drive and create a primary FAT 32 partition for each TinkerOS install you want.  Then you can try going back and installing again not using the automated installer.  If you can't find the drive (or probing causes issues on your hardware) you can run lspci in Linux to try to find the I/O ports and choose no to probing.
+Hopefully the automated installer will work for you, however if it does not you may still be able to install THE TEMPLE OF HERMES.  The original TempleOS hard drive probing code and disk partitioner are not always up to the task.  TinkerOS has attempted to improve upon the process a bit, but sometimes a manual paritioning and entering of I/O ports is required.  Usually all that needs to be done is to create a msdos (not GPT) partition table on the drive and create a primary FAT 32 partition for each Temple of Hermes install you want.  Then you can try going back and installing again not using the automated installer.  If you can't find the drive (or probing causes issues on your hardware) you can run lscpi in Linux to try to find the I/O ports and choose no to probing.
 
 Dual booting with another operating system which can read FAT 32 partitions is handy for backup and transferring files.
 
@@ -12,11 +14,11 @@ The $LK,"::/Misc/OSInstall.HC"$ script will automate much of this.  It runs if y
 
 See $LK,"Boot.DD",A="FI:::/Doc/Boot.DD"$ for an overview of booting.  See $LK,"Requirements",A="FI:::/Doc/Requirements.DD"$ for supported hardware.
 
-Two TinkerOS partitions are highly recommended, so you can boot to a back-up and fix the primary when you work on it.  Odds are, you only need a couple gigabytes for your TinkerOS partitions.
+Two Temple of Hermes partitions are highly recommended, so you can boot to a back-up and fix the primary when you work on it.  Odds are, you only need a couple gigabytes for your Temple of Hermes partitions.
 
 1)
 $ID,2$$LK,"Mount",A="MN:Mount"$() use if the drive is partitioned.
-$ID,2$This command mounts a drive making it accessible.  For simplicity, sel $FG,2$'C'$FG$ as the first drive letter for your hard drive.  The first partition will be $FG,2$'C'$FG$, second, $FG,2$'D'$FG$, etc.  TinkerOS needs 3 numbers to utilize a hard drive -- base0, base1, and unit.  When you enter a hexadecimal number, do it like in $FG,2$C$FG$ with a $FG,2$0x$FG$ prefix.  If the probe was successful, you can just enter the number in the probe box instead of base0.
+$ID,2$This command mounts a drive making it accessible.  For simplicity, sel $FG,2$'C'$FG$ as the first drive letter for your hard drive.  The first partition will be $FG,2$'C'$FG$, second, $FG,2$'D'$FG$, etc.  THE TEMPLE OF HERMES needs 3 numbers to utilize a hard drive -- base0, base1, and unit.  When you enter a hexadecimal number, do it like in $FG,2$C$FG$ with a $FG,2$0x$FG$ prefix.  If the probe was successful, you can just enter the number in the probe box instead of base0.
 $ID,-2$
 $LK,"DskPrt",A="MN:DskPrt"$($FG,2$'C'$FG$) use if drive is not partitioned
 

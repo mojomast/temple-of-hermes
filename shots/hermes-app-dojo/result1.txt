@@ -1,0 +1,4 @@
+CHALLENGE: caduceus
+STATUS: PASS
+SCORE: 100
+DETAIL: staff=249 serpL=129 serpR=129 wings=466 px=705

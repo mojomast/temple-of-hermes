@@ -33,7 +33,7 @@ U0 GodDoodleSmooth(I64 num)
   for (y=0; y<god.doodle_dc->height; y++)
     for (x=0; x<god.doodle_dc->width; x++)
     {
-      ArrayZero(histogram,16);
+      MemSet(histogram,0,sizeof(histogram));
       for (y1=y-num; y1<=y+num; y1++)
         for (x1=x-num; x1<=x+num; x1++)
         {

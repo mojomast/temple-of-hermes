@@ -21,17 +21,19 @@ U0 SrvStartUp()
 
 U0 StartUpTasks()
 {
-  CTask *user1,*user2;
+  CTask *user1;
+  // One terminal runs Once.  Keep it hidden so the Hermes launcher owns the
+  // live-ISO screen; Ctrl-Alt-N still opens a visible user shell later.
   user1=User;
-  user2=User;
-  WinToTop(user1);
-  WinTileVert;
+  XTalk(user1,"Cd;#include \"Once\";\n");
+  LBtr(&user1->display_flags,DISPLAYf_SHOW);
+  if (TaskValidate(user1))
+    TaskDerivedValsUpdate(user1);
   "Boot Time:%7.3fs\n"
   ,tS;
-  XTalk(user1,"Cd;#include \"Once\";\n");
 }
 
 StartUpTasks;
 
-"\nTinkerOS V%5.3f\t%D %T\n\n"
+"\nTHE TEMPLE OF HERMES  (TinkerOS V%5.3f)\t%D %T\n\n"
 ,sys_os_version,sys_compile_time,sys_compile_time;

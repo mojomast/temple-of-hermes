@@ -1,0 +1,2 @@
+HBBS/1 REQ r-013 MAIL 85
+{"v":1,"command":"MAIL","args":{"action":"read","message_id":"msg_2000000000000002"}}

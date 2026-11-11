@@ -12,20 +12,7 @@ class CPlannedDrv
   Bool pri;
 };
 
-U0 DskPrtMBRWrite(CBlkDev *bd,CMasterBoot *mbr,I64 blk)
-{//Write a partition-table sector by whatever path bd needs, bypassing the
-//partition bounds-checking that block 0 and the ext links sit outside of.
-  if (bd->type==BDT_SDHCI)
-    fp_sdhci_blkdev_write(mbr,blk,1);
-  else if (bd->type==BDT_USB)
-    BlkDevFnRw(bd,mbr,blk,1,TRUE);
-  else if (AHCIMode)
-    AHCIAtaBlksWrite(bd,mbr,blk,1);
-  else
-    ATAWriteBlks(bd,mbr,blk,1);
-}
-
-public I64 DskPrtExt(U8 drv_let=0,I64 max_blks=0,I64 argc,I64 *argv,Bool skip_fmt=FALSE)
+public I64 DskPrtExt(U8 drv_let=0,I64 max_blks=0,I64 argc,I64 *argv)
 {//Partition disk
   /*Partition the disk containing partition drv_let.
 
@@ -70,8 +57,7 @@ public I64 DskPrtExt(U8 drv_let=0,I64 max_blks=0,I64 argc,I64 *argv,Bool skip_fm
     "Failed to mount block device to partition!\n";
     return 0;
   }
-  if (bd->type!=BDT_ATA && bd->type!=BDT_AHCI_SATA && bd->type!=BDT_SDHCI &&
-      bd->type!=BDT_USB)
+  if (bd->type!=BDT_ATA && bd->type!=BDT_AHCI_SATA && bd->type!=BDT_SDHCI)
   {
     "Unable to parition mounted block device type!\n";
     return 0;
@@ -135,7 +121,7 @@ public I64 DskPrtExt(U8 drv_let=0,I64 max_blks=0,I64 argc,I64 *argv,Bool skip_fm
     goto pd_done;
   remaining=FloorU64(bd->max_blk+1,ROUND_DRV_TO)-ROUND_DRV_TO;
   tmppp=head.next;
-  ZeroClass(&mbr);
+  MemSet(&mbr,0,BLK_SIZE);
   mbr.signature=0xAA55;
   offset=0;
   for (i=0; i<pri_cnt; i++)
@@ -165,11 +151,18 @@ public I64 DskPrtExt(U8 drv_let=0,I64 max_blks=0,I64 argc,I64 *argv,Bool skip_fm
     mbr.p[i].size=remaining;
     ext_base=offset;
   }
-  DskPrtMBRWrite(bd,&mbr,0);
+  if (bd->type==BDT_SDHCI)
+    fp_sdhci_blkdev_write(&mbr, 0, 1);
+  else {
+  if (AHCIMode)
+    AHCIAtaBlksWrite(bd, &mbr, 0, 1);
+  else
+    ATAWriteBlks(bd,&mbr,0,1);
+  }
   while (tmppp!=&head)
   {
     start_offset=offset;
-    ZeroClass(&mbr);
+    MemSet(&mbr,0,BLK_SIZE);
     mbr.signature=0xAA55;
     mbr.p[0].active=0x80;
     mbr.p[0].start_head=1;
@@ -192,13 +185,19 @@ public I64 DskPrtExt(U8 drv_let=0,I64 max_blks=0,I64 argc,I64 *argv,Bool skip_fm
       mbr.p[1].offset=offset-ext_base;
       mbr.p[1].size=tmppp->size;
     }
-    DskPrtMBRWrite(bd,&mbr,start_offset);
+    if (bd->type==BDT_SDHCI)
+      fp_sdhci_blkdev_write(&mbr, start_offset, 1);
+    else {
+      if (AHCIMode)
+        AHCIAtaBlksWrite(bd, &mbr, start_offset, 1);
+      else
+        ATAWriteBlks(bd,&mbr,start_offset,1);
+    }
   }
   bd->flags&=~(BDF_INITIALIZED | BDF_INIT_IN_PROGRESS);
   BlkDevAdd(bd,,FALSE,TRUE);
-  if (!skip_fmt)
-    for (i=bd->first_drv_let; i<drv_let2; i++)
-      Fmt(i,,FALSE);
+  for (i=bd->first_drv_let; i<drv_let2; i++)
+    Fmt(i,,FALSE);
 pd_done:
   while (head.next!=&head)
   {

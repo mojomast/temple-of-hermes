@@ -21,20 +21,12 @@ asm {
   DU8	0,0,0,0,0,0,0,0,0,0,'-',0,0,0,'+',0;
 }
 
-U8 KbdStatus()
-{//i8042 status. No controller reads 0xFF (floating bus): report no data.
-  I64 s=InU8(KBD_CTRL);
-  if (s==0xFF)
-    return 0;
-  return s;
-}
-
 public U0 KbdCmdSend(I64 port, U8 val)
 {
   F64 timeout=tS+0.125;
   while (tS<timeout)
   {
-    if (!(KbdStatus&2))
+    if (!(InU8(KBD_CTRL)&2))
     {
       OutU8(port,val);
       return;
@@ -47,7 +39,7 @@ public I64 KbdCmdRead()
 {
   F64 timeout=tS+0.125;
   while (tS<timeout)
-    if (KbdStatus&1)
+    if (InU8(KBD_CTRL)&1)
       return InU8(KBD_PORT);
   // Don't spam early kernel output on this error
   throw(0,!Bt(&sys_run_level,RLf_COMPILER));
@@ -720,24 +712,10 @@ I64 KbdMsgsQue()
 
 I64 KbdMsEvtTime()
 {//Timestamp of last key or mouse event.
-  if (ms_hard.timestamp>kbd.new_key_timestamp)
+  if (ms_hard.timestamp>kbd.timestamp)
     return ms_hard.timestamp;
   else
     return kbd.new_key_timestamp;
-}
-
-U0 KbdInjectIrqPass(U8 *pkt)
-{//The in-IRQ KbdBuildSC pass that KbdPktRead does for a PS/2 byte. Without it
-//an injected key reaches only the Ctrl-Alt callbacks registered with in_irq
-//clear (F, M, T), and never C, D, N, V or X. Keeps its own shift/ctrl/alt
-//state, the way KbdPktRead's statics are separate from KbdHndlr's.
-  static U8 last_raw_byte=0;
-  static I64 last_sc=0;
-  kbd_ctrl_alt_inject=TRUE;
-  KbdBuildSC(pkt[0],TRUE,&last_raw_byte,&last_sc);
-  if (pkt[0]==0xE0)
-    KbdBuildSC(pkt[1],TRUE,&last_raw_byte,&last_sc);
-  kbd_ctrl_alt_inject=FALSE;
 }
 
 public U0 KbdPktInject(U8 *pkt)
@@ -745,7 +723,6 @@ public U0 KbdPktInject(U8 *pkt)
     PUSHFD
     CLI
     kbd.timestamp=GetTSC;
-    KbdInjectIrqPass(pkt);
     KbdHndlr(pkt);
     POPFD
 }

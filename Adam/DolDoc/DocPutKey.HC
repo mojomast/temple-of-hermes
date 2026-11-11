@@ -1,36 +1,5 @@
 #help_index "DolDoc/Output;StdOut/DolDoc"
 
-#define PERSONAL_MENU_HOME_FILE	"~/PersonalMenu.DD"
-#define PERSONAL_MENU_FILE	"::/PersonalMenu.DD"
-#define PERSONAL_MENU_RAM_FILE	"B:/PersonalMenu.DD"
-
-public U8 *personal_menu_file=PERSONAL_MENU_FILE;
-
-public U8 *PersonalMenuFile()
-{//Name of the Ctrl-M menu, built from the icon files if it is missing.
-  if (IsFileZorNotZ(PERSONAL_MENU_HOME_FILE))
-    return StrNew(PERSONAL_MENU_HOME_FILE);
-  if (IsFileZorNotZ(PERSONAL_MENU_FILE))
-    return StrNew(PERSONAL_MENU_FILE);
-  if (DrvIsWritable(':'))
-  {
-    personal_menu_file=PERSONAL_MENU_FILE;
-    AdamFile("::/Misc/AppMenu");
-    if (IsFileZorNotZ(PERSONAL_MENU_FILE))
-      return StrNew(PERSONAL_MENU_FILE);
-  }
-  if (!IsFileZorNotZ(PERSONAL_MENU_RAM_FILE) &&
-      DrvMounted('B') && DrvIsWritable('B'))
-  {
-    personal_menu_file=PERSONAL_MENU_RAM_FILE;
-    AdamFile("::/Misc/AppMenu");
-    personal_menu_file=PERSONAL_MENU_FILE;
-  }
-  if (IsFileZorNotZ(PERSONAL_MENU_RAM_FILE))
-    return StrNew(PERSONAL_MENU_RAM_FILE);
-  return NULL;
-}
-
 public U0 DocPutKey(CDoc *doc,I64 ch=0,I64 sc=0)
 {//$LK,"PutKey",A="MN:PutKey"$(ch,sc) at doc insert pt, cur_entry.
   I64 i,x,y;
@@ -311,8 +280,6 @@ public U0 DocPutKey(CDoc *doc,I64 ch=0,I64 sc=0)
               {
                 if (sc&SCF_SHIFT)
                   ACMan(sc.u8[0]-SC_F1+1,Fs);
-                else if (ACIsHistoryMode())
-                  ACHistoryFillIn(sc.u8[0]-SC_F1+1);
                 else
                   ACFillIn(sc.u8[0]-SC_F1+1);
               }
@@ -482,7 +449,7 @@ public U0 DocPutKey(CDoc *doc,I64 ch=0,I64 sc=0)
               if (sc&SCF_KEY_DESC)
               {
                 if (sc&SCF_SHIFT)
-                  KeyDescSet("Cmd/Toggle AutoComplete/History");
+                  KeyDescSet("Cmd/Toggle Blink/Scroll");
                 else
                   KeyDescSet("Edit/Paste last command");
               }
@@ -490,7 +457,8 @@ public U0 DocPutKey(CDoc *doc,I64 ch=0,I64 sc=0)
               {
                 if (sc&SCF_SHIFT)
                 {
-                  ToggleHistory;
+                  ToggleBlink;
+                  ToggleScroll;
                 }
                 else
                 {
@@ -743,16 +711,9 @@ public U0 DocPutKey(CDoc *doc,I64 ch=0,I64 sc=0)
             KeyDescSet("Cmd/Personal Menu");
           else
           {
-            if (st=PersonalMenuFile)
-            {
-              m=DocRead(st);
-              DocMenu(m);
-              DocDel(m);
-              Free(st);
-            }
-            else
-              PopUpOk(ST_WARN_ST "No Personal Menu and no writable drive\n"
-                      "to generate one onto.\n\n");
+            m=DocRead("~/PersonalMenu.DD.Z");
+            DocMenu(m);
+            DocDel(m);
           }
         }
         break;

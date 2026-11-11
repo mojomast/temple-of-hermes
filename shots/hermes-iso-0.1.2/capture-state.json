@@ -1,0 +1,252 @@
+{
+  "apps": {
+    "hermes-chat": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.96, colors=5, diff=0.96",
+        "diff": 0.96,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.96, colors=5, diff=0.96",
+        "diff": 0.96,
+        "return": "launcher back"
+      }
+    },
+    "worldsim": {
+      "click": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.84, colors=9, diff=0.84",
+        "diff": 0.84,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.84, colors=9, diff=0.84",
+        "diff": 0.84,
+        "return": "launcher back"
+      }
+    },
+    "codex": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.92, colors=9, diff=0.92",
+        "diff": 0.92,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.92, colors=9, diff=0.92",
+        "diff": 0.92,
+        "return": "launcher back"
+      }
+    },
+    "psyche": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.97, colors=6, diff=0.97",
+        "diff": 0.97,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.97, colors=5, diff=0.97",
+        "diff": 0.97,
+        "return": "launcher back"
+      }
+    },
+    "capybara": {
+      "click": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.93, colors=9, diff=0.93",
+        "diff": 0.93,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.93, colors=9, diff=0.93",
+        "diff": 0.93,
+        "return": "launcher back"
+      }
+    },
+    "messenger": {
+      "click": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.25, colors=9, diff=0.25",
+        "diff": 0.25,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.25, colors=9, diff=0.25",
+        "diff": 0.25,
+        "return": "launcher back"
+      }
+    },
+    "bbs": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.14, colors=5, diff=0.14",
+        "diff": 0.14,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.13, colors=5, diff=0.13",
+        "diff": 0.13,
+        "return": "launcher back"
+      }
+    },
+    "threshold": {
+      "click": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.18, colors=9, diff=0.18",
+        "diff": 0.18,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.18, colors=9, diff=0.18",
+        "diff": 0.18,
+        "return": "launcher back"
+      }
+    },
+    "dojo": {
+      "click": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.82, colors=9, diff=0.82",
+        "diff": 0.82,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.82, colors=9, diff=0.82",
+        "diff": 0.82,
+        "return": "launcher back"
+      }
+    },
+    "offerings": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.84, colors=9, diff=0.84",
+        "diff": 0.84,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.84, colors=9, diff=0.84",
+        "diff": 0.84,
+        "return": "launcher back"
+      }
+    },
+    "southpaw": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.84, colors=9, diff=0.84",
+        "diff": 0.84,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.84, colors=9, diff=0.84",
+        "diff": 0.84,
+        "return": "launcher back"
+      }
+    },
+    "modem-net": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.97, colors=6, diff=0.97",
+        "diff": 0.97,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.97, colors=6, diff=0.97",
+        "diff": 0.97,
+        "return": "launcher back"
+      }
+    },
+    "caduceus": {
+      "click": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.76, colors=7, diff=0.76",
+        "diff": 0.76,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.76, colors=7, diff=0.76",
+        "diff": 0.76,
+        "return": "launcher back"
+      }
+    },
+    "token-rain": {
+      "click": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.25, colors=9, diff=0.25",
+        "diff": 0.25,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Hermes App, diff=0.25, colors=9, diff=0.25",
+        "diff": 0.25,
+        "return": "launcher back"
+      }
+    },
+    "spoon": {
+      "click": {
+        "ok": true,
+        "launch": "app window Spoon, diff=0.30, colors=9, diff=0.30",
+        "diff": 0.3,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app window Spoon, diff=0.30, colors=9, diff=0.30",
+        "diff": 0.3,
+        "return": "launcher back"
+      }
+    },
+    "dojo-duel": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.16, colors=9, diff=0.16",
+        "diff": 0.16,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.16, colors=9, diff=0.16",
+        "diff": 0.16,
+        "return": "launcher back"
+      }
+    },
+    "about": {
+      "click": {
+        "ok": true,
+        "launch": "app text, diff=0.97, colors=6, diff=0.97",
+        "diff": 0.97,
+        "return": "launcher back"
+      },
+      "key": {
+        "ok": true,
+        "launch": "app text, diff=0.97, colors=5, diff=0.97",
+        "diff": 0.97,
+        "return": "launcher back"
+      }
+    }
+  },
+  "temple": {
+    "click": {
+      "ok": true,
+      "reason": "clean launcher"
+    },
+    "key": {
+      "ok": true,
+      "reason": "clean launcher"
+    }
+  }
+}

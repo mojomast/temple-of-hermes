@@ -4,7 +4,7 @@ before import is resolved, you can use
 "import".  Otherwise, use a fun pointer
 var and check it before calling.
 */
-import Bool AreYouSure();
+
 import U0 ClassRep(U8 *_d,U8 *class_name=lastclass,
                    I64 max_depth=2,Bool fun=FALSE,I64 offset=0);
 import U8 *DocSave(CDoc *doc,I64 *_size=NULL);
@@ -57,7 +57,7 @@ extern CFile *FOpen(U8 *filename,U8 *flags,I64 cnt=0);
 extern U8 *FileExtRem(U8 *src,U8 *dst=NULL);
 extern Bool FileFind(U8 *filename,CDirEntry *_de=NULL,I64 fuf_flags=0);
 extern U8 *FileNameAbs(U8 *_filename,I64 fuf_flags=0);
-extern U8 *FileRead(U8 *filename,I64 *_size=NULL,I64 *_attr=NULL,Bool quiet=FALSE);
+extern U8 *FileRead(U8 *filename,I64 *_size=NULL,I64 *_attr=NULL);
 extern I64 FileWrite(U8 *filename,U8 *fbuf,I64 size,CDate cdt=0,I64 attr=0);
 extern I64 FlushMsgs(CTask *task=NULL);
 extern U0 Free(U8 *addr);
@@ -77,9 +77,6 @@ extern U0 JobQueDel(CJob *head);
 extern I64 JobsHndlr(I64 run_flags,CTask *task=NULL);
 extern CBlkDev *Let2BlkDev(U8 drv_let=0,Bool except=TRUE);
 extern I64 Let2BlkDevType(U8 drv_let);
-extern U8 DrvNextFreeLetChk(U8 first_drv_let='C');
-extern U8 DrvNextFreeLetType(U8 first_drv_let='C');
-extern I64 DrvVolSerial(U8 drv_let=0);
 extern CDrv *Let2Drv(U8 drv_let=0,Bool except=TRUE);
 extern U8 Let2Let(U8 drv_let=0);
 extern U0 MPInt(U8 num,I64 cpu_num=1);
@@ -101,8 +98,6 @@ extern U0 RedSeaFreeFreeLst(CDrv *dv);
 extern U0 RedSeaInit(CDrv *dv);
 extern Bool RedSeaValidate(U8 drv_let);
 extern I64 Seg2Linear(U32 *ptr);
-extern CHeapCtrl *sys_dma_heap;
-extern U0 DmaHeapInit();
 extern CTask *SpawnQue(U0 (*fp_addr)(U8 *data),U8 *data=NULL,
                        U8 *task_name=NULL,I64 target_cpu,CTask *parent=NULL, //NULL means adam
                        I64 stk_size=0,I64 flags=1<<JOBf_ADD_TO_QUE);
@@ -115,22 +110,25 @@ extern CJob *TaskMsg(CTask *_srv,CTask *master,
 extern U0 TaskRstAwaitingMsg(CTask *task=NULL);
 extern Bool TaskValidate(CTask *task);
 extern U0 TaskWait(CTask *task=NULL,Bool cmd_line_pmt=FALSE);
-extern U8 UsbMountAt(I64 k=-1,U8 drv_let=0);
-extern U8 UsbMountVol(I64 ser,U8 first_drv_let=0,I64 timeout_ms=6000);
 extern CTask *User(U8 *fmt=NULL,...);
 extern U0 UserTaskCont();
 extern U0 XTalk(CTask *task,U8 *fmt,...);
 extern U0 throw(I64 ch=0,Bool no_log=FALSE,Bool exit_unhandled=FALSE);
-extern U8 *DirTreeSerialize(CDirEntry *tmpde,I64 *_size=NULL);
-extern CDirEntry *DirTreeUnserialize(U8 *src);
-extern I64 Size(U8 *files_find_mask="/*",U8 *fu_flags=NULL,I64 round_to=0);
-extern I64 FileCnt(CDirEntry *tmpde);
-extern I64 FF(U8 *files_find_mask,U8 *fu_flags=NULL);
+extern U8 *DBlk(I64 blk,Bool write=FALSE);
+extern U8 *DClus(I64 c,Bool write=FALSE,I64 num=0);
+extern U8 *Dump(U8 *filename,Bool write=FALSE);
 extern Bool Copy(U8 *src_files_find_mask,U8 *dst_files_find_mask=".");
 extern Bool Move(U8 *f1,U8 *f2);
 extern I64 CopyTree(U8 *src_files_find_mask,U8 *dst_files_find_mask,Bool no_mask=TRUE);
 extern I64 DelTree(U8 *files_find_mask,U8 *fu_flags=NULL);
 extern U0 Touch(U8 *files_find_mask="*",U8 *attr="+?",U8 *fu_flags=NULL,CDate cdt=I64_MIN);
+extern U8 *DirTreeSerialize(CDirEntry *tmpde,I64 *_size=NULL);
+extern CDirEntry *DirTreeUnserialize(U8 *src);
+extern I64 Size(U8 *files_find_mask="/*",U8 *fu_flags=NULL,I64 round_to=0);
+extern I64 FileCnt(CDirEntry *tmpde);
+extern I64 FF(U8 *files_find_mask,U8 *fu_flags=NULL);
+extern I64 Zip(U8 *files_find_mask="*",U8 *fu_flags=NULL);
+extern I64 Unzip(U8 *files_find_mask="*.Z",U8 *fu_flags=NULL);
 extern U0 Unmount(U8 drv_let=0);
 extern U8 MountFile(U8 *filename);
 extern Bool Silent(Bool val=ON);
@@ -139,7 +137,7 @@ extern U0 DefinePrint(U8 *dname,U8 *src,...);
 extern U0 PortNop();
 extern U0 Busy(I64 uS);
 extern CMsRawQue *MsRawQueFind(CTask *task);
-extern CTask *SetSysFocusTask(CTask *task, Bool check_raw=TRUE);
+extern CTask *SetSysFocusTask(CTask *task=Fs, Bool check_raw=TRUE);
 extern U0 SetAltScrn(CDC *scrn=NULL);
 extern sd_drv *sdhci_drv;
 extern sd_drv *SdhciInit(I64 vendor_id=NULL, I64 device_id=NULL, Bool setup_drvs=TRUE);

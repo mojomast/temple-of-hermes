@@ -1,0 +1,42 @@
+23:09:52 boot trial 01: ok=True 12.3s
+23:10:07 boot trial 02: ok=True 12.2s
+23:10:21 boot trial 03: ok=True 12.3s
+23:10:35 boot trial 04: ok=True 12.2s
+23:10:49 boot trial 05: ok=True 12.2s
+23:11:04 boot trial 06: ok=True 12.2s
+23:11:18 boot trial 07: ok=True 12.3s
+23:11:32 boot trial 08: ok=True 12.3s
+23:11:46 boot trial 09: ok=True 12.2s
+23:12:01 boot trial 10: ok=True 12.2s
+23:12:15 boot trial 11: ok=True 12.3s
+23:12:29 boot trial 12: ok=True 12.2s
+23:12:43 boot trial 13: ok=True 12.3s
+23:12:58 boot trial 14: ok=True 12.3s
+23:13:12 boot trial 15: ok=True 12.3s
+23:13:26 boot trial 16: ok=True 12.3s
+23:13:41 boot trial 17: ok=True 12.3s
+23:13:55 boot trial 18: ok=True 12.3s
+23:14:09 boot trial 19: ok=True 12.2s
+23:14:23 boot trial 20: ok=True 12.3s
+23:14:23 boot trials: 20/20
+23:14:30 splash captured from 006-boot.png
+23:14:45 launcher captured
+23:15:02 shell captured
+23:15:40 03-app-hermes-chat: ok=True diff=0.10 errors=[]
+23:16:17 04-app-worldsim: ok=True diff=0.96 errors=[]
+23:16:54 05-app-codex: ok=True diff=0.94 errors=[]
+23:17:31 06-app-psyche: ok=True diff=0.97 errors=[]
+23:18:09 07-app-capybara: ok=True diff=0.95 errors=[]
+23:18:47 08-app-messenger: ok=True diff=0.95 errors=[]
+23:19:24 09-app-bbs: ok=True diff=0.94 errors=[]
+23:20:01 10-app-threshold: ok=True diff=0.96 errors=[]
+23:20:38 11-app-dojo: ok=True diff=0.97 errors=[]
+23:21:16 12-app-offerings: ok=True diff=0.81 errors=[]
+23:21:54 13-app-southpaw: ok=True diff=0.38 errors=[]
+23:22:31 14-app-modem-net: ok=True diff=0.08 errors=[]
+23:23:08 15-game-caduceus: ok=True diff=0.96 errors=[]
+23:23:46 16-game-token-rain: ok=True diff=0.96 errors=[]
+23:24:23 17-game-spoon: ok=True diff=0.96 errors=[]
+23:25:00 18-game-dojo-duel: ok=True diff=0.97 errors=[]
+23:25:48 net echo ok=True
+23:25:50 capture pass complete

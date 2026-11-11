@@ -15,8 +15,7 @@ public Bool MakeCmp()
 }
 
 public U0 MakeAll()
-{//Recompile compiler and kernel manually.
- //Shared by BootDVDIns.HC as well as this file.
+{//Recompile compiler and kernel manually
   if (MakeCmp)
     throw;
   if (Cmp("/Kernel/Kernel","Kernel",,':'))
@@ -27,6 +26,8 @@ public U0 BootHDIns(U8 drv_let=0)
 {//Install new parition boot-loader
   //$LK,"MakeAll",A="MN:MakeAll"$ and install new boot-loader.
   CDrv *dv;
+  if (fp_input_gate && !(*fp_input_gate)("BootHDIns"))
+    return;
   CFAT32Boot br;
   CDirEntry de;
   I64 i;
@@ -42,7 +43,6 @@ public U0 BootHDIns(U8 drv_let=0)
     case BDT_AHCI_SATA:
     case BDT_ATA:
     case BDT_SDHCI:
-    case BDT_USB:
       Move("/Kernel/Kernel.BIN.Z","/" KERNEL_BIN_C);
       if (!FileFind("/" KERNEL_BIN_C,&de,FUF_JUST_FILES))
         "No Kernel.BIN.C\n";

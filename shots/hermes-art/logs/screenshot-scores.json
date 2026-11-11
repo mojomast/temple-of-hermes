@@ -1,0 +1,20 @@
+{
+  "wallpaper": {
+    "frame": "frame-0050.png",
+    "palette_index_match": 0.9999576822916667,
+    "nonblack_fraction": 0.21488606770833332,
+    "distinct_palette_indices": 16
+  },
+  "icon": {
+    "frame": "frame-0080.png",
+    "icon_region_palette_match_vs_icon": 1.0,
+    "icon_region_palette_match_vs_wallpaper": 0.857421875,
+    "full_frame_wallpaper_match": 0.999482421875
+  },
+  "splash": {
+    "frame": "frame-0110.png",
+    "palette_index_match": 0.9998697916666667,
+    "nonblack_fraction": 0.79001953125,
+    "distinct_palette_indices": 14
+  }
+}

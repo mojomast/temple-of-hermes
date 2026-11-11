@@ -36,20 +36,6 @@ I64 EndianI64(I64 d)
   return res;
 }
 
-U64 EndianU64(U64 d)
-{//Swap big<-->little endian.
-  U64 res;
-  res.u8[7]=d.u8[0];
-  res.u8[6]=d.u8[1];
-  res.u8[5]=d.u8[2];
-  res.u8[4]=d.u8[3];
-  res.u8[3]=d.u8[4];
-  res.u8[2]=d.u8[5];
-  res.u8[1]=d.u8[6];
-  res.u8[0]=d.u8[7];
-  return res;
-}
-
 I64 BCnt(I64 d)
 {//Count set bits in I64.
   I64 res=0,i;
@@ -126,19 +112,11 @@ F64 tS()
   return SysTimerRead/ToF64(SYS_TIMER_FREQ);
 }
 
-U0 ZeroClass(U8 *ptr,I64 s_elem=firstsize)
-{//Set all data in a class to zero.
-  MemSet(ptr,0,s_elem);
-}
-
-U0 ClassCpy(U8 *dst,U8 *src,I64 n_elem=1,I64 s_elem=firstsize)
-{//Copy n_elem elements of a class onto another, fixed or heap array alike.
-  MemCpy(dst,src,n_elem*s_elem);
-}
-
-U0 ArrayZero(U8 *ptr,I64 n_elem,I64 s_elem=firstsize)
-{//Zero n_elem elements of class ptr, fixed or heap array alike.
-  MemSet(ptr,0,n_elem*s_elem);
+Bool Blink(F64 Hz=2.5)
+{//Return TRUE, then FALSE, then TRUE at given frequency.
+  if (!Hz) return 0;
+  if (!blink_master_flag) return 0;
+  return ToI64(cnts.jiffies*2*Hz/JIFFY_FREQ)&1;
 }
 
 U0 Busy(I64 uS)
@@ -257,6 +235,20 @@ Bool ScrnCast(Bool val=ON,Bool just_audio=FALSE,U8 *print_fmt="B:/Tmp/%X.GR")
   return old_val;
 }
 
+U0 SndRst()
+{//Fix stuck sound.
+  if (Bt(&sys_semas[SEMA_SND],0))
+  {
+    Sleep(1);
+    if (Bt(&sys_semas[SEMA_SND],0))
+    {
+      Sleep(1);
+      LBtr(&sys_semas[SEMA_SND],0);
+    }
+  }
+  Snd;
+}
+
 U0 Beep(I8 ona=62,Bool busy=FALSE)
 {//Make beep at given ona freq.
   Snd(ona);
@@ -296,6 +288,13 @@ Bool Mute(Bool val)
 Bool IsMute()
 {//Return is-mute flag.
   return Bt(&sys_semas[SEMA_MUTE],0);
+}
+
+I64 GetVolume()
+{// Returns system volume
+  // Override me, if changing from PC speaker
+  if (IsMute) return 0;
+  return 100;
 }
 
 U0 VolumeUp()
@@ -375,13 +374,13 @@ public U0 SetAltScrn(CDC *scrn=NULL)
   POPFD
 }
 
-CTask *SetSysFocusTask(CTask *task,Bool check_raw=TRUE)
+CTask *SetSysFocusTask(CTask *task=Fs,Bool check_raw=TRUE)
 {
   PUSHFD
   CLI
   SetAltScrn;  // Restore screen if full screen app loses focus
   CMsRawQue *entry = ms_hard.raw_queue->next;
-  if (!check_raw || !(ms_hard.installed || ms_inject) || IsDbgMode || IsRaw)
+  if (!check_raw || !ms_hard.installed || IsDbgMode || IsRaw)
   {
     sys_focus_task=task;
     POPFD
@@ -390,7 +389,7 @@ CTask *SetSysFocusTask(CTask *task,Bool check_raw=TRUE)
   ms_hard.raw_mode = MsRawQueFind(task);
   ms.show = !ms_hard.raw_mode;
   sys_focus_task=task;
-  while ((ms_hard.installed || ms_inject) && entry && entry != ms_hard.raw_queue)
+  while (ms_hard.installed && entry && entry != ms_hard.raw_queue)
   {
     if (!TaskValidate(entry->task))
     {
@@ -415,6 +414,37 @@ U0 KeyStateRst()
   MemSetI64(key_state,0,16);
   MemSetI64(sc_state,0,32);
   sc_flags_state=0;
+}
+
+public U0 BitFieldSet(U8 *bit_field, U8 offset, U8 size, U8 value)
+{//Sets values in a bit field
+  I64 i;
+  for (i=0; i<size; i++)
+    BEqu(bit_field,offset+i,value>>i);
+}
+
+public U64 BitFieldGet(U8 *bit_field, U8 offset, U8 size)
+{//Gets values from a bit field
+  I64 i;
+  U64 val=0;
+  for (i=0; i<size; i++)
+    BEqu(&val,i,Bt(bit_field,offset+i));
+  return val;
+}
+
+public Bool IsHypervisorPresent()
+{
+  CRAXRBXRCXRDX regs;
+  CPUId(1, &regs);
+  I64 hyper=(regs.rcx>>31)&1;
+  if (hyper)
+    return 1;
+  return 0;
+}
+
+U8 *HypeInfo()
+{
+  return hype_info;
 }
 
 public U0 SYield()

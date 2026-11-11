@@ -1,0 +1,60 @@
+Tue 11/10 02:00:17 FPS: 31 CPU10                                           ENTER
+ MENU                        6D57B428[X] MENU                       6D56FA28[X]
+T                                                    TinkerOS V5.20
+eEnter dev number or
+rport with 0x prefix.                        Public Domain Operating System
+mI/O Port Base0:
+ 2                                       Help & Index, Quick Start: Cmd line
+
+ Defined Drives:                         Directory of T:/Home
+ B REDSEA   RAM        0000 0000 00      DATE_ TIME_ SIZE
+    0000000000000058-0000000000040000    06/16 04:54 0200 ,
+ C FAT32    ATA        01F0 03F4 01      06/16 04:54 0000 ,,
+    Model# :QEMU HARDDISK                06/16 04: MENU                  6D5[X]
+    Serial#:QM00002                      06/16 04:T AutoComplete is in StandBy
+    000000000000003F-000000000001FFFF    06/16 04:e
+ T REDSEA   ATAPI      0170 0000 00      T:/Home> r  System Keys Quick Guide
+    0000000000000058-0000000000010EBF             m     (Works Everywhere)
+ Home Dir:"T:/Home"                                  <SPACE>   Left-Click
+                                                     <ENTER>   Right-Click
+ ****** Mount Drives ******                           <F1>     Help
+ A-B are RAM drives.                                <CTRL-m>   Personal Menu
+ C-L are ATA hard drives.                             <ESC>    Save  & Exit
+ M-P are ISO file read drives.                     <SHIFT-ESC> Abort & Exit
+ Q-S are ISO file write drives.                     <WINDOWS>  Pull-Down Menu
+ T-Z are ATAPI CD/DVD drives.
+                                                        (Works Everywhere)
+ Drive Letter (<ENTER> to exit):                      <F7>     Random Word
+                                                   <SHIFT-F7>  Random Passage
+ 18.450891s ans=0x00000000=0                          <F6>     Random Song
+ T:/Home>#include "C:/RUN.HC";                     <SHIFT-F6>  Random Doodle
+ Make Directory:B:/Hermes
+ Make Directory:B:/Hermes/Net                                     EOF
+ Make Directory:B:/Hermes/Apps
+ Make Directory:B:/Hermes/Apps/HermesCha
+ t
+ Make Directory:B:/Hermes/Art
+ Make Directory:B:/Hermes/Art/Icons
+ Make Directory:B:/Hermes/Art/Icons/32
+ Copying C:/F01.BIN to
+ B:/Hermes/Net/Glbls.HC
+ Copying C:/F02.BIN to
+ B:/Hermes/Net/Protocol.HC
+ Copying C:/F03.BIN to
+ B:/Hermes/Net/Modem.HC
+ Copying C:/F04.BIN to
+ B:/Hermes/Net/Load.HC
+ Copying C:/F05.BIN to
+ B:/Hermes/Net/Build.HC
+ Copying C:/F06.BIN to
+ B:/Hermes/Apps/HermesChat/Load.HC
+ Copying C:/F07.BIN to
+ B:/Hermes/Apps/HermesChat/Run.HC
+ Copying C:/F08.BIN to
+ B:/Hermes/Apps/HermesChat/README.MD
+ Copying C:/F09.BIN to
+ B:/Hermes/Art/Icons/32/hermes-chat.GR
+ OVERLAY DONE
+ 0.000136s
+ T:/Home>
+                           EOF                                    EOF

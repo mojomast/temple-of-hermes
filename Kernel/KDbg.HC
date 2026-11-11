@@ -610,9 +610,7 @@ U0 Dbg2()
   U8 buf[200];
   if (dbg.panic)
   {
-    if (!Bt(&sys_run_level,RLf_COMPILER)) //No disassembler yet.
-      "%P\n",Fs->rip;
-    else if (IsRaw)
+    if (IsRaw)
     {
       i=Fs->rip;
       Ui(buf,&i);
@@ -658,7 +656,7 @@ U0 Fault3(I64 fault_num,I64 fault_err_code)
     MPInt(I_MP_CRASH,0);
     SysHlt;
   }
-  "\n\tTinkerOS Debugger\n\n"
+  "\n\tTHE TEMPLE OF HERMES Debugger\n\n"
   ">Help;\t//For help.\n\n";
   Beep(62,TRUE);
   if (fault_num==I_DBG)

@@ -4,11 +4,11 @@ U0 GetFileDate(U8 *filename,CDate *cd)
 {
   CDirEntry de;
   U8 *cur_dir=StrNew(filename);
-  ZeroClass(cd);
+  MemSet(cd,0,sizeof(CDate));
   if (FileFind(filename,&de,FUF_JUST_FILES))
   {
     Free(de.full_name);
-    ClassCpy(cd, &de.datetime);
+    MemCpy(cd, &de.datetime, sizeof(CDate));
   }
   Free(cur_dir);
 }

@@ -1,0 +1,85 @@
+{
+  "title": "Hermes/Art in-OS load verification (TinkerOS 5.20-rc10 under QEMU TCG)",
+  "guest_os": {
+    "name": "TinkerOS",
+    "release": "5.20-rc10",
+    "iso": "TinkerOS_5.20-rc10.ISO",
+    "iso_sha256": "feb5cb570a79fefbefeb7d7a7133e3eac0e3b4ffcd6adf8a0fd29049476a1cc4",
+    "iso_sha256_verified": true,
+    "boot": "live CD, install=n, tour=n, MountIDEAuto at HolyC prompt"
+  },
+  "qemu": {
+    "version": "8.2.2",
+    "accel": "tcg",
+    "machine": "pc,kernel-irqchip=off",
+    "cpu": "qemu64",
+    "display": "none",
+    "nic": "none",
+    "smp": 1,
+    "memory": "1G",
+    "screendump": "QMP screendump (PNG)"
+  },
+  "overlay": {
+    "format": "MBR + FAT32",
+    "guest_root": "C:/Hermes/Art",
+    "files_staged": 123,
+    "staging_marker": "ok"
+  },
+  "grread": {
+    "wallpaper": "GRRead non-NULL ptr=31562278 width=640 winternal=640 height=480",
+    "icon": "GRRead non-NULL ptr=31562278 width=32 winternal=32 height=32",
+    "splash": "GRRead non-NULL ptr=31562278 width=640 winternal=640 height=480",
+    "all": "3/3 assets loaded and blitted"
+  },
+  "asset_hashes": {
+    "Wallpaper/toh-temple-night.GR": {
+      "size": 307232,
+      "sha256": "acd947fa0a0ec8ea488315c06e1037a395cf20fc27e3c4a6482c7b1908779222",
+      "guest_matches_repo": true
+    },
+    "Splash/toh-boot-splash.GR": {
+      "size": 307232,
+      "sha256": "6d9f71dfafaeffcff7102f3ea8835547ab1ad4a4ddd2849befb0ceba8c3ed2f3",
+      "guest_matches_repo": true
+    },
+    "Icons/32/hermes-chat.GR": {
+      "size": 1056,
+      "sha256": "bdfb6d3c6de4287fac3978c6e6ba3e15c25724b1c70ccbca6ba3d92c84084dc6",
+      "guest_matches_repo": true
+    }
+  },
+  "screenshots": {
+    "01-wallpaper-blit.png": {
+      "source_frame": "frame-0050.png",
+      "palette_index_match_to_source": 0.9999576822916667,
+      "nonblack_fraction": 0.21488606770833332,
+      "distinct_std_palette_indices": 16
+    },
+    "02-icon-blit.png": {
+      "source_frame": "frame-0080.png",
+      "icon_region_16_48_palette_match": 1.0,
+      "icon_region_match_vs_wallpaper": 0.857421875,
+      "full_frame_wallpaper_match": 0.999482421875
+    },
+    "03-splash-blit.png": {
+      "source_frame": "frame-0110.png",
+      "palette_index_match_to_source": 0.9998697916666667,
+      "nonblack_fraction": 0.79001953125,
+      "distinct_std_palette_indices": 14
+    }
+  },
+  "no_guest_crash": {
+    "marker_after_all_three_blits": "R_ALL_OK",
+    "value": "3/3 assets loaded and blitted",
+    "error_frames": 0,
+    "note": "The guest wrote R_ALL_OK after the third Sleep/blit cycle and the VM exited cleanly."
+  },
+  "method": {
+    "assets_copied_by": "HolyC Copy() from 8.3 FAT32 staging files to C:/Hermes/Art/**",
+    "blit": "GRRead(stem) then GrBlot(gr.dc,x,y,dc), DCDel(dc)",
+    "screenshot": "QMP screendump during each 8 s settle window",
+    "color_check": "QEMU VGA DAC is 6-bit, so PNG RGB values differ by a few units; frames are decoded and mapped to the nearest of the 16 std palette entries before comparison."
+  },
+  "runner": "shots/hermes-art/tools/run_art.py",
+  "extras_iso_note": "A preflight run on the in-repo Extras/TempleOS.ISO also returned non-NULL for all three assets; the final evidence run used the verified public 5.20-rc10 ISO."
+}

@@ -111,7 +111,7 @@ U0 LoadGame()
     return;
   if (size == sizeof(SaveState))
   {
-    ClassCpy(&ss,savedata);
+    MemCpy(&ss,savedata,sizeof(SaveState));
     board_seed=ss.board_seed;
     time_add=ss.time_add;
     MemCpy(state,&ss.state,81);

@@ -16,10 +16,9 @@ Cd(__DIR__);;
 #include "FileBMP"
 #include "CPURep"
 #include "MD5"
-#include "TOSServer"
 #include "TOSClient"
 #include "SethUtil"
 #include "SysRep"
 #include "SysSurvey"
-#include,opt "SysSurveyLegacy"
+#include "BitField"
 Cd("..");;

@@ -1,26 +1,26 @@
-U0 UDPSockTest()
+U0 UDPSocketTest()
 {
-  CUDPSock            *u0 = UDPSock(AF_INET);
-  CUDPSock            *u1 = UDPSock(AF_INET);
-  CSockAddrIPV4    *i0 = CAlloc(sizeof(CSockAddrIPV4));
-  CSockAddrIPV4    *i1 = CAlloc(sizeof(CSockAddrIPV4));
+  CUDPSocket            *u0 = UDPSocket(AF_INET);
+  CUDPSocket            *u1 = UDPSocket(AF_INET);
+  CSocketAddressIPV4    *i0 = CAlloc(sizeof(CSocketAddressIPV4));
+  CSocketAddressIPV4    *i1 = CAlloc(sizeof(CSocketAddressIPV4));
   i0->port          = EndianU16(80);
   i0->family            = AF_INET;
-  i0->addr.addr   = 0xDEADBEEF;
+  i0->address.address   = 0xDEADBEEF;
   i1->port          = EndianU16(68);
   i1->family            = AF_INET;
-  i1->addr.addr = 0xF00DBABE;
-  UDPSockBind(u0, i0);
-  ClassRep(udp_globals.bound_sock_tree);
-  UDPSockBind(u1, i1);
+  i1->address.address = 0xF00DBABE;
+  UDPSocketBind(u0, i0);
+  ClassRep(udp_globals.bound_socket_tree);
+  UDPSocketBind(u1, i1);
   "Before remove first socket\n";
   UDPRep;
   "\n";
-  UDPSockClose(u0);
+  UDPSocketClose(u0);
   "After remove first socket\n";
   UDPRep;
   "\n";
-  UDPSockClose(u1);
+  UDPSocketClose(u1);
   "After both sockets removed\n";
   UDPRep;
   "\n";
@@ -28,4 +28,4 @@ U0 UDPSockTest()
   Free(i1);
 }
 
-UDPSockTest;
+UDPSocketTest;

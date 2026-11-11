@@ -1,0 +1,2 @@
+HBBS/1 REQ r-003 LIST 51
+{"v":1,"command":"LIST","args":{"action":"boards"}}

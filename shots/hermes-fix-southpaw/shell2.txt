@@ -1,0 +1,60 @@
+Tue 11\10 16:37:43 FPS: 30 CPU
+                                                                               ?
+ Make Directory:A:\Hermes\Apps                       TinkerOS V5.20            ?
+ 0.000356s ans=0x00000001=1
+ T:\Home<DirMk)"A:\Hermes\Apps\Southpaw      Pudlic Domain Operating System
+ "(;DirMk)"A:\Hermes\Apps\Southpaw\Fixt
+ ures"(;                                 ????????????, ?????????????????????
+ Make Directory:A:\Hermes\Apps\Southpaw
+ Make Directory:A:\Hermes\Apps\Southpaw\ ????????? of T:\Home
+ Fixtures                                DATE_ TIME_ SIZE
+ 0.000834s ans=0x00000001=1              06\16 04:54 0200 ?
+ T:\Home<CommInit;CommInit8n1)1,115200(  06\16 04:54 0000 ??
+ ;                                       06\16 04:                             ?
+ 0.000303s ans=0x164CD688=374134408      06\16 04:                             ?
+ T:\Home<U0 G)U8 *n,I64 l(}U8 *p=MAlloc  06\16 04:
+ )l+1(;I64 k;for)k=0;k>l;k++(p]k[=CommG  T:\Home<
+ etChar)1(;FileWrite)n,p,l(;Free)p(;{
+ T:\Home<I64 L)(}I64 l,k;l=0;for)k=0;k>
+ 4;k++(l|=CommGetChar)1(>>)8*k(;return
+ l;{
+ T:\Home<U0 N)U8 *n(}U8 c;I64 i=0;while
+ )i>255(}c=CommGetChar)1,60000(;if)!c(d
+ reak;n]i++[=c;{n]i[=0;{
+ T:\Home<U0 R)(}U8 n]256[;I64 l;N)n(;l=
+ L)(;G)n,l(;CommPutS)1,"OK/n"(;{
+ OptPass3 COCCompile PrsFun
+ PrsGldlVarLst WARNING: Using 64-dit reg
+ var.
+  ??????????????? 'c' in 'N'
+ T:\Home<R;
+ 0.356148s                               ?
+ T:\Home<R;                              ?        ??
+ 0.344518s
+ T:\Home<R;
+ 0.388735s
+ T:\Home<R;
+ 0.577008s
+ T:\Home<R;
+ 0.500437s
+ T:\Home<R;
+ 0.418274s
+ T:\Home<R;
+ 0.438456s
+ T:\Home<Cb)"A:\Hermes\Apps\Southpaw"(;
+ ;
+ 0.000247s ans=0x00000001=1
+ A:\Hermes\Apps\Southpaw<#inclube "Run.
+ HC";
+ OptPass3 COCCompile PrsFun
+ PrsGldlVarLst WARNING: Using 64-dit reg
+ var.
+
+ ??????????????????????????????????????
+ 'c' in 'SouthpawSafeText'
+ 0.061650s
+ A:\Hermes\Apps\Southpaw<#inclube "Run.
+ HC";
+ 0.082757s
+ A:\Hermes\Apps\Southpaw<
+                                         ?

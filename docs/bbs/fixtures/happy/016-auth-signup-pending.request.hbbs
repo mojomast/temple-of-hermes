@@ -1,0 +1,2 @@
+HBBS/1 REQ r-016 AUTH 151
+{"v":1,"command":"AUTH","args":{"action":"signup_status","application_id":"app_1000000000000001","claim_token":"fixture.claim.token.0000000000000001"}}

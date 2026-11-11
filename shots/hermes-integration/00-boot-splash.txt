@@ -1,0 +1,12 @@
+Tue 11/10 13:20:57 FPS: 25 CPU99
+ MENU                                           100300                      [X]
+TInsReg::0
+eEnabling VMMouse!
+r
+m
+
+
+
+
+
+                                                                  EOF

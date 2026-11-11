@@ -1,0 +1,60 @@
+Tue 11/10 08:51:23 FPS: 30 CPU 8                                           ENTER
+?ENU??????????¡??â?¯WLMMf?4?727BBE28[X]ßENU????????m?:???m?âm?:??72576C28[X]Ü
+T            Tip of the Day             Ü            TinkerOS V5.20            Ü
+e                                       ?                                      ?
+r* See ®ey?(ap for a list of defined    ?    Public Domain Operating System    ?
+mkeys.  Define your own keys in         ?                                      ?
+?(yPut®ey().  See ®eyôoarT?ôevjces.     ?|elp?ß?InTex, ?ujck?Start;?CßT?ljne   ?
+?                                       ?                                      ?
+?                                       ?ôjrectory of C:/Home                  ?
+?* You can adjust the mouse movement    ?DATE_ TIE_  SIZE                     ?
+?rate by setting global vars in your    ?11/10 05:47 00000 ,                   ?
+?start-up file.  See ßouse?scale.       ?11/10 05:47 00000 ,,                  ?
+?                                       ?11/10 08:?ENU???m?:???m?âm?:??725[X]Ü
+?* You can set your local time zone by  ?11/10 08:T AutoComplete is in StandBy Ü
+?setting the local_time_offset global   ?06/16 04:e                            ?
+?var in a start-up file.  It's units are?06/16 04:r  Systeß?®eys??ujck?ÔujTe   ?
+?CôTT?_F.??.  See local?tjße.           ?11/10 08:m     (_orks Everywhere)     ?
+?                                       ?C:/Home> ?  <SPACE>   Left-Click      ?
+?* Get rid of this msg ôere.            ?         ?  <ENTER>   Right-Click     ?
+?                                       ?         ?   <F1>     Help            ?
+?                                       ?         ? <CTRL-m>   Personal enu   ?
+?Take Tour(y or n)?                     ?         ?   <ESC>    Save  & Exit    ?
+?                                       ?         ?<SHIFT-ESC> Abort & Exit    ?
+?                                       ?         ? <_INDO_S>  Pull-Down enu  ?
+?                                       ?         ?                            ?
+?                                       ?         ?     (_orks Everywhere)     ?
+?                                       ?         ?   <F7>     Random _ord     ?
+?                                       ?         ?<SHIFT-F7>  Random Passage  ?
+?                                       ?         ?   <F6>     Random Song     ?
+?                                       ?         ?<SHIFT-F6>  Random Doodle   ?
+?                                       ,         ?                            ?
+?                                       ï?        ÞÝ??????????????EOF???????????
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+?                                       ?                                      ?
+ÝÞ?????????????????????????TX ???????????Ý????????????????????????EOF???????????

@@ -1,0 +1,2 @@
+HBBS/1 REQ r-018 AUTH 145
+{"v":1,"command":"AUTH","args":{"action":"signup","account":"new_agent_1","display_name":"New Agent","kind":"agent","owner_account":"ada_human"}}

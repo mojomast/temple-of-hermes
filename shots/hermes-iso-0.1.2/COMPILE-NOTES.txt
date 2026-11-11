@@ -1,0 +1,38 @@
+Guest build notes for TempleOfHermes-0.1.2 (transcribed from build logs).
+
+BASE
+  hermes/iso-0.1.2 packed at 190501f12f13244e5d4cbd259d2cffaac1d74e03
+  Work branch hermes/iso-0.1.2, created from that packed HEAD.
+
+OVERLAY
+  D:/RUN.HC copied 254 Fxx.BIN files onto C: and removed .Z twins.
+  OVERLAY DONE
+
+MAKEDISTRO
+  Adam/Hermes/MakeDistro ran DoDistro/BootDVDIns/RedSeaISO in the guest.
+  Temple of Hermes ISO written to /Tmp/TempleOfHermes.ISO.C
+  Volume id: THE_TEMPLE_OF_HERMES
+  Size: 14,030,848 bytes
+  SHA256: 9afc98ed2bb15a3ff26ebaca12ea392079292df6667b3c1c527fdd30d80cdb13
+
+COMPILE
+  No fatal HolyC compile or link errors in the launcher, boot path,
+  AutoComplete, app entry points, or the edited games/apps.
+  Non-fatal guest warnings remain in the existing BBS/daemon locals
+  (unused vars, 64-bit register hints); they do not stop any app.
+
+LAUNCHER
+  Hermes/Apps/Launcher/Load.HC, RunFile.HC, Hermes/Apps/Registry.HC
+  6x3 full-screen grid, 18 entries, unique keys, arrows/Enter/Space,
+  real mouse hit-testing, About on F1, one ASCII footer line.
+  RunFile.HC restores the launcher after every app exit.
+
+BOOT PATH
+  HomeSys.HC keeps one hidden user terminal; StartOS.HC docks the Adam
+  terminal; Once.HC hides the user terminal after autostart.
+  Adam/AutoComplete/DoACInit.HC initializes the dictionary without opening
+  the System Keys guide at boot.
+
+LOG SOURCES
+  run/build32-nohup.log, run/final2-nohup.log,
+  shots/hermes-iso-0.1.2/capture.log, boot-trials.log, net-echo.log

@@ -1,0 +1,348 @@
+{
+  "shots": {
+    "20-tools-toast": {
+      "path": "shots/hermes-tools/20-tools-toast.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 16,
+      "bbox": [
+        0,
+        0,
+        640,
+        480
+      ],
+      "text": " HERMES/user   :45 FPS: 30 CPU99\n MENU                        6D55D628[X] MENU                       6D4B7428[X]\nT            Tin                                                .20\ne\nr   MENU                                                                  [X]\nm TT                                                                          d\n   e  THE TEMPLE OF HERMES\n   r\n   m  Apps\n\n He\n Ab\n Qu                                                MENU                  6D2[X]\n                           "
+    },
+    "21-tools-windows": {
+      "path": "shots/hermes-tools/21-tools-windows.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 16,
+      "bbox": [
+        0,
+        0,
+        640,
+        480
+      ],
+      "text": " HERMES/user   :47 FPS: 30 CPU99\n MENU                        6D55D628[X] MENU                       6D4B7428[X]\nT            Tinke                                            V5.20\ne\nr   MENU                                                                  [X]\nm TT                                                                          d\n   e  THE TEMPLE OF HERMES\n   r\n   m  Apps\n\n He\n Ab\n Qu                                                MENU                  6D2[X]\n                           "
+    },
+    "22-tools-guards": {
+      "path": "shots/hermes-tools/22-tools-guards.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 16,
+      "bbox": [
+        0,
+        0,
+        640,
+        480
+      ],
+      "text": " HERMES/agent  :48 FPS: 30 CPU98\n MENU                        6D55D628[X] MENU                       6D4B7428[X]\nT            Ti                                                  20\ne\nr   MENU                                                                  [X]\nm TT                                                                          d\n   e  THE TEMPLE OF HERMES\n   r\n   m  Apps\n\n He\n Ab\n Qu                                                MENU                  6D2[X]\n                           "
+    },
+    "23-tools-sysinfo": {
+      "path": "shots/hermes-tools/23-tools-sysinfo.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 16,
+      "bbox": [
+        0,
+        0,
+        640,
+        480
+      ],
+      "text": " HERMES/agent  :50 FPS: 31 CPU99\n MENU                        6D55D628[X] MENU                       6D4B7428[X]\nT\ne\nr   MENU                                                                  [X]\nm TT                                                                          d\n   e  THE TEMPLE OF HERMES\n   r\n   m  Apps\n\n He\n Ab\n Qu                                                MENU                  6D2[X]\n                                                  T AutoComplete is in StandBy\n Te           "
+    }
+  },
+  "rpc": {
+    "ping": {
+      "pong": 1,
+      "t": 33.013,
+      "mode": "user",
+      "version": "0.1.0"
+    },
+    "toast": {
+      "ok": 1,
+      "toast": "Hermes says: B5 toast: guest tools are live",
+      "until": 38.015
+    },
+    "windows": {
+      "focus": "0x6D40A428",
+      "windows": [
+        {
+          "addr": "0x100300",
+          "name": "DocTerm",
+          "title": "DocTerm",
+          "win": [
+            1,
+            2,
+            78,
+            10
+          ],
+          "show": 1,
+          "focus": 0,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 4,
+            "line": 5,
+            "col": 0
+          }
+        },
+        {
+          "addr": "0x6D4B7428",
+          "name": "DocTerm",
+          "title": "DocTerm",
+          "win": [
+            41,
+            2,
+            78,
+            58
+          ],
+          "show": 1,
+          "focus": 0,
+          "z": 3,
+          "cursor": {
+            "x": 8,
+            "y": 24,
+            "line": 25,
+            "col": 0
+          }
+        },
+        {
+          "addr": "0x6D55D628",
+          "name": "DocTerm",
+          "title": "Cd;#include \"Once\";;\n",
+          "win": [
+            1,
+            2,
+            39,
+            58
+          ],
+          "show": 1,
+          "focus": 0,
+          "z": 4,
+          "cursor": {
+            "x": 24,
+            "y": 52,
+            "line": 53,
+            "col": 0
+          }
+        },
+        {
+          "addr": "0x6D40A428",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            4,
+            5,
+            76,
+            48
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 5,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        },
+        {
+          "addr": "0x6D267828",
+          "name": "DocTerm",
+          "title": "DocTerm",
+          "win": [
+            51,
+            13,
+            78,
+            30
+          ],
+          "show": 1,
+          "focus": 0,
+          "z": 6,
+          "cursor": {
+            "x": 0,
+            "y": 17,
+            "line": 18,
+            "col": 0
+          }
+        }
+      ]
+    },
+    "toast_windows": {
+      "ok": 1,
+      "toast": "Hermes says: B5 windows: see tools.json",
+      "until": 39.604
+    },
+    "mode_agent": {
+      "mode": "agent"
+    },
+    "guards": {
+      "mode": "agent",
+      "safe_mode": 1,
+      "what": "Fmt",
+      "allow": 0,
+      "input_gate": 1,
+      "guard_installed": 1,
+      "blocked": [
+        "Fmt",
+        "AreYouSure",
+        "OSInstall",
+        "BootHDIns"
+      ],
+      "yorn_blocked": 1
+    },
+    "toast_guards": {
+      "ok": 1,
+      "toast": "Hermes says: B5 guards: Fmt allow=0 blocked=4",
+      "until": 41.119
+    },
+    "sysinfo": {
+      "name": "TempleOfHermes",
+      "version": "0.1.0",
+      "os_version": 5.2,
+      "t": 37.627,
+      "time": "2026-11-10T12:49:49",
+      "mode": "agent",
+      "ready": 1,
+      "tasks": 7,
+      "windows": 5,
+      "tasks_spawned": 10,
+      "mem_phys": 1099511627776,
+      "heap_base": "0x50A000",
+      "heap_limit": "0x7FFDFFFF",
+      "screen": {
+        "w": 640,
+        "h": 480,
+        "cols": 80,
+        "rows": 60
+      },
+      "com": {
+        "port": 1,
+        "baud": 115200
+      },
+      "build": {
+        "compiler": "HolyC"
+      }
+    },
+    "toast_sysinfo": {
+      "ok": 1,
+      "toast": "Hermes says: B5 sysinfo: version=0.1.0 mode=agent",
+      "until": 42.63
+    },
+    "mode_user": {
+      "mode": "user"
+    },
+    "events": [
+      {
+        "seq": 1,
+        "kind": "ready",
+        "data": {
+          "seq": 1,
+          "t": 4.638,
+          "kind": "ready",
+          "data": "0.1.0"
+        }
+      },
+      {
+        "seq": 2,
+        "kind": "task_spawned",
+        "data": {
+          "seq": 2,
+          "t": 4.689,
+          "kind": "task_spawned",
+          "data": "0x6D4B7428 Unnamed Task"
+        }
+      },
+      {
+        "seq": 3,
+        "kind": "task_spawned",
+        "data": {
+          "seq": 3,
+          "t": 5.824,
+          "kind": "task_spawned",
+          "data": "0x6D418A28 Input Filter"
+        }
+      },
+      {
+        "seq": 4,
+        "kind": "task_spawned",
+        "data": {
+          "seq": 4,
+          "t": 6.145,
+          "kind": "task_spawned",
+          "data": "0x6D40A428 Hermes Apps"
+        }
+      },
+      {
+        "seq": 5,
+        "kind": "task_spawned",
+        "data": {
+          "seq": 5,
+          "t": 7.984,
+          "kind": "task_spawned",
+          "data": "0x6D267828 AutoComplete"
+        }
+      },
+      {
+        "seq": 6,
+        "kind": "toast",
+        "data": {
+          "seq": 6,
+          "t": 33.015,
+          "kind": "toast",
+          "data": "Hermes says: B5 toast: guest tools are live"
+        }
+      },
+      {
+        "seq": 7,
+        "kind": "toast",
+        "data": {
+          "seq": 7,
+          "t": 34.604,
+          "kind": "toast",
+          "data": "Hermes says: B5 windows: see tools.json"
+        }
+      },
+      {
+        "seq": 8,
+        "kind": "mode_changed",
+        "data": {
+          "seq": 8,
+          "t": 36.115,
+          "kind": "mode_changed",
+          "data": "agent"
+        }
+      },
+      {
+        "seq": 9,
+        "kind": "toast",
+        "data": {
+          "seq": 9,
+          "t": 36.119,
+          "kind": "toast",
+          "data": "Hermes says: B5 guards: Fmt allow=0 blocked=4"
+        }
+      },
+      {
+        "seq": 10,
+        "kind": "toast",
+        "data": {
+          "seq": 10,
+          "t": 37.63,
+          "kind": "toast",
+          "data": "Hermes says: B5 sysinfo: version=0.1.0 mode=agent"
+        }
+      }
+    ]
+  }
+}

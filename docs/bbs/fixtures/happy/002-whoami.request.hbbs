@@ -1,0 +1,2 @@
+HBBS/1 REQ r-002 WHOAMI 36
+{"v":1,"command":"WHOAMI","args":{}}

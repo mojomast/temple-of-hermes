@@ -616,7 +616,6 @@ U0 GrUpdateCache(U8 *src_start)
 
 
 static I64 ss_wait_ticks=0;
-static CBGR24 ss_saved_palette[PAL_COLORS_NUM];
 
 U0 GrUpdateVGAGraphics()
 {
@@ -644,9 +643,6 @@ U0 GrUpdateVGAGraphics()
         Kill(gr.scrn_saver_task);
       }
       gr.scrn_saver_task=NULL;
-      // Save the palette and give the screen saver the default one.
-      ClassCpy(ss_saved_palette,&gr_palette,PAL_COLORS_NUM);
-      GrSetExtPalette;
     }
     else if (gr.scrn_saver_cnts<5)
     {
@@ -673,9 +669,9 @@ U0 GrUpdateVGAGraphics()
         Kill(gr.scrn_saver_task);
       }
       gr.scrn_saver_task=NULL;
-      // Restore the palette in case the screen saver changed it.
-      ClassCpy(&gr_palette,ss_saved_palette,PAL_COLORS_NUM);
     }
+    // Restore default ext. palette in case screen saver changed it.
+    GrSetExtPalette;
     src_start = gr.dc2->body;
   }
   if (gr.scrn_zoom == 1)
@@ -778,6 +774,8 @@ U0 GrUpdateScrn()
     GrUpdateTextModeText;
   else
   {
+    DCBlotColor4(gr.dc1->body,gr.dc2->body,gr.dc_cache->body,
+                 gr.dc2->height*gr.dc2->width_internal>>3);
     GrUpdateVGAGraphics;
   }
   lock GrSethHelperSema=0;

@@ -18,6 +18,7 @@ I64 GopherOpen(U8 *host, U16 port, U8 *selector, U8 *query)
   {
     return -1;
   }
+//  sock = create_connection(host, port);
   sock = TCPConnectionCreate(host, port);
   if (sock <= 0)
   {
@@ -32,22 +33,23 @@ I64 GopherOpen(U8 *host, U16 port, U8 *selector, U8 *query)
   {
     line = StrPrint(NULL, "%s\t%s\r\n", selector, query);
   }
-  sock(CTCPSock *)->timeout = TCP_TIMEOUT;
-  TCPSockSendStr(sock, line);
+  sock(CTCPSocket *)->timeout = TCP_TIMEOUT;
+//  sendString(sock, line, 0);
+  TCPSocketSendString(sock, line);
   Free(line);
   return sock;
 }
 
-public I64 GopherDl(U8 *host, U16 port = 70, U8 *selector, U8 *query = NULL, U8 *dst)
+public I64 GopherDl(U8 *host, U16 port = 70, U8 *selector, U8 *query = NULL, U8 *dest)
 {
   CFile *f;
   U8         buf[BLK_SIZE];
   I64        data_len = 0, total_len = 0, got, sock;
   progress4 = 0;
-  f = FOpen(dst, "w");
+  f = FOpen(dest, "w");
   if (!f)
   {
-    PrintErr("Failed to open %s for writing\n", dst);
+    PrintErr("Failed to open %s for writing\n", dest);
     return -1;
   }
   sock = GopherOpen(host, port, selector, query);
@@ -57,7 +59,8 @@ public I64 GopherDl(U8 *host, U16 port = 70, U8 *selector, U8 *query = NULL, U8 
   }
   while (TRUE)
   {
-    got = TCPSockRx(sock, buf + data_len, sizeof(buf) - data_len);
+//      got = recv(sock, buf + data_len, sizeof(buf) - data_len, 0);
+    got = TCPSocketReceive(sock, buf + data_len, sizeof(buf) - data_len);
     if (got <= 0)
     {
       if (got < 0)
@@ -68,7 +71,7 @@ public I64 GopherDl(U8 *host, U16 port = 70, U8 *selector, U8 *query = NULL, U8 
       }
       f->de.size = total_len;
       FClose(f);
-      TCPSockClose(sock);
+      TCPSocketClose(sock);
       return got;
     }
     data_len += got;
@@ -83,8 +86,8 @@ public I64 GopherDl(U8 *host, U16 port = 70, U8 *selector, U8 *query = NULL, U8 
       data_len = 0;
     }
   }
-  TCPSockClose(sock);
-  PrintErr("Write failed, %s may be corrupted\n", dst);
+  TCPSocketClose(sock);
+  PrintErr("Write failed, %s may be corrupted\n", dest);
   FClose(f);
   return -1;
 }
@@ -121,6 +124,7 @@ U8 *GopherBasename(U8 *selector)
   {
     result = lastslash + 1;
   }
+  //BAD FOR FILENAMES: ? / | = % : ; * + " < > space
   result = StrReplace(result, "?", "");
   result = StrReplace(result, "/", "",, TRUE);
   result = StrReplace(result, "|", "",, TRUE);
@@ -135,7 +139,7 @@ U8 *GopherBasename(U8 *selector)
   result = StrReplace(result, ">", "",, TRUE);
   result = StrReplace(result, " ", "",, TRUE);
   if (StrLen(result) > 22)
-    result[21] = 0;
+    result[21] = 0; // truncate filename len
   AdamLog("%s\n", result);
   return result;
 }
@@ -237,7 +241,8 @@ public I64 GopherMenu(U8 *host, U16 port = 70, U8 *selector = "/", U8 *query = N
   }
   do
   {
-    n = TCPSockRxLine(sock, buf, sizeof(buf));
+//      n = recvLine(sock, buf, sizeof(buf), 0);
+    n = TCPSocketReceiveLine(sock, buf, sizeof(buf));
     if (StrCmp(buf, ".") == 0)
     {
       break;
@@ -245,7 +250,8 @@ public I64 GopherMenu(U8 *host, U16 port = 70, U8 *selector = "/", U8 *query = N
     GopherLine(buf);
   }
   while (n > 0);
-  TCPSockClose(sock);
+//  close(sock);
+  TCPSocketClose(sock);
   return 0;
 }
 

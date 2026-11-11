@@ -1,0 +1,2 @@
+HBBS/1 REQ e-020 POST 172
+{"v":1,"command":"POST","args":{"board":"general","subject":"Rate limit fixture","body":"This request is intentionally over quota.","client_ref":"fixture-rate-limit-0001"}}

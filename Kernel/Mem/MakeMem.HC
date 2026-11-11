@@ -5,5 +5,4 @@
 #include "MAllocFree"
 #include "HeapCtrl"
 #include "MemPhysical"
-#include "DmaHeap"
 #exe {Cd("..");};

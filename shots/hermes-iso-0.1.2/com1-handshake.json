@@ -1,0 +1,12 @@
+{
+  "plugin_commit": "b15c396c308b638c00959740dfa3d28920f45484",
+  "iso": "TempleOfHermes-0.1.2.ISO",
+  "beacon": "HBEACON TempleOfHermes/0.1.0",
+  "hrpc_request": "HREQ 1 ping 0",
+  "hrpc_reply": {
+    "header": "HRPL 1 ok 54",
+    "payload": "{\"pong\":1,\"t\": 10.213,\"mode\":\"user\",\"version\":\"0.1.0\"}"
+  },
+  "ok": true,
+  "screen_source": "serial"
+}

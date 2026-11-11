@@ -1,0 +1,12 @@
+# Build and smoke artifacts, not source
+run/
+__pycache__/
+*.pyc
+*.qcow2
+*.img
+dist/*.ISO
+dist/*.ISO.C
+dist/*.iso
+# Keep written shots of a successful smoke test, ignore huge dumps
+shots/_raw/
+scripts/.cache/

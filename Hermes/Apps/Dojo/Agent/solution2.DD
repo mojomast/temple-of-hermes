@@ -1,0 +1,6 @@
+$WW,1$$TX,"HERMES DOJO ENTRY FORM"$
+
+Name: $TX+BD+TC,"                    "$
+Rank: $TX+BD+TC,"                    "$
+
+$BT,"SUBMIT",LE=0$

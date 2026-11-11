@@ -1,0 +1,94 @@
+{
+  "apps": {
+    "Codex": {
+      "path": "shots/hermes-integration/12-codex.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 12,
+      "bbox": [
+        0,
+        0,
+        640,
+        472
+      ],
+      "text": " HERMES/user   :28 FPS: 31 CPU99                                           ENTER\n\n\n\n\n\n\n              ` '                                                 '\n\n\n\n\n\n                            256 lines   scroll 1/256\n\n\n\n\n\n                            `Hermes/Lore/` is the guest-side Codex of Nous:\n\n\n                                    '   '          '   '               '\n\n                            for the same cards. It is the place to check a\n\n\n                                '   `       `'\n\n                            The refresh is **2026-first**. Entries are\n\n\n                                               '  `\n                            P\n                            quotes, no invented dates, and no photoreal\n\n\n                            '`  '  '    ' '  '  '        `              `\n\n\n"
+    },
+    "Psyche": {
+      "path": "shots/hermes-integration/13-psyche.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 15,
+      "bbox": [
+        8,
+        16,
+        632,
+        472
+      ],
+      "text": "\n\n\n\n\n\n\n\n\n\n\n      ___\n\n\n\n\n\n\n\n\n\n\n\n           _                                          _\n\n\n\n\n\n\n\n\n\n\n\n                         _"
+    },
+    "Capybara": {
+      "path": "shots/hermes-integration/14-capybara.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 12,
+      "bbox": [
+        8,
+        20,
+        632,
+        472
+      ],
+      "text": "\n\n\n\n\n\n                                                                   _\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                           _\n\n\n\n\n\n\n\n                                          ___\n\n\n\n\n                            _____\n\n                           _\n\n\n\n\n                         _             __"
+    },
+    "MessengerRun": {
+      "path": "shots/hermes-integration/15-messenger-run.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 13,
+      "bbox": [
+        0,
+        0,
+        640,
+        475
+      ],
+      "text": " HERMES/user   :42 FPS: 30 CPU99                                           ENTER\n\n\n\n\n\n\n   '                          '   '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                           __\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                                                  _\n\n\n\n\n\n\n\n                                                        ____________________"
+    },
+    "HermesBBS": {
+      "path": "shots/hermes-integration/16-hermes-bbs.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 9,
+      "bbox": [
+        0,
+        0,
+        640,
+        480
+      ],
+      "text": " HERMES/user   :08 FPS: 30 CPU99                                           ENTER\n MENU                        6D55D428[X] MENU                       6D4B7028[X]\nTat docs/USING-WITH-HERMES-AGENTS.md.                TinkerOS V5.20\ne\nrTempleOS by Terry A. Davis. TinkerOS by     Public Domain Operating System\nmits authors.                            TempleOS / TinkerOS fork for agent and\n Public domain / Unlicense; both                         human\n upstream credits are kept.                              co-use\n                                          Version 0.1.0 - TinkerOS 5.200 base\n Install is not started automatically.\n To install later, run OSInstall;        Help & Index,\n from USER mode only.                    About THE TEMPLE OF HERMES,\n                                         Quic"
+    },
+    "Dojo": {
+      "path": "shots/hermes-integration/18-dojo.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 16,
+      "bbox": [
+        0,
+        8,
+        640,
+        472
+      ],
+      "text": "\n\n                                                                           N W\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n            '\n            game character\n\n                    '\n\n\n\n\n                               3 draw_it sprite                  --\n\n\n\n\n\n\n\n\n\n\n\n\n                               Pass 60+. Solutions live in Agent/.\n\n\n\n\n\n\n                          P            P\n\n    Agent: write Agent/solutionN.*, then"
+    }
+  }
+}

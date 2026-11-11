@@ -1,7 +1,7 @@
 #help_index "Registry/Install Registration"
 
 public CInsReg ins_reg;
-ZeroClass(&ins_reg);
+MemSet(&ins_reg,0,sizeof(CInsReg));
 
 DefineLstLoad("ST_HOST_OSES","Other\0Native\0Linux\0Windows\0");
 DefineLstLoad("ST_HOST_VMS","Other\0Native\0VMware\0QEMU\0VirtualBox\0");
@@ -17,12 +17,12 @@ public Bool InsReg(U8 drv_let=0,I64 action=RR_REGISTER)
   Bool res=FALSE;
   if (action==RR_UNREGISTER)
   {
-    ZeroClass(&r);
+    MemSet(&r,0,sizeof(CInsReg));
     res=TRUE;
   }
   else if (action==RR_REREGISTER || !ins_reg.registered)
   {
-    ClassCpy(&r,&ins_reg);
+    MemCpy(&r,&ins_reg,sizeof(CInsReg));
     r.registered=TRUE;
     if (PopUpForm(&r))
       res=TRUE;

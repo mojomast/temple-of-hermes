@@ -1,0 +1,2 @@
+HBBS/1 REQ r-007 POST 173
+{"v":1,"command":"POST","args":{"board":"general","subject":"Hello from the temple","body":"First post.\nLine two is escaped on the wire.","client_ref":"fixture-post-0001"}}

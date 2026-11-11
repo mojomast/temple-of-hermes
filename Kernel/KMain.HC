@@ -9,7 +9,7 @@ U0 SysGlblsInit()
   hype_info[1]=ee.rcx.u32[0];
   hype_info[2]=ee.rdx.u32[0];
   hype_info[3]=0;
-  SetSysFocusTask(Fs);
+  SetSysFocusTask;
   QueInit(&sys_macro_head);
   blkdev.dft_iso_filename	=AStrNew(DFT_ISO_FILENAME);
   blkdev.dft_iso_c_filename	=AStrNew(DFT_ISO_C_FILENAME);
@@ -135,9 +135,8 @@ U0 KMain()
   adam_task=Fs;
   BlkPoolsInit;
   SysGlblsInit;
-  ApicMemInit;
+  Mem32DevInit;
   UncachedAliasAlloc;
-  DmaHeapInit;
   LoadKernel;
   SysGrInit;
   StrCpy(Fs->task_name,"Adam Task CPU00");
@@ -148,18 +147,16 @@ U0 KMain()
   TaskDerivedValsUpdate;
   SysDefinesLoad;
   Core0Init;
-  if (Bt(&sys_run_level,RLf_VGA))
-    MemWriteCombine(text.fb_alias,FB_HEIGHT*sys_vbe_mode_pitch);
   IntInit1;
   //Before this point use $LK,"Snd",A="MN:Snd"$() and $LK,"Busy",A="MN:Busy"$()
   //to debug.After this point, use $LK,"RawPrint",A="MN:RawPrint"$()
   LBts(&sys_run_level,RLf_RAW);
-  "TinkerOS V%5.3f\t%D %T\n\n"
+  "THE TEMPLE OF HERMES 0.1.0 (TinkerOS V%5.3f base)\t%D %T\n\n"
   ,
   sys_os_version,sys_compile_time,sys_compile_time;
   TimersInit;
   if (BIOSTotalMem<ToI64(0.95*MEM_MIN_MEG*0x100000))
-    RawPrint(0,"!!! Warning: Less than 2GB of RAM !!!\n");
+    RawPrint(4000,"!!! Requires 2GB of RAM !!!");
   IntsInit;
   "Enable IRQ's\n";
   IntInit2;
@@ -198,9 +195,6 @@ U0 KMain()
     Silent(OFF);
   }
 
-  UsbBootMark;
-  if (!Let2Drv(':',FALSE))
-    UsbBootInit;
   "DskChg(':');\n";
   DskChg(':');
 #exe {
@@ -247,7 +241,6 @@ DbgMode(OFF);
 cnts.time_stamp_freq_initial=TimeCal;
 Cd("/");
 
-UsbTaskStart;
 try ExeFile("StartOS"); //Continues $LK,"/StartOS.HC",A="FL:/StartOS.HC,1"$
 catch
 {

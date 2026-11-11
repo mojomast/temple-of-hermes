@@ -11,7 +11,7 @@ U0 BgtEntryDel2(CBgtEntry *tmpb)
 CBgtEntry *BgtEntryCopy(CBgtEntry *tmpb,Bool periodic_copy)
 {
   CBgtEntry *res=MAlloc(sizeof(CBgtEntry));
-  ClassCpy(res,tmpb);
+  MemCpy(res,tmpb,sizeof(CBgtEntry));
   if (periodic_copy)
   {
     res->credit=StrNew(tmpb->credit);

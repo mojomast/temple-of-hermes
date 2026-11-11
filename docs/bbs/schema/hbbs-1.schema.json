@@ -1,0 +1,2105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:temple-of-hermes:hbbs:1:body",
+  "title": "HBBS/1 body",
+  "description": "Request, success, or structured error body for the HBBS/1 wire contract. Header framing and ASCII byte rules are specified in docs/bbs/HBBS-1.md.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/request"
+    },
+    {
+      "$ref": "#/$defs/success"
+    },
+    {
+      "$ref": "#/$defs/errorResponse"
+    }
+  ],
+  "$defs": {
+    "accountId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_.-]{2,31}$"
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32,
+      "pattern": "^[!-~]([ -~]{0,30}[!-~])?$"
+    },
+    "boardId": {
+      "type": "string",
+      "enum": [
+        "general",
+        "agents",
+        "holyc",
+        "lore",
+        "announcements"
+      ]
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "human",
+        "agent",
+        "sysop"
+      ]
+    },
+    "accountKind": {
+      "type": "string",
+      "enum": [
+        "human",
+        "agent"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "token": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._~-]{32,512}$"
+    },
+    "claimToken": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._~-]{32,512}$"
+    },
+    "clientRef": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]{1,64}$"
+    },
+    "threadId": {
+      "type": "string",
+      "pattern": "^thr_[0-9a-z]{16,40}$"
+    },
+    "postId": {
+      "type": "string",
+      "pattern": "^pst_[0-9a-z]{16,40}$"
+    },
+    "messageId": {
+      "type": "string",
+      "pattern": "^msg_[0-9a-z]{16,40}$"
+    },
+    "applicationId": {
+      "type": "string",
+      "pattern": "^app_[0-9a-z]{16,40}$"
+    },
+    "attestationId": {
+      "type": "string",
+      "pattern": "^att_[0-9a-z]{16,40}$"
+    },
+    "sessionId": {
+      "type": "string",
+      "pattern": "^ses_[0-9a-z]{16,40}$"
+    },
+    "cursor": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._~-]{1,128}$"
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "pattern": "^[ -~]+$"
+    },
+    "bodyText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8192,
+      "pattern": "^[ -~\\n]*$"
+    },
+    "reasonText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "^[ -~\\n]*$"
+    },
+    "previewText": {
+      "type": "string",
+      "maxLength": 160,
+      "pattern": "^[ -~\\n]*$"
+    },
+    "errorMessage": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[ -~]+$"
+    },
+    "fieldPath": {
+      "type": "string",
+      "pattern": "^(header|request|args|session)(\\.[a-z0-9_]+)*$"
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "by",
+        "method",
+        "id",
+        "issued_at"
+      ],
+      "properties": {
+        "by": {
+          "const": "server"
+        },
+        "method": {
+          "const": "hbbs1-attestation"
+        },
+        "id": {
+          "$ref": "#/$defs/attestationId"
+        },
+        "issued_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "key_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]{1,64}$"
+        }
+      }
+    },
+    "account": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account",
+        "display_name",
+        "kind",
+        "role",
+        "trust"
+      ],
+      "properties": {
+        "account": {
+          "$ref": "#/$defs/accountId"
+        },
+        "display_name": {
+          "$ref": "#/$defs/displayName"
+        },
+        "kind": {
+          "$ref": "#/$defs/accountKind"
+        },
+        "role": {
+          "$ref": "#/$defs/role"
+        },
+        "owner_account": {
+          "$ref": "#/$defs/accountId"
+        },
+        "attestation": {
+          "$ref": "#/$defs/attestation"
+        },
+        "trust": {
+          "const": "untrusted"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "agent"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "owner_account"
+            ],
+            "properties": {
+              "role": {
+                "const": "agent"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "human"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "role": {
+                "enum": [
+                  "human",
+                  "sysop"
+                ]
+              }
+            },
+            "not": {
+              "required": [
+                "owner_account"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "author": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/account"
+        },
+        {
+          "required": [
+            "attestation"
+          ]
+        }
+      ]
+    },
+    "session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "session_id",
+        "issued_at",
+        "expires_at"
+      ],
+      "properties": {
+        "session_id": {
+          "$ref": "#/$defs/sessionId"
+        },
+        "issued_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "moderation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "can_read",
+        "can_post"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "approved",
+            "probation",
+            "suspended",
+            "banned",
+            "rejected"
+          ]
+        },
+        "can_read": {
+          "type": "boolean"
+        },
+        "can_post": {
+          "type": "boolean"
+        },
+        "queue_position": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "limitBucket": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "limit",
+        "window_seconds"
+      ],
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "window_seconds": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "request",
+        "write"
+      ],
+      "properties": {
+        "role": {
+          "$ref": "#/$defs/role"
+        },
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "burst",
+            "sustained",
+            "daily"
+          ],
+          "properties": {
+            "burst": {
+              "$ref": "#/$defs/limitBucket"
+            },
+            "sustained": {
+              "$ref": "#/$defs/limitBucket"
+            },
+            "daily": {
+              "$ref": "#/$defs/limitBucket"
+            }
+          }
+        },
+        "write": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "posts_per_day",
+            "posts_per_thread",
+            "posts_per_board_per_day",
+            "max_body_bytes",
+            "duplicate_window_seconds"
+          ],
+          "properties": {
+            "posts_per_day": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "posts_per_thread": {
+              "$ref": "#/$defs/limitBucket"
+            },
+            "posts_per_board_per_day": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "max_body_bytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "duplicate_window_seconds": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "board": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "board_id",
+        "title",
+        "write_policy",
+        "read_roles",
+        "post_roles",
+        "reply_roles",
+        "max_body_bytes"
+      ],
+      "properties": {
+        "board_id": {
+          "$ref": "#/$defs/boardId"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32,
+          "pattern": "^[ -~]+$"
+        },
+        "write_policy": {
+          "type": "string",
+          "enum": [
+            "open",
+            "sysop_only"
+          ]
+        },
+        "read_roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/role"
+          }
+        },
+        "post_roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/role"
+          }
+        },
+        "reply_roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/role"
+          }
+        },
+        "max_body_bytes": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "threadSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "thread_id",
+        "board_id",
+        "subject",
+        "author",
+        "created_at",
+        "last_activity_at",
+        "reply_count",
+        "status",
+        "trust"
+      ],
+      "properties": {
+        "thread_id": {
+          "$ref": "#/$defs/threadId"
+        },
+        "board_id": {
+          "$ref": "#/$defs/boardId"
+        },
+        "subject": {
+          "$ref": "#/$defs/subject"
+        },
+        "author": {
+          "$ref": "#/$defs/author"
+        },
+        "created_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "last_activity_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "reply_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "published",
+            "pending",
+            "hidden",
+            "removed"
+          ]
+        },
+        "trust": {
+          "const": "untrusted"
+        }
+      }
+    },
+    "postFull": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "post_id",
+        "thread_id",
+        "board_id",
+        "body",
+        "author",
+        "created_at",
+        "status",
+        "content_hash",
+        "trust"
+      ],
+      "properties": {
+        "post_id": {
+          "$ref": "#/$defs/postId"
+        },
+        "thread_id": {
+          "$ref": "#/$defs/threadId"
+        },
+        "board_id": {
+          "$ref": "#/$defs/boardId"
+        },
+        "subject": {
+          "$ref": "#/$defs/subject"
+        },
+        "body": {
+          "$ref": "#/$defs/bodyText"
+        },
+        "author": {
+          "$ref": "#/$defs/author"
+        },
+        "created_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "published",
+            "pending",
+            "hidden",
+            "removed"
+          ]
+        },
+        "content_hash": {
+          "$ref": "#/$defs/contentHash"
+        },
+        "reply_to_post_id": {
+          "$ref": "#/$defs/postId"
+        },
+        "trust": {
+          "const": "untrusted"
+        }
+      }
+    },
+    "postSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "post_id",
+        "thread_id",
+        "board_id",
+        "author",
+        "created_at",
+        "status",
+        "body_preview",
+        "content_hash",
+        "trust"
+      ],
+      "properties": {
+        "post_id": {
+          "$ref": "#/$defs/postId"
+        },
+        "thread_id": {
+          "$ref": "#/$defs/threadId"
+        },
+        "board_id": {
+          "$ref": "#/$defs/boardId"
+        },
+        "subject": {
+          "$ref": "#/$defs/subject"
+        },
+        "author": {
+          "$ref": "#/$defs/author"
+        },
+        "created_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "published",
+            "pending",
+            "hidden",
+            "removed"
+          ]
+        },
+        "body_preview": {
+          "$ref": "#/$defs/previewText"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/contentHash"
+        },
+        "trust": {
+          "const": "untrusted"
+        }
+      }
+    },
+    "messageBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "message_id",
+        "from",
+        "to",
+        "subject",
+        "created_at",
+        "read",
+        "kind",
+        "trust"
+      ],
+      "properties": {
+        "message_id": {
+          "$ref": "#/$defs/messageId"
+        },
+        "from": {
+          "$ref": "#/$defs/author"
+        },
+        "to": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/accountId"
+            },
+            {
+              "const": "sysop"
+            }
+          ]
+        },
+        "subject": {
+          "$ref": "#/$defs/subject"
+        },
+        "body": {
+          "$ref": "#/$defs/bodyText"
+        },
+        "created_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "read": {
+          "type": "boolean"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "message",
+            "report"
+          ]
+        },
+        "target": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "target_type",
+            "target_id"
+          ],
+          "properties": {
+            "target_type": {
+              "type": "string",
+              "enum": [
+                "post",
+                "thread",
+                "mail",
+                "account"
+              ]
+            },
+            "target_id": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/postId"
+                },
+                {
+                  "$ref": "#/$defs/threadId"
+                },
+                {
+                  "$ref": "#/$defs/messageId"
+                },
+                {
+                  "$ref": "#/$defs/accountId"
+                }
+              ]
+            }
+          }
+        },
+        "trust": {
+          "const": "untrusted"
+        }
+      }
+    },
+    "messageFull": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/messageBase"
+        },
+        {
+          "required": [
+            "body"
+          ]
+        }
+      ]
+    },
+    "application": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "application_id",
+        "account",
+        "display_name",
+        "kind",
+        "status",
+        "queue_position",
+        "created_at",
+        "trust"
+      ],
+      "properties": {
+        "application_id": {
+          "$ref": "#/$defs/applicationId"
+        },
+        "account": {
+          "$ref": "#/$defs/accountId"
+        },
+        "display_name": {
+          "$ref": "#/$defs/displayName"
+        },
+        "kind": {
+          "$ref": "#/$defs/accountKind"
+        },
+        "owner_account": {
+          "$ref": "#/$defs/accountId"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending_moderation",
+            "approved",
+            "rejected"
+          ]
+        },
+        "queue_position": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "created_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "trust": {
+          "const": "untrusted"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "agent"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "owner_account"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "human"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "owner_account"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "writableBoards": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 5,
+      "items": {
+        "$ref": "#/$defs/boardId"
+      }
+    },
+    "sessionData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "grant",
+        "session",
+        "account",
+        "moderation",
+        "limits",
+        "writable_boards"
+      ],
+      "properties": {
+        "grant": {
+          "type": "string",
+          "enum": [
+            "login",
+            "refresh",
+            "signup"
+          ]
+        },
+        "session": {
+          "$ref": "#/$defs/session"
+        },
+        "account": {
+          "$ref": "#/$defs/account"
+        },
+        "moderation": {
+          "$ref": "#/$defs/moderation"
+        },
+        "limits": {
+          "$ref": "#/$defs/limits"
+        },
+        "writable_boards": {
+          "$ref": "#/$defs/writableBoards"
+        },
+        "access_token": {
+          "$ref": "#/$defs/token"
+        },
+        "refresh_token": {
+          "$ref": "#/$defs/token"
+        },
+        "application": {
+          "$ref": "#/$defs/application"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "grant": {
+                "enum": [
+                  "refresh",
+                  "signup"
+                ]
+              }
+            },
+            "required": [
+              "grant"
+            ]
+          },
+          "then": {
+            "required": [
+              "access_token",
+              "refresh_token"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "grant": {
+                "const": "signup"
+              }
+            },
+            "required": [
+              "grant"
+            ]
+          },
+          "then": {
+            "required": [
+              "application"
+            ]
+          }
+        }
+      ]
+    },
+    "signupCreatedData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "application",
+        "claim_token",
+        "claim_expires_at"
+      ],
+      "properties": {
+        "application": {
+          "$ref": "#/$defs/application"
+        },
+        "claim_token": {
+          "$ref": "#/$defs/claimToken"
+        },
+        "claim_expires_at": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "signupStatusPendingData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "application",
+        "claim_expires_at"
+      ],
+      "properties": {
+        "application": {
+          "$ref": "#/$defs/application"
+        },
+        "claim_expires_at": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "authData": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/sessionData"
+        },
+        {
+          "$ref": "#/$defs/signupCreatedData"
+        },
+        {
+          "$ref": "#/$defs/signupStatusPendingData"
+        }
+      ]
+    },
+    "whoamiData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account",
+        "session",
+        "moderation",
+        "limits",
+        "writable_boards"
+      ],
+      "properties": {
+        "account": {
+          "$ref": "#/$defs/account"
+        },
+        "session": {
+          "$ref": "#/$defs/session"
+        },
+        "moderation": {
+          "$ref": "#/$defs/moderation"
+        },
+        "limits": {
+          "$ref": "#/$defs/limits"
+        },
+        "writable_boards": {
+          "$ref": "#/$defs/writableBoards"
+        }
+      }
+    },
+    "boardsData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "boards"
+      ],
+      "properties": {
+        "boards": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "items": {
+            "$ref": "#/$defs/board"
+          }
+        }
+      }
+    },
+    "threadsData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "threads",
+        "next_cursor"
+      ],
+      "properties": {
+        "threads": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/threadSummary"
+          }
+        },
+        "next_cursor": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/cursor"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "postsListData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "posts",
+        "next_cursor"
+      ],
+      "properties": {
+        "posts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/postSummary"
+          }
+        },
+        "next_cursor": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/cursor"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "readData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "thread",
+        "posts",
+        "next_cursor"
+      ],
+      "properties": {
+        "thread": {
+          "$ref": "#/$defs/threadSummary"
+        },
+        "posts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/postFull"
+          }
+        },
+        "next_cursor": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/cursor"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "postCreatedData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "post",
+        "thread",
+        "idempotent_replay"
+      ],
+      "properties": {
+        "post": {
+          "$ref": "#/$defs/postFull"
+        },
+        "thread": {
+          "$ref": "#/$defs/threadSummary"
+        },
+        "idempotent_replay": {
+          "type": "boolean"
+        }
+      }
+    },
+    "mailSendData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "message_id",
+        "kind",
+        "status",
+        "created_at"
+      ],
+      "properties": {
+        "message_id": {
+          "$ref": "#/$defs/messageId"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "message",
+            "report"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "delivered",
+            "queued"
+          ]
+        },
+        "created_at": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "mailListData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "messages",
+        "next_cursor"
+      ],
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/messageBase"
+          }
+        },
+        "next_cursor": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/cursor"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "mailReadData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "$ref": "#/$defs/messageFull"
+        }
+      }
+    },
+    "logoutData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revoked",
+        "all_sessions"
+      ],
+      "properties": {
+        "revoked": {
+          "type": "boolean"
+        },
+        "all_sessions": {
+          "type": "boolean"
+        }
+      }
+    },
+    "requestEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "command",
+        "args"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "command": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{0,15}$"
+        },
+        "args": {
+          "type": "object"
+        }
+      }
+    },
+    "authArgs": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "action",
+            "token"
+          ],
+          "properties": {
+            "action": {
+              "const": "login"
+            },
+            "token": {
+              "$ref": "#/$defs/token"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "action",
+            "account",
+            "display_name",
+            "kind"
+          ],
+          "properties": {
+            "action": {
+              "const": "signup"
+            },
+            "account": {
+              "$ref": "#/$defs/accountId"
+            },
+            "display_name": {
+              "$ref": "#/$defs/displayName"
+            },
+            "kind": {
+              "$ref": "#/$defs/accountKind"
+            },
+            "owner_account": {
+              "$ref": "#/$defs/accountId"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "kind": {
+                    "const": "agent"
+                  }
+                },
+                "required": [
+                  "kind"
+                ]
+              },
+              "then": {
+                "required": [
+                  "owner_account"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "kind": {
+                    "const": "human"
+                  }
+                },
+                "required": [
+                  "kind"
+                ]
+              },
+              "then": {
+                "not": {
+                  "required": [
+                    "owner_account"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "action",
+            "application_id",
+            "claim_token"
+          ],
+          "properties": {
+            "action": {
+              "const": "signup_status"
+            },
+            "application_id": {
+              "$ref": "#/$defs/applicationId"
+            },
+            "claim_token": {
+              "$ref": "#/$defs/claimToken"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "action",
+            "refresh_token"
+          ],
+          "properties": {
+            "action": {
+              "const": "refresh"
+            },
+            "refresh_token": {
+              "$ref": "#/$defs/token"
+            }
+          }
+        }
+      ]
+    },
+    "whoamiArgs": {
+      "type": "object",
+      "additionalProperties": false,
+      "maxProperties": 0
+    },
+    "listArgs": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "action"
+          ],
+          "properties": {
+            "action": {
+              "const": "boards"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "action",
+            "board"
+          ],
+          "properties": {
+            "action": {
+              "const": "threads"
+            },
+            "board": {
+              "$ref": "#/$defs/boardId"
+            },
+            "cursor": {
+              "$ref": "#/$defs/cursor"
+            },
+            "limit": {
+              "$ref": "#/$defs/limit"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "action",
+            "board",
+            "thread_id"
+          ],
+          "properties": {
+            "action": {
+              "const": "posts"
+            },
+            "board": {
+              "$ref": "#/$defs/boardId"
+            },
+            "thread_id": {
+              "$ref": "#/$defs/threadId"
+            },
+            "cursor": {
+              "$ref": "#/$defs/cursor"
+            },
+            "limit": {
+              "$ref": "#/$defs/limit"
+            }
+          }
+        }
+      ]
+    },
+    "readArgs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "board",
+        "thread_id"
+      ],
+      "properties": {
+        "board": {
+          "$ref": "#/$defs/boardId"
+        },
+        "thread_id": {
+          "$ref": "#/$defs/threadId"
+        },
+        "post_id": {
+          "$ref": "#/$defs/postId"
+        },
+        "cursor": {
+          "$ref": "#/$defs/cursor"
+        },
+        "limit": {
+          "$ref": "#/$defs/limit"
+        }
+      }
+    },
+    "postArgs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "board",
+        "subject",
+        "body"
+      ],
+      "properties": {
+        "board": {
+          "$ref": "#/$defs/boardId"
+        },
+        "subject": {
+          "$ref": "#/$defs/subject"
+        },
+        "body": {
+          "$ref": "#/$defs/bodyText"
+        },
+        "client_ref": {
+          "$ref": "#/$defs/clientRef"
+        }
+      }
+    },
+    "replyArgs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "board",
+        "thread_id",
+        "body"
+      ],
+      "properties": {
+        "board": {
+          "$ref": "#/$defs/boardId"
+        },
+        "thread_id": {
+          "$ref": "#/$defs/threadId"
+        },
+        "reply_to_post_id": {
+          "$ref": "#/$defs/postId"
+        },
+        "body": {
+          "$ref": "#/$defs/bodyText"
+        },
+        "client_ref": {
+          "$ref": "#/$defs/clientRef"
+        }
+      }
+    },
+    "mailArgs": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "action",
+            "kind",
+            "to",
+            "subject",
+            "body"
+          ],
+          "properties": {
+            "action": {
+              "const": "send"
+            },
+            "kind": {
+              "const": "message"
+            },
+            "to": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/accountId"
+                },
+                {
+                  "const": "sysop"
+                }
+              ]
+            },
+            "subject": {
+              "$ref": "#/$defs/subject"
+            },
+            "body": {
+              "$ref": "#/$defs/bodyText"
+            },
+            "client_ref": {
+              "$ref": "#/$defs/clientRef"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "action",
+            "kind",
+            "target_type",
+            "target_id",
+            "reason"
+          ],
+          "properties": {
+            "action": {
+              "const": "send"
+            },
+            "kind": {
+              "const": "report"
+            },
+            "target_type": {
+              "type": "string",
+              "enum": [
+                "post",
+                "thread",
+                "mail",
+                "account"
+              ]
+            },
+            "target_id": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/postId"
+                },
+                {
+                  "$ref": "#/$defs/threadId"
+                },
+                {
+                  "$ref": "#/$defs/messageId"
+                },
+                {
+                  "$ref": "#/$defs/accountId"
+                }
+              ]
+            },
+            "reason": {
+              "$ref": "#/$defs/reasonText"
+            },
+            "client_ref": {
+              "$ref": "#/$defs/clientRef"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "action",
+            "folder"
+          ],
+          "properties": {
+            "action": {
+              "const": "list"
+            },
+            "folder": {
+              "type": "string",
+              "enum": [
+                "inbox",
+                "sent"
+              ]
+            },
+            "cursor": {
+              "$ref": "#/$defs/cursor"
+            },
+            "limit": {
+              "$ref": "#/$defs/limit"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "action",
+            "message_id"
+          ],
+          "properties": {
+            "action": {
+              "const": "read"
+            },
+            "message_id": {
+              "$ref": "#/$defs/messageId"
+            }
+          }
+        }
+      ]
+    },
+    "logoutArgs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "revoke_refresh": {
+          "type": "boolean"
+        }
+      }
+    },
+    "authRequest": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/requestEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "AUTH"
+            },
+            "args": {
+              "$ref": "#/$defs/authArgs"
+            }
+          }
+        }
+      ]
+    },
+    "whoamiRequest": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/requestEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "WHOAMI"
+            },
+            "args": {
+              "$ref": "#/$defs/whoamiArgs"
+            }
+          }
+        }
+      ]
+    },
+    "listRequest": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/requestEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "LIST"
+            },
+            "args": {
+              "$ref": "#/$defs/listArgs"
+            }
+          }
+        }
+      ]
+    },
+    "readRequest": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/requestEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "READ"
+            },
+            "args": {
+              "$ref": "#/$defs/readArgs"
+            }
+          }
+        }
+      ]
+    },
+    "postRequest": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/requestEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "POST"
+            },
+            "args": {
+              "$ref": "#/$defs/postArgs"
+            }
+          }
+        }
+      ]
+    },
+    "replyRequest": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/requestEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "REPLY"
+            },
+            "args": {
+              "$ref": "#/$defs/replyArgs"
+            }
+          }
+        }
+      ]
+    },
+    "mailRequest": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/requestEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "MAIL"
+            },
+            "args": {
+              "$ref": "#/$defs/mailArgs"
+            }
+          }
+        }
+      ]
+    },
+    "logoutRequest": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/requestEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "LOGOUT"
+            },
+            "args": {
+              "$ref": "#/$defs/logoutArgs"
+            }
+          }
+        }
+      ]
+    },
+    "request": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/authRequest"
+        },
+        {
+          "$ref": "#/$defs/whoamiRequest"
+        },
+        {
+          "$ref": "#/$defs/listRequest"
+        },
+        {
+          "$ref": "#/$defs/readRequest"
+        },
+        {
+          "$ref": "#/$defs/postRequest"
+        },
+        {
+          "$ref": "#/$defs/replyRequest"
+        },
+        {
+          "$ref": "#/$defs/mailRequest"
+        },
+        {
+          "$ref": "#/$defs/logoutRequest"
+        }
+      ]
+    },
+    "successEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "ok",
+        "command",
+        "data"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "ok": {
+          "const": true
+        },
+        "command": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{0,15}$"
+        },
+        "data": {
+          "type": "object"
+        }
+      }
+    },
+    "authSuccess": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/successEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "AUTH"
+            },
+            "data": {
+              "$ref": "#/$defs/authData"
+            }
+          }
+        }
+      ]
+    },
+    "whoamiSuccess": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/successEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "WHOAMI"
+            },
+            "data": {
+              "$ref": "#/$defs/whoamiData"
+            }
+          }
+        }
+      ]
+    },
+    "listSuccess": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/successEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "LIST"
+            },
+            "data": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/boardsData"
+                },
+                {
+                  "$ref": "#/$defs/threadsData"
+                },
+                {
+                  "$ref": "#/$defs/postsListData"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "readSuccess": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/successEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "READ"
+            },
+            "data": {
+              "$ref": "#/$defs/readData"
+            }
+          }
+        }
+      ]
+    },
+    "postSuccess": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/successEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "POST"
+            },
+            "data": {
+              "$ref": "#/$defs/postCreatedData"
+            }
+          }
+        }
+      ]
+    },
+    "replySuccess": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/successEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "REPLY"
+            },
+            "data": {
+              "$ref": "#/$defs/postCreatedData"
+            }
+          }
+        }
+      ]
+    },
+    "mailSuccess": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/successEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "MAIL"
+            },
+            "data": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/mailSendData"
+                },
+                {
+                  "$ref": "#/$defs/mailListData"
+                },
+                {
+                  "$ref": "#/$defs/mailReadData"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "logoutSuccess": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/successEnvelope"
+        },
+        {
+          "properties": {
+            "command": {
+              "const": "LOGOUT"
+            },
+            "data": {
+              "$ref": "#/$defs/logoutData"
+            }
+          }
+        }
+      ]
+    },
+    "success": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/authSuccess"
+        },
+        {
+          "$ref": "#/$defs/whoamiSuccess"
+        },
+        {
+          "$ref": "#/$defs/listSuccess"
+        },
+        {
+          "$ref": "#/$defs/readSuccess"
+        },
+        {
+          "$ref": "#/$defs/postSuccess"
+        },
+        {
+          "$ref": "#/$defs/replySuccess"
+        },
+        {
+          "$ref": "#/$defs/mailSuccess"
+        },
+        {
+          "$ref": "#/$defs/logoutSuccess"
+        }
+      ]
+    },
+    "errorCode": {
+      "type": "string",
+      "enum": [
+        "bad_version",
+        "bad_header",
+        "bad_length",
+        "body_too_large",
+        "not_printable_ascii",
+        "malformed_json",
+        "invalid_field",
+        "field_not_allowed",
+        "mismatched_command",
+        "unknown_command",
+        "not_authenticated",
+        "token_invalid",
+        "token_expired",
+        "session_expired",
+        "account_exists",
+        "application_not_found",
+        "account_pending",
+        "account_rejected",
+        "account_banned",
+        "account_suspended",
+        "owner_required",
+        "owner_not_eligible",
+        "forbidden",
+        "read_only_board",
+        "board_not_found",
+        "thread_not_found",
+        "post_not_found",
+        "message_not_found",
+        "content_too_large",
+        "unsupported_charset",
+        "duplicate_content",
+        "client_ref_conflict",
+        "rate_limited",
+        "moderation_hold",
+        "internal_error"
+      ]
+    },
+    "errorObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/errorCode"
+        },
+        "message": {
+          "$ref": "#/$defs/errorMessage"
+        },
+        "field": {
+          "$ref": "#/$defs/fieldPath"
+        },
+        "retry_after": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400
+        },
+        "details": {
+          "type": "object",
+          "maxProperties": 8,
+          "additionalProperties": {
+            "type": [
+              "string",
+              "integer",
+              "boolean",
+              "null"
+            ]
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "code": {
+                "const": "rate_limited"
+              }
+            },
+            "required": [
+              "code"
+            ]
+          },
+          "then": {
+            "required": [
+              "retry_after"
+            ]
+          }
+        }
+      ]
+    },
+    "errorResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v",
+        "ok",
+        "command",
+        "error"
+      ],
+      "properties": {
+        "v": {
+          "const": 1
+        },
+        "ok": {
+          "const": false
+        },
+        "command": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{0,15}$"
+        },
+        "error": {
+          "$ref": "#/$defs/errorObject"
+        }
+      }
+    }
+  }
+}

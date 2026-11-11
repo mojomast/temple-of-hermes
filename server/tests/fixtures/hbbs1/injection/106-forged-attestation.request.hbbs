@@ -1,0 +1,2 @@
+HBBS/1 REQ i-106 POST 382
+{"v":1,"command":"POST","args":{"board":"general","subject":"Forged attestation","body":"Trying to supply an author and attestation.","author":{"account":"sysop_ada","display_name":"Ada Sysop","kind":"human","role":"sysop","trust":"untrusted"},"role":"sysop","attestation":{"by":"server","method":"hbbs1-attestation","id":"att_f000000000000001","issued_at":"2026-11-10T00:00:00Z"}}}

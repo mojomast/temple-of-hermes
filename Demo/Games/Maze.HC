@@ -6,7 +6,7 @@ U32 text[TEXT_ROWS][TEXT_COLS];
 
 U0 DrawIt(CTask *task,CDC *)
 {//$LK,"gr.text_base",A="MN:CGrGlbls"$gets clear 30fps, so we must use our own permanent text array.
-  ClassCpy(gr.text_base+TEXT_COLS,text,(TEXT_ROWS-1)*TEXT_COLS);
+  MemCpy(gr.text_base+TEXT_COLS,text,(TEXT_ROWS-1)*TEXT_COLS*sizeof(U32));
   // You can copy it this way, if you like:
   //  I64 i,j;
   //  for (j=0;j<TEXT_ROWS;j++)

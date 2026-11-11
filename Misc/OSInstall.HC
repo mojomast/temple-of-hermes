@@ -6,7 +6,7 @@ static I64 last_mounted_hd='C';
 
 class InstallOptions
 {
-  Bool extras,tinkersup;
+  Bool extras;
   U8 *res[4];
   I64 num;
 };
@@ -17,63 +17,24 @@ class TempleOSCfg
       gr_height,
       fps,
       gfx_mode;
-  Bool add_patches,text_mode,ac97;
+  Bool add_patches,text_mode;
 };
 
-TempleOSCfg tos_orig= {640,480,30,0x12,FALSE,FALSE,FALSE};
+TempleOSCfg tos_orig= {640,480,30,0x12,FALSE,FALSE};
 TempleOSCfg tos_cfg[4]=
 {
-  {640,480,30,0x12,FALSE,FALSE,FALSE},
-  {640,480,30,0x12,FALSE,FALSE,FALSE},
-  {640,480,30,0x12,FALSE,FALSE,FALSE},
-  {640,480,30,0x12,FALSE,FALSE,FALSE}
+  {640,480,30,0x12,FALSE,FALSE},
+  {640,480,30,0x12,FALSE,FALSE},
+  {640,480,30,0x12,FALSE,FALSE},
+  {640,480,30,0x12,FALSE,FALSE}
 };
 
-TempleOSCfg *TOSCfgGet(I64 drv_let)
-{//Per-target-drive TempleOS settings.  C-F get their own slot, anything
- //else shares slot 0 rather than indexing off the end of the array.
-  I64 i=drv_let-'C';
-  if (!(0<=i<4))
-    i=0;
-  return &tos_cfg[i];
-}
-
-Bool TempleOSInstallAvail(U8 drv_let)
-{//TempleOS is installed from ::/Extras/TempleOS.ISO and patched from
- //::/Misc/TempleOS, so without both there is nothing to offer.  The AHCI
- //kernel cannot boot it, and TempleOS has no USB support, so a stick on U-Z
- //can never be a TempleOS target either.
-  if (AHCIMode)
-    return FALSE;
-  if ('U'<=drv_let<='Z')
-    return FALSE;
-  return FileFind("::/Extras/TempleOS.ISO") && IsDir("::/Misc/TempleOS");
-}
-
-U0 PromptSupplementalFiles(Bool *extras,Bool *tinkersup)
-{//Ask about the optional supplemental file sets, shared by all install paths.
- //Nothing to offer when the boot drive has no /Extras, so stay quiet then and
- //leave the caller's flags alone.
-  // TODO deprecate this and installing TempleOS
-  if (!IsDir("::/Extras"))
-    return;
-  "\nWould you like to install supplemental extras ";
-  if (YorN('n'))
-  {
-    "\nWould you like to install TinkerOS Supplemental files also ";
-    *tinkersup=YorN('n');
-    "\nWould you like to copy TempleOS supplemental ISO files in /Extras ";
-    *extras=YorN('n');
-  }
-}
-
-U0 InstallDrv(U8 drv_let,Bool extras=FALSE,Bool templeos=FALSE,
-    Bool tinkersup=FALSE)
+U0 InstallDrv(U8 drv_let,Bool extras=FALSE,Bool templeos=FALSE)
 {
   Bool ready=FALSE,old_silent;
   U8 *st,*st2;
-  I64 src_let,sup_let,timeout=0;
-  TempleOSCfg *drv_tos_cfg=TOSCfgGet(drv_let);
+  I64 src_let,timeout=0;
+  TempleOSCfg *drv_tos_cfg=&tos_cfg['C'-drv_let];
   src_let=':';
   st=MStrPrint("%C:/Ready",drv_let);
   old_silent=Silent;
@@ -108,13 +69,7 @@ U0 InstallDrv(U8 drv_let,Bool extras=FALSE,Bool templeos=FALSE,
   {
     if (!DrvMounted('M'))
       MountFile("::/Extras/TempleOS.ISO");
-    if (DrvMounted('M'))
-      src_let='M';
-    else
-    {
-      "Could not mount ::/Extras/TempleOS.ISO, installing TinkerOS instead.\n";
-      templeos=FALSE;
-    }
+    src_let='M';
   }
   ExePrint("Copy(\"%C:/*.BIN.C\",\"%C:/\");",src_let,drv_let);
   ExePrint("CopyTree(\"%C:/0000Boot\",\"%C:/0000Boot\");",src_let,drv_let);
@@ -131,18 +86,6 @@ U0 InstallDrv(U8 drv_let,Bool extras=FALSE,Bool templeos=FALSE,
   if (extras)
   {
     ExePrint("CopyTree(\"::/Extras\",\"%C:/Extras\");",drv_let);
-  }
-  if (tinkersup && !templeos)
-  {
-    "\nInstalling TinkerOS Supplemental files...\n";
-    sup_let=MountFile("::/Extras/TinkerSup1.ISO.C");
-    if (sup_let)
-    {
-      ExePrint("CopyTree(\"%C:/\",\"%C:/\");",sup_let,drv_let);
-      Unmount(sup_let);
-    }
-    else
-      "Could not mount ::/Extras/TinkerSup1.ISO.C\n";
   }
   ExePrint("DirMk(\"%C:/Tmp\");",drv_let);
   ExePrint("DirMk(\"%C:/Tmp/ScrnShots\");",drv_let);
@@ -172,19 +115,6 @@ U0 InstallDrv(U8 drv_let,Bool extras=FALSE,Bool templeos=FALSE,
   {
     ExePrint("CopyTree(\"::/Misc/TempleOS/TextMode\",\"%C:/Kernel\");",drv_let);
   }
-  if (templeos && drv_tos_cfg->ac97)
-  {
-    ExePrint("Copy(\"::/Misc/TempleOS/AC97TempleOS.HC.Z\","
-        "\"%C:/Demo/Snd/AC97TempleOS.HC.Z\");",drv_let);
-    //MakeHome.HC.Z was copied from the TempleOS ISO above, so add the
-    //driver to it to have it loaded at every boot.  It goes in second to
-    //last so it lands ahead of the closing Cd("..") the file ends with.
-    st=MStrPrint("%C:/Home/MakeHome.HC.Z",drv_let);
-    "Patching file %s\n"
-    ,st;
-    DocAppendLine(st,"#include \"/Demo/Snd/AC97TempleOS\"\n",-1);
-    Free(st);
-  }
   if (templeos && drv_tos_cfg->fps!=tos_orig.fps)
   {
     st=MStrPrint("%C:/Kernel/KernelA.HH.Z",drv_let);
@@ -204,7 +134,22 @@ Bool VMPrtDsk(CTask *task,CATARep *ata_drv, I64 num)
 {
   if (ata_drv)
   {
-    XTalkWait(task,"AtaMkPrt(0,,%d,%d);Fs->user_data=1;\nC\np%d\nY",num,install_just_ide,ata_drv->num);
+    if (num==1)
+    {
+      XTalkWait(task,"DskPrt(,1.0);\nC\np%d\nY",ata_drv->num);
+    }
+    else if (num==2)
+    {
+      XTalkWait(task,"DskPrt(,0.5,0.5);\nC\np%d\nY",ata_drv->num);
+    }
+    else if (num==3)
+    {
+      XTalkWait(task,"DskPrt(,0.32,0.32,0.32,-1.0);\nC\np%d\nY\n",ata_drv->num);
+    }
+    else if (num==4)
+    {
+      XTalkWait(task,"DskPrt(,0.25,0.25,0.25,0.25);\nC\np%d\nY",ata_drv->num);
+    }
     return TRUE;
   }
   else
@@ -213,18 +158,32 @@ Bool VMPrtDsk(CTask *task,CATARep *ata_drv, I64 num)
 
 Bool VMPrtDskAHCI(CTask *task,I64 port, I64 num)
 {
-  XTalkWait(task,"AtaMkPrt(0,,%d,%d);Fs->user_data=1;\nC\n%d\nY",num,install_just_ide,port);
+  if (num==1)
+  {
+    XTalkWait(task,"DskPrt(,1.0);\nC\n%d\nY",port);
+  }
+  else if (num==2)
+  {
+    XTalkWait(task,"DskPrt(,0.5,0.5);\nC\n%d\nY",port);
+  }
+  else if (num==3)
+  {
+    XTalkWait(task,"DskPrt(,0.32,0.32,0.32,-1.0);\nC\n%d\nY\n",port);
+  }
+  else if (num==4)
+  {
+    XTalkWait(task,"DskPrt(,0.25,0.25,0.25,0.25);\nC\n%d\nY",port);
+  }
   return TRUE;
 }
 
 U0 VMInstallDrv(CTask *task,U8 drv_let,
-    CATARep *ata_drv,CATARep *atapi_drv,U8 *res, Bool extras=FALSE,
-    Bool tinkersup=FALSE)
+    CATARep *ata_drv,CATARep *atapi_drv,U8 *res, Bool extras=FALSE)
 {
   Bool templeos=FALSE;
   if (StrLen(res)<3)
     templeos=TRUE;
-  InstallDrv(drv_let, extras, templeos, tinkersup);
+  InstallDrv(drv_let, extras, templeos);
   if (AHCIMode)
   {
     XTalkWait(task,"BootHDIns('%C');\n\nB\n0x20000\n",drv_let);
@@ -251,9 +210,9 @@ U0 VMInstallDrv(CTask *task,U8 drv_let,
   }
 }
 
-U0 DispResOptions(U8 drv_let)
+U0 DispResOptions()
 {
-  "Select graphics mode (TinkerOS):\n\n";
+  "Select graphics mode (THE TEMPLE OF HERMES):\n\n";
   "0: 640x480 (4:3)\n"
   "1: 800x600 (4:3)\n"
   "2: 1024x768 (4:3)*\n"
@@ -286,7 +245,7 @@ if (CheckVidMode(1920,1200))
 }
   "17: Text mode 80x60 columns, no graphics\n";
   "18: Enter custom width and height\n";
-  if (TempleOSInstallAvail(drv_let))
+  if (!AHCIMode)
   {
     "19: TempleOS standard no patches\n";
     "20: TempleOS custom FPS, w/patches\n";
@@ -299,12 +258,12 @@ U8* ResPrompt(U8 drive)
 {
   I64 res,width,height;
   U8 *cfg=NULL, *pmpt;
-  TempleOSCfg *drv_tos_cfg=TOSCfgGet(drive);
+  TempleOSCfg *drv_tos_cfg=&tos_cfg['C'-drive];
   pmpt=MStrPrint("Select graphics mode for drive %c: ",drive);
-  if (TempleOSInstallAvail(drive))
-    res=GetI64(pmpt,0,0,21);
-  else
+  if (AHCIMode)
     res=GetI64(pmpt,0,0,18);
+  else
+    res=GetI64(pmpt,0,0,21);
   Free(pmpt);
   if (res==20)
   {
@@ -312,14 +271,6 @@ U8* ResPrompt(U8 drive)
     drv_tos_cfg->fps=GetI64(pmpt,30,1,60);
     Free(pmpt);
     drv_tos_cfg->add_patches=TRUE;
-    if (VBoxPciPresent && AC97Present)
-    {
-      "\nVirtualBox AC97 audio hardware detected.\n"
-      "This adds sound support to TempleOS by\n"
-      "routing Snd() through the AC97 codec.\n\n"
-      "Install AC97 sound support ";
-      drv_tos_cfg->ac97=YorN('y');
-    }
   }
   if (res==21)
   {
@@ -427,18 +378,19 @@ U0 VMInstallSetup(InstallOptions *cfg)
   I64 i;
   "\nYou may automatically install up to 4\n";
   if (AHCIMode)
-    "copies of TinkerOS on your drive.\n\n";
+    "copies of THE TEMPLE OF HERMES on your drive.\n\n";
   else
-    "copies of Temple/TinkerOS on your drive.\n\n";
+    "copies of THE TEMPLE OF HERMES (TempleOS/TinkerOS base) on your drive.\n\n";
   "Unless otherwise specified 2 is default\n\n";
   cfg->num=GetI64("How many would you like to install :",2,1,4);
   for (i=0; i<cfg->num; i++)
   {
     "\n";
-    DispResOptions('C'+i);
+    DispResOptions;
     cfg->res[i]=ResPrompt('C'+i);
   }
-  PromptSupplementalFiles(&cfg->extras,&cfg->tinkersup);
+  "\nWould you like to also install extra supplemental ISO files in /Extras ";
+  cfg->extras=YorN('n');
 }
 
 U0 VMInstall(Bool just_std_ide=TRUE, InstallOptions *cfg)
@@ -508,8 +460,7 @@ U0 VMInstall(Bool just_std_ide=TRUE, InstallOptions *cfg)
     }
     for (i=0; i<cfg->num; i++)
     {
-      VMInstallDrv(task,'C'+i,ata_drv,atapi_drv,cfg->res[i],cfg->extras,
-          cfg->tinkersup);
+      VMInstallDrv(task,'C'+i,ata_drv,atapi_drv,cfg->res[i],cfg->extras);
       Free(cfg->res[i]);
     }
     BootMHDIns('C');
@@ -531,7 +482,7 @@ U0 RegularInstallWiz()
   I64 ch,num_hints=0;
   CTask *task;
   CBlkDev *tmpbd;
-  Bool probe, just_ide, extras=FALSE, templeos=FALSE, tinkersup=FALSE;
+  Bool probe, just_ide, extras=FALSE, templeos=FALSE;
   task=User;
   TaskWait(task);
   task->border_src=BDS_CONST;
@@ -659,12 +610,13 @@ U0 RegularInstallWiz()
     else
       Fmt(drv_let,,FALSE,FSt_REDSEA);
   }
-  PromptSupplementalFiles(&extras,&tinkersup);
-  DispResOptions(drv_let);
+  "\nWould you like to also install extra supplemental ISO files in /Extras ";
+  extras=YorN('n');
+  DispResOptions;
   res=ResPrompt(drv_let);
   if (StrLen(res)<3)
     templeos=TRUE;
-  InstallDrv(drv_let,extras,templeos,tinkersup);
+  InstallDrv(drv_let,extras,templeos);
   if (!base0)
   {
     tmpbd=Let2BlkDev('C');
@@ -681,174 +633,12 @@ U0 RegularInstallWiz()
   Kill(task);
 }
 
-I64 InstUsbMsdCnt()
-{//How many USB mass storage devices are plugged in
-  I64 k,n=0;
-  for (k=0; k<16; k++)
-    if (UsbDevKind(k)==USB_KIND_MSD)
-      n++;
-  return n;
-}
-
-I64 InstUsbMsdUnmounted()
-{//Lowest-numbered USB mass storage device with no drive letter mounted,
- //or -1 if every stick is already mounted (or there are none).
-  I64 k;
-  for (k=0; k<16; k++)
-    if (UsbDevKind(k)==USB_KIND_MSD && !UsbDevLets(k))
-      return k;
-  return -1;
-}
-
-Bool RegularInstallWizUSB()
-{//Install onto a USB stick.  Just has to get it onto a U-Z letter, formatted
- //so it has a vol serial, and feed KCfg the device number -- Mount2 records
- //the serial, not a port, so the stick still boots from another socket.
- //Returns TRUE when the stick was repartitioned here, in which case the
- //master boot loader went onto it without asking and the caller is done.
-  I64 drv_let,usb_k,ch,n,vol_ser;
-  U8 *res;
-  Bool extras=FALSE,tinkersup=FALSE,repart=FALSE,auto_mbr=FALSE;
-  CTask *task;
-  task=User;
-  TaskWait(task);
-  task->border_src=BDS_CONST;
-  task->border_attr=LTGRAY<<4+DrvTextAttrGet(':')&15;
-  task->text_attr =LTGRAY<<4+BLUE;
-  task->win_inhibit=WIG_TASK_DFT-WIF_SELF_BORDER;
-  WinHorz(Fs->win_left,Fs->win_right,task);
-  WinVert(Fs->win_top,(Fs->win_top+Fs->win_bottom)>>2-1,task);
-  WinVert(task->win_bottom+3,Fs->win_bottom);
-  WinToTop(Fs);
-  res=NULL;
-  "\nUSB storage devices:\n\n";
-  n=UsbMsdRep;
-  if (!n)
-  {
-    "\nNo USB storage device found.\n"
-    "Plug the stick in, give it a few\n"
-    "seconds and run the wizard again.\n";
-    goto usb_wiz_done;
-  }
-  usb_k=GetI64("\nUSB Device Num to install to (-1 for first unmounted):",
-      -1,-1,15);
-  if (usb_k<0)
-  {
-    usb_k=InstUsbMsdUnmounted;
-    if (usb_k<0)
-    {
-      "\nNo unmounted USB storage device found.\n"
-      "Every stick listed above is already mounted --\n"
-      "give its device number to install to one of them.\n";
-      goto usb_wiz_done;
-    }
-    "\nUsing USB device %d.\n",usb_k;
-  }
-  if (UsbDevKind(usb_k)!=USB_KIND_MSD)
-  {
-    "\nThat is not a USB storage device.\n";
-    goto usb_wiz_done;
-  }
-  "\n$$BK,1$$$$RED$$WARNING: data on USB device %d can be lost!$$FG$$$$BK,0$$\n\n"
-  "Continue ",usb_k;
-  if (!YorN('n'))
-    goto usb_wiz_done;
-  '\n';
-  if (UsbDevLets(usb_k))
-    drv_let=Bsf(UsbDevLets(usb_k))+'A';
-  else
-    drv_let=UsbMountAt(usb_k);
-  if (!drv_let)
-  {
-    "\nCould not mount that stick.  U-Z may all be taken\n"
-    "DrvRep lists them.\n";
-    goto usb_wiz_done;
-  }
-  "\nMounted as drive %C.\n\n",drv_let;
-  "$$RED$$Repartition the WHOLE stick?$$FG$$\n"
-  "Say yes for a stick that has never held\n"
-  "TinkerOS or you want repartitioned and formatted ";
-  if (YorN('n'))
-  {
-    '\n';
-    repart=TRUE;
-    DskPrt(drv_let,1.0);
-    if (!DrvMounted(drv_let))
-    {
-      "\nThe stick did not come back after repartitioning.\n";
-      goto usb_wiz_done;
-    }
-  }
-  else
-  {
-    '\n';
-    "$$RED$$Format %C Partition?$$FG$$\n",drv_let;
-    if (YorN('y'))
-    {
-      '\n';
-      do
-      {
-        "$$PURPLE$$1$$FG$$) Use FAT32 (default)\n"
-        "$$PURPLE$$2$$FG$$) Use RedSea\n"
-        "\nFile System Type: ";
-        ch=GetChar;
-        '\n';
-      }
-      while (!('1'<=ch<='2')&&ch!=10);
-      if (ch=='1' || ch==10)
-        Fmt(drv_let,,FALSE,FSt_FAT32);
-      else
-        Fmt(drv_let,,FALSE,FSt_REDSEA);
-    }
-  }
-  vol_ser=DrvVolSerial(drv_let);
-  if (vol_ser)
-    "\nDrive %C vol serial 0x%016X -- the installed kernel will\n"
-    "find this stick on any port.\n",drv_let,vol_ser;
-  else
-    "\n$$BK,1$$$$RED$$Warning:$$FG$$$$BK,0$$ drive %C carries no vol serial, so the kernel\n"
-    "can only name the stick by device number -- which moves with\n"
-    "the port.  Let this wizard format it to give it one.\n",drv_let;
-  PromptSupplementalFiles(&extras,&tinkersup);
-  InstallDrv(drv_let,extras,FALSE,tinkersup);
-  DispResOptions(drv_let);
-  res=ResPrompt(drv_let);
-  //KCfg: boot drv letter, RAM drive B, then the stick.  The device number
-  //only gets Mount2 to the stick to read its serial; the config gets
-  //UsbMountVol(<serial>,'<let>').
-  XTalkWait(task,"BootHDIns('%C');\n%CB\n0x20000\n%C%d\n\n\n%s\n",
-      drv_let,drv_let,drv_let,usb_k,res);
-  last_drv_installed=drv_let;
-  if (repart)
-  {
-    //The stick was repartitioned here, so there is nothing on it worth
-    //asking about -- put the master boot loader on it and be done.
-    "\n$$RED$$Installing Master Boot loader to drive %C...$$FG$$\n",drv_let;
-    BootMHDIns(drv_let);
-    auto_mbr=TRUE;
-  }
-  else
-  {
-    "\n$$RED$$Install Master Boot loader to drive %C?$$FG$$",drv_let;
-    if (YorN('y'))
-    {
-      '\n';
-      BootMHDIns(drv_let);
-    }
-  }
-usb_wiz_done:
-  Free(res);
-  WinVert(task->win_top,Fs->win_bottom);
-  Kill(task);
-  return auto_mbr;
-}
-
 U0 RegularInstallWizAHCI()
 {
   I64 drv_let;
   U8	*st, *port_st, *res, *tmpstr;
   I64 i, ch, default_port=0, selected_port;
-  Bool extras=FALSE, tinkersup=FALSE;
+  Bool extras=FALSE;
   CTask	*task;
   task = User;
   TaskWait(task);
@@ -864,8 +654,7 @@ U0 RegularInstallWizAHCI()
   for (i=0; i<AHCI_MAX_PORTS; i++)
     if ((&blkdev.ahci_hba->ports[i])->signature == AHCI_PxSIG_ATA)
       selected_port=default_port=i;
-  "\nSelect the port of the ATA drive to install\n"
-  "on listed in the window above.\n";
+  "\nSelect the port of the ATA drive to install on listed in the window above.\n";
   "Hard Drive Port (default %d): ", default_port;
   while (TRUE)
   {
@@ -922,9 +711,10 @@ U0 RegularInstallWizAHCI()
     else
       Fmt(drv_let,, FALSE, FSt_REDSEA);
   }
-  PromptSupplementalFiles(&extras,&tinkersup);
-  InstallDrv(drv_let,extras,FALSE,tinkersup);
-  DispResOptions(drv_let);
+  "\nWould you like to also install extra supplemental ISO files in /Extras ";
+  extras=YorN('n');
+  InstallDrv(drv_let,extras);
+  DispResOptions;
   res=ResPrompt(drv_let);
   XTalkWait(task,"BootHDIns('%C');\n\nB\n0x20000\n"
       "C\n%d\n\n\n%s\n", //Exit Drives,Dsk Cache,Options
@@ -952,8 +742,7 @@ U0 DoInstructions()
 
 Bool DoInstall(Bool pmt_reboot)
 {
-  I64 i,res=FALSE,vm_install,usb_install,default_choice='y',found_drv='n';
-  Bool usb_done=FALSE;
+  I64 i,res=FALSE,vm_install,default_choice='y',found_drv='n';
   InstallOptions *cfg;
   if (DrvMounted('C'))
   {
@@ -998,19 +787,19 @@ Bool DoInstall(Bool pmt_reboot)
       if (!res)
       {
         "\nIt looks like for whatever reason\n"
-        "TinkerOS was not able to automatically\n"
+        "THE TEMPLE OF HERMES was not able to automatically\n"
         "install on your hard drive.  You still\n"
-        "may be able to install TinkerOS if it\n"
+        "may be able to install THE TEMPLE OF HERMES if it\n"
         "can detect your hard drive when you\n"
         "manually supply I/O ports.  These can\n"
         "be found using lscpi in Linux or might\n"
         "even be found using the Mount command\n"
-        "within TinkerOS once the drive has\n"
+        "within THE TEMPLE OF HERMES once the drive has\n"
         "been paritioned.\n\n";
         "Please manually parition the drive\n"
         "with a msdos (not gpt) partition\n"
         "table and create a primary FAT32\n"
-        "partition to install TinkerOS on.\n"
+        "partition to install THE TEMPLE OF HERMES on.\n"
         "Then come back instead of choosing\n"
         "the automatic installer, manually\n"
         "install to the partition you created\n"
@@ -1032,11 +821,9 @@ Bool DoInstall(Bool pmt_reboot)
       "\n\nIf you have already prepared partitions\n"
       "to install to using clonezilla or\n"
       "another partitioning tool you can try\n"
-      "to auto mount them now if they are FAT32\n"
-      "formatted. ";
-      if (InstUsbMsdCnt())
-        "Pick no for USB installs.";
-      "\n\nRun MountAuto ";
+      "to auto mount them now if they are\n"
+      "FAT32 formatted.\n"
+      "\nRun MountAuto ";
       if (YorN('y'))
         MountAuto;
       if (!DrvMounted('C')&&!DrvMounted('D')&&!DrvMounted('E')&&!DrvMounted('F')&&!AHCIMode)
@@ -1064,18 +851,7 @@ Bool DoInstall(Bool pmt_reboot)
     {
       do
       {
-        usb_install=FALSE;
-        if (InstUsbMsdCnt())
-        {
-          "\nInstall to a USB drive ";
-          usb_install=YorN('n');
-        }
-        if (usb_install)
-        {
-          '\n';
-          usb_done=RegularInstallWizUSB();
-        }
-        else if (AHCIMode)
+        if (AHCIMode)
         {
           RegularInstallWizAHCI();
         }
@@ -1087,23 +863,15 @@ Bool DoInstall(Bool pmt_reboot)
         for (i='C'; i<'G'; i++)
           if (DrvMounted(i))
             last_mounted_hd=i;
-        if (usb_done)
-          break;
         "\nWould you like to run the wizard again to install to another drive ";
         if (last_drv_installed == last_mounted_hd) default_choice='n';
       }
       while (YorN(default_choice));
-      //The stick is installed and bootable, so there is nothing left to ask.
-      if (usb_done)
-        pmt_reboot=FALSE;
-      else
+      "$$RED$$Install Master Boot loader?$$FG$$";
+      if (YorN('y'))
       {
-        "$$RED$$Install Master Boot loader?$$FG$$";
-        if (YorN('y'))
-        {
-          '\n';
-          BootMHDIns('C');
-        }
+        '\n';
+        BootMHDIns('C');
       }
     }
     else
@@ -1137,14 +905,10 @@ Bool DoInstall(Bool pmt_reboot)
   return res;
 }
 
-Bool USBInstall()
-{//Install onto a USB stick, skipping the internal-drive wizards.
-  RegularInstallWizUSB;
-  return TRUE;
-}
-
 Bool OSInstall(Bool pmt_reboot=TRUE)
 {
+  if (fp_input_gate && !(*fp_input_gate)("OSInstall"))
+    return FALSE;
   DoInstructions;
   return DoInstall(pmt_reboot);
 }

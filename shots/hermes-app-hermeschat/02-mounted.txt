@@ -1,0 +1,60 @@
+Tue 11/10 02:00:10 FPS: 31 CPU 9                                           ENTER
+ MENU                        6D57B428[X] MENU                       6D56FA28[X]
+THome Dir:"T:/Home"                                  TinkerOS V5.20
+e
+r****** Mount Drives ******                  Public Domain Operating System
+mA-B are RAM drives.
+ C-L are ATA hard drives.                Help & Index, Quick Start: Cmd line
+ M-P are ISO file read drives.
+ Q-S are ISO file write drives.          Directory of T:/Home
+ T-Z are ATAPI CD/DVD drives.            DATE_ TIME_ SIZE
+                                         06/16 04:54 0200 ,
+ Drive Letter (<ENTER> to exit):C        06/16 04:54 0000 ,,
+ Partition Num (Default=All):            06/16 04: MENU                  6D5[X]
+                                         06/16 04:T AutoComplete is in StandBy
+ We're going to probe hardware.          06/16 04:e
+ Exit all other applications.            T:/Home> r  System Keys Quick Guide
+ Press 'p' to probe or 's' to skip.               m     (Works Everywhere)
+                                                     <SPACE>   Left-Click
+ Subcode:0x80 Bus:0x0 Dev:0x1 Fun:0x1                <ENTER>   Right-Click
+                                                      <F1>     Help
+  1  CD/DVD Drive ATAPI Primary IDE                 <CTRL-m>   Personal Menu
+     Base0:0x01F0 Base1:0x03F4 Unit:0                 <ESC>    Save  & Exit
+                                                   <SHIFT-ESC> Abort & Exit
+  2  Hard Drive   ATA   Primary IDE                 <WINDOWS>  Pull-Down Menu
+     Base0:0x01F0 Base1:0x03F4 Unit:1
+                                                        (Works Everywhere)
+  3  CD/DVD Drive ATAPI Secondary IDE                 <F7>     Random Word
+     (Drive originally installed from.)            <SHIFT-F7>  Random Passage
+     (Drive booted from.)                             <F6>     Random Song
+     Base0:0x0170 Base1:0x0374 Unit:0              <SHIFT-F6>  Random Doodle
+
+                                                                  EOF
+ Enter dev number or
+ port with 0x prefix.
+ I/O Port Base0:
+ 2
+
+ Defined Drives:
+ B REDSEA   RAM        0000 0000 00
+    0000000000000058-0000000000040000
+ C FAT32    ATA        01F0 03F4 01
+    Model# :QEMU HARDDISK
+    Serial#:QM00002
+    000000000000003F-000000000001FFFF
+ T REDSEA   ATAPI      0170 0000 00
+    0000000000000058-0000000000010EBF
+ Home Dir:"T:/Home"
+
+ ****** Mount Drives ******
+ A-B are RAM drives.
+ C-L are ATA hard drives.
+ M-P are ISO file read drives.
+ Q-S are ISO file write drives.
+ T-Z are ATAPI CD/DVD drives.
+
+ Drive Letter (<ENTER> to exit):
+
+ 18.450891s ans=0x00000000=0
+ T:/Home>
+                           EOF                                    EOF

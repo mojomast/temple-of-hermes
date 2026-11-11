@@ -1,0 +1,72 @@
+19:16:03 splash captured from 006-boot.png
+19:16:05 capture pass complete
+19:19:18 launcher captured
+19:19:35 shell captured
+19:19:37 capture pass complete
+19:20:21 03-app-hermes-chat: ok=True diff=0.21 errors=[]
+19:21:00 04-app-worldsim: ok=True diff=0.07 errors=[]
+19:21:38 05-app-codex: ok=True diff=0.20 errors=[]
+19:22:16 06-app-psyche: ok=True diff=0.96 errors=[]
+19:22:50 07-app-capybara: ok=True diff=0.94 errors=[]
+19:24:09 cap-08-app-messenger-1: launcher did not appear; rebooting
+19:25:27 cap-08-app-messenger-2: launcher did not appear; rebooting
+19:26:46 cap-08-app-messenger-3: launcher did not appear; rebooting
+19:26:48 08-app-messenger: FAILED after retries
+19:27:24 09-app-bbs: ok=True diff=0.19 errors=[]
+19:28:03 10-app-threshold: ok=True diff=0.07 errors=[]
+19:28:40 11-app-dojo: ok=True diff=0.21 errors=[]
+19:29:59 cap-12-app-offerings-1: launcher did not appear; rebooting
+19:30:37 12-app-offerings: ok=True diff=0.07 errors=[]
+19:31:15 13-app-southpaw: ok=True diff=0.07 errors=[]
+19:31:57 14-app-modem-net: ok=True diff=0.12 errors=[]
+19:32:35 15-game-caduceus: ok=True diff=0.07 errors=[]
+19:33:22 16-game-token-rain: ok=True diff=0.25 errors=[]
+19:34:40 cap-17-game-spoon-1: launcher did not appear; rebooting
+19:35:59 cap-17-game-spoon-2: launcher did not appear; rebooting
+19:36:37 17-game-spoon: ok=True diff=0.07 errors=[]
+19:37:11 18-game-dojo-duel: ok=True diff=0.07 errors=[]
+19:37:13 capture pass complete
+19:38:53 03-app-hermes-chat: already captured
+19:40:10 cap-04-app-worldsim-1: launcher did not appear; rebooting
+19:40:52 04-app-worldsim: ok=True diff=0.96 errors=[]
+19:42:10 cap-05-app-codex-1: launcher did not appear; rebooting
+19:42:48 05-app-codex: ok=True diff=0.94 errors=[]
+19:42:50 06-app-psyche: already captured
+19:42:50 07-app-capybara: already captured
+19:43:29 08-app-messenger: ok=True diff=0.95 errors=[]
+19:44:48 cap-09-app-bbs-1: launcher did not appear; rebooting
+19:46:13 09-app-bbs: ok=False diff=0.08 errors=[]
+19:47:32 cap-09-app-bbs-3: launcher did not appear; rebooting
+19:47:34 09-app-bbs: FAILED after retries
+19:48:51 cap-10-app-threshold-1: launcher did not appear; rebooting
+19:50:10 cap-10-app-threshold-2: launcher did not appear; rebooting
+19:50:55 10-app-threshold: ok=True diff=0.96 errors=[]
+19:52:14 cap-11-app-dojo-1: launcher did not appear; rebooting
+19:53:34 cap-11-app-dojo-2: launcher did not appear; rebooting
+19:54:53 cap-11-app-dojo-3: launcher did not appear; rebooting
+19:54:55 11-app-dojo: FAILED after retries
+19:56:12 cap-12-app-offerings-1: launcher did not appear; rebooting
+19:56:57 12-app-offerings: ok=True diff=0.85 errors=[]
+19:57:43 13-app-southpaw: ok=True diff=0.38 errors=[]
+19:57:45 14-app-modem-net: already captured
+19:58:33 15-game-caduceus: ok=True diff=0.92 errors=['Except:Drv:&DrvChk+0x0030:&Let2Drv+0x0078:&DirContextNew+0x0098:&DirMk+0x0041:&C']
+19:59:51 cap-16-game-token-rain-1: launcher did not appear; rebooting
+20:01:10 cap-16-game-token-rain-2: launcher did not appear; rebooting
+20:02:29 cap-16-game-token-rain-3: launcher did not appear; rebooting
+20:02:31 16-game-token-rain: FAILED after retries
+20:03:48 cap-17-game-spoon-1: launcher did not appear; rebooting
+20:05:07 cap-17-game-spoon-2: launcher did not appear; rebooting
+20:05:56 17-game-spoon: ok=True diff=0.60 errors=['Except:Drv:&DrvChk+0x0030:&Let2Drv+0x0078:&DirContextNew+0x0098:&DirMk+0x0041:6D']
+20:06:42 18-game-dojo-duel: ok=True diff=0.21 errors=['?Except:Drv:??????????????:             ?                                      |']
+20:06:44 capture pass complete
+20:08:38 fix-09-app-bbs-1: launcher did not appear; rebooting
+20:11:25 fix-09-app-bbs-3: launcher did not appear; rebooting
+20:14:13 fix-09-app-bbs-5: launcher did not appear; rebooting
+20:15:31 fix-09-app-bbs-6: launcher did not appear; rebooting
+20:16:50 fix-11-app-dojo-1: launcher did not appear; rebooting
+20:18:51 fix-16-game-token-rain-1: launcher did not appear; rebooting
+20:20:55 fix-18-game-dojo-duel-1: launcher did not appear; rebooting
+20:23:20 long-09-app-bbs-1: launcher did not appear; rebooting
+20:24:39 long-09-app-bbs-2: launcher did not appear; rebooting
+20:30:57 net echo ok=True
+20:30:59 capture pass complete

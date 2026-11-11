@@ -633,7 +633,7 @@ public I64 EdReplace(CDoc *doc,U8 *find,U8 *replace,
   I64 i,res=-1;
   if (!doc) return -1;
   unlock=DocLock(doc);
-  ClassCpy(&old_find_replace,doc->find_replace);
+  MemCpy(&old_find_replace,doc->find_replace,sizeof(CEdFindText));
   MemSet(doc->find_replace,0,sizeof(CEdFindText));
   i=StrLen(find);
   if (i<sizeof(CEdFindText.find_text))
@@ -651,7 +651,7 @@ public I64 EdReplace(CDoc *doc,U8 *find,U8 *replace,
       res=EdFindReplace(doc);
     }
   }
-  ClassCpy(doc->find_replace,&old_find_replace);
+  MemCpy(doc->find_replace,&old_find_replace,sizeof(CEdFindText));
   if (unlock)
     DocUnlock(doc);
   return res;

@@ -1,10 +1,3 @@
-Cd(__DIR__);;
-#include "VBoxLog"
-
-// Uncomment to enable VirtualBox shared clipboard integration.
-// The VM's clipboard mode must be set to Bidirectional.
-//#define VBOX_CLIPBOARD_ENABLE
-
 #define VBOX_VMMDEV_VERSION 0x00010003
 #define VBOX_REQUEST_HEADER_VERSION 0x10001
 
@@ -13,30 +6,27 @@ Cd(__DIR__);;
 #define VBOX_REQUEST_HGCM_CONNECT 60
 #define VBOX_REQUEST_HGCM_DISCONNECT 61
 #define VBOX_REQUEST_HGCM_CALL 62
-#define VBOX_REQUEST_HGCM_CANCEL2 65
+
 #define VBOX_REQUEST_GET_MOUSE 1
 #define VBOX_REQUEST_SET_MOUSE 2
-#define VINF_HGCM_ASYNC_EXECUTE 2
-#define VBOX_HGCM_REQ_DONE 1
-#define VBOX_HGCM_PARM_32BIT 1
-#define VBOX_HGCM_PARM_LINADDR 4
+
 #define VBOX_SHARED_CLIPBOARD_FMT_UNICODETEXT 1
 #define VBOX_SHARED_CLIPBOARD_FMT_BITMAP 2
+
 #define VBOX_SHARED_CLIPBOARD_FN_GET_HOST_MSG 1
 #define VBOX_SHARED_CLIPBOARD_FN_FMTS 2
 #define VBOX_SHARED_CLIPBOARD_FN_READ_DATA 3
 #define VBOX_SHARED_CLIPBOARD_FN_WRITE_DATA 4
-#define VBOX_SHARED_CLIPBOARD_HOST_MSG_QUIT 1
+
 #define VBOX_SHARED_CLIPBOARD_HOST_MSG_READ_DATA 2
 #define VBOX_SHARED_CLIPBOARD_HOST_MSG_FMTS 3
+
 #define HOST_CLIP_READ_MAX 32768
 #define HOST_CLIP_WRITE_MAX 32768
+
 #define MS_MSG_MS 12
-#define HGCM_CALL_MS 1000
-#define HGCM_HOST_MSG_MS 30000
-#define HGCM_CANCEL_MS 500
-#define VB_ADDR_LIMIT 0x100000000
-#define VB_DOLDOC_ESC 0x24
+#define CLIP_MSG_MS 10
+#define MSG_REQ_MS 20
 
 class VBGuestHdr
 {
@@ -88,18 +78,8 @@ class VBoxClipConnect
   U32 loc_type;
   U8 loc[128];
   U32 client_id;
-};
-
-class VBoxClipDisconnect
-{
-  VBoxHGCMHdr hdr;
-  U32 client_id;
-};
-
-class VBoxHGCMCancel2
-{
-  VBGuestHdr hdr;
-  U32 phys_req;
+  U32 msg;
+  U32 fmts;
 };
 
 class VBoxHGCParam
@@ -162,152 +142,54 @@ class VBoxCaps
 };
 
 static I16 *utf16_host_write_clipboard=NULL;
-static I16 *utf16_host_read_clipboard=NULL;
 static U8 *utf8_host_read_clipboard=NULL;
-static U8 *guest_clip_utf8=NULL;
+static I16 *utf16_host_read_clipboard=NULL;
 static CTask *vb_ms_task=NULL;
-static CTask *vb_clip_task=NULL;
-
-I64 VBHelperCPU()
-{
-  if (mp_cnt<2) return -1;
-  return mp_cnt-1;
-}
-
 static VBoxClipConnect *vbox_clip=NULL;
-static VBoxClipDisconnect *vbox_clip_disc=NULL;
-static VBoxHGCMCancel2 *vbox_clip_cancel=NULL;
 static VBoxClipMsg *vbox_clip_msg=NULL;
 static VBoxClipRead *vbox_clip_read=NULL;
 static VBoxClipFmts *vbox_clip_fmts=NULL;
 static VBoxClipWrite *vbox_clip_write=NULL;
 static VBGuest vb_guest;
 static VBGuestMsAbs *mouse=NULL;
-static I64 vb_clip_op_lock=0;
-static I64 vb_clip_data_lock=0;
-static I64 vb_clip_cancel_lock=0;
-static Bool vb_clip_run=FALSE;
-static Bool vb_clip_up=FALSE;
-static Bool vb_clip_broken=FALSE;
-static VBoxHGCMHdr *vb_clip_stuck=NULL;
-static I64 vb_host_fmts=0;
+static I64 vb_msg_lock=0;
 
-Bool VBAddrOk(U8 *p)
-{//TRUE if p can be handed to VirtualBox as a 32-bit address.
-  if (!p)
-    return FALSE;
-  return p(I64) < VB_ADDR_LIMIT;
-}
-
-I64 VBParm32(VBoxHGCParam *p)
-{//Read back a VMMDevHGCMParmType_32bit result.
-  return p->value & 0xFFFFFFFF;
-}
-
-I64 ToUTF16(I16 *dst, U8 *input, I64 max_chars)
-{//Latin-1 to UTF-16LE.  Returns bytes written, terminator included.
+U0 ToUTF16(U8 *input)
+{
   I64 i, size;
   size=StrLen(input);
-  if (size > max_chars)
-    size = max_chars;
-  i=0;
-  while (i < size)
+  if (size > HOST_CLIP_WRITE_MAX)
+    size = HOST_CLIP_WRITE_MAX;
+  for (i = 0; i < size; i++)
   {
-    dst[i]=input[i];
-    i++;
+    utf16_host_write_clipboard[i]=input[i];
   }
-  dst[size]=0;
-  return (size+1)*2;
+  utf16_host_write_clipboard[size]=0;
 }
 
-I64 ToUTF8(U8 *dst, I16 *src, I64 size_bytes, I64 max_chars)
-{//UTF-16LE to Latin-1.  size_bytes is the byte count the host reported.
-  I64 i, size;
-  size = size_bytes/2;
-  if (size > max_chars)
-    size = max_chars;
-  i=0;
-  while (i < size)
+U0 ToUTF8(I16 *input, I64 size)
+{
+  I64 i;
+  size = size/2;
+  if (size>HOST_CLIP_READ_MAX)
+    size=HOST_CLIP_READ_MAX-1;
+  for (i = 0; i < size; i++)
   {
-    dst[i] = src[i];
-    i++;
+    utf8_host_read_clipboard[i] = input[i];
   }
-  dst[size]=0;
-  return StrLen(dst);
+  utf8_host_read_clipboard[size]=0;
 }
 
-Bool VBSendReq(VBGuestHdr *hdr)
-{//Plain (non HGCM) VMMDev request.
-  hdr->rc=0;
-  OutU32(vb_guest.port, hdr);
-  return hdr->rc >= 0;
-}
-
-U0 VBHGCMCancel(VBoxHGCMHdr *hdr)
-{//Tell the host to abandon a call we have given up on.
-  I64 deadline;
-
-  if (!vbox_clip_cancel)
-    return;
-
-  while (LBts(&vb_clip_cancel_lock,0))
+U0 VBSendMsg(U8 *msg, I64 sleep=CLIP_MSG_MS)
+{
+  while (Bt(&vb_msg_lock,0))
+  {
     Yield;
-
-  ZeroClass(vbox_clip_cancel);
-  vbox_clip_cancel->hdr.size=sizeof(VBoxHGCMCancel2);
-  vbox_clip_cancel->hdr.ver=VBOX_REQUEST_HEADER_VERSION;
-  vbox_clip_cancel->hdr.req_type=VBOX_REQUEST_HGCM_CANCEL2;
-  vbox_clip_cancel->phys_req=hdr(I64);
-  OutU32(vb_guest.port, vbox_clip_cancel);
-
-  LBtr(&vb_clip_cancel_lock,0);
-
-  deadline=cnts.jiffies+HGCM_CANCEL_MS*JIFFY_FREQ/1000;
-  while (!(hdr->flags & VBOX_HGCM_REQ_DONE))
-  {
-    if (cnts.jiffies > deadline)
-      return;
-    Sleep(1);
   }
-}
-
-Bool VBHGCMCall(VBoxHGCMHdr *hdr, I64 timeout_ms)
-{//Submit an HGCM request and wait for it to actually finish.
-  I64 deadline;
-
-  if (vb_clip_broken)
-    return FALSE;
-
-  hdr->flags=0;
-  hdr->result=0;
-  hdr->rc=0;
-  OutU32(vb_guest.port, hdr);
-
-  Sleep(1);
-
-  if (hdr->rc < 0)
-    return FALSE;
-
-  if (hdr->flags & VBOX_HGCM_REQ_DONE)
-    return hdr->result >= 0;
-
-  deadline=cnts.jiffies+timeout_ms*JIFFY_FREQ/1000;
-  while (!(hdr->flags & VBOX_HGCM_REQ_DONE))
-  {
-    if (cnts.jiffies > deadline)
-    {
-      VBHGCMCancel(hdr);
-      if (!(hdr->flags & VBOX_HGCM_REQ_DONE))
-      {
-        vb_clip_stuck=hdr;
-        vb_clip_broken=TRUE;
-        AdamLog("VirtualBox clipboard: HGCM request stuck, disabling.\n");
-      }
-      return FALSE;
-    }
-    Sleep(1);
-  }
-  return hdr->result >= 0;
+  LBts(&vb_msg_lock, 0);
+  OutU32(vb_guest.port, msg);
+  Sleep(sleep);
+  LBtr(&vb_msg_lock, 0);
 }
 
 U0 VBGuestMsUpdate()
@@ -315,7 +197,7 @@ U0 VBGuestMsUpdate()
   I64 dx,dy,x,y,slop=1;
   U8 ms_buf[4];
 
-  VBSendReq(&mouse->hdr);
+  VBSendMsg(mouse, MS_MSG_MS);
 
   x = GR_WIDTH * (mouse->x) / 0xFFFF;
   y = GR_HEIGHT * (mouse->y) / 0xFFFF;
@@ -371,172 +253,74 @@ U0 VBMsPollTask()
 {
   while (1)
   {
-    VBGuestMsUpdate;
-    Sleep(MS_MSG_MS);
+    if (vb_msg_lock)
+      Yield;
+    else
+      VBGuestMsUpdate;
+    Yield;
   }
 }
 
-U0 VBClipReqInit(U8 *req, I64 total_size)
-{//Zero the request body and refill the HGCM header.
-  VBoxHGCMHdr *hdr=req;
-
-  MemSet(req+sizeof(VBoxHGCMHdr),0,total_size-sizeof(VBoxHGCMHdr));
-  hdr->size=total_size;
-  hdr->ver=VBOX_REQUEST_HEADER_VERSION;
-  hdr->req_type=VBOX_REQUEST_HGCM_CALL;
-  hdr->flags=0;
-  hdr->result=0;
-  hdr->rc=0;
-}
-
-Bool VBHostClipMsgReq(I64 timeout_ms)
-{//FN_GET_HOST_MSG does not return until the host has something to say, so
-//this is the one call we are supposed to sit on.  Owned by the service task.
-  if (vb_clip_broken)
-    return FALSE;
-  VBClipReqInit(vbox_clip_msg,sizeof(VBoxClipMsg));
+U0 VBHostClipMsgReq()
+{
+  MemSet(vbox_clip_msg+sizeof(VBoxHGCMHdr),0,sizeof(VBoxClipMsg)-sizeof(VBoxHGCMHdr));
   vbox_clip_msg->client_id = vbox_clip->client_id;
   vbox_clip_msg->func_code = VBOX_SHARED_CLIPBOARD_FN_GET_HOST_MSG;
   vbox_clip_msg->param_cnt = 2;
-  vbox_clip_msg->msg.type = VBOX_HGCM_PARM_32BIT;
-  vbox_clip_msg->fmts.type = VBOX_HGCM_PARM_32BIT;
-  return VBHGCMCall(&vbox_clip_msg->hdr,timeout_ms);
+  vbox_clip_msg->msg.type = 1;
+  vbox_clip_msg->fmts.type = 1;
+  VBSendMsg(vbox_clip_msg,MSG_REQ_MS);
 }
 
-Bool VBHostClipRead()
-{//Pull the host clipboard into utf16_host_read_clipboard.
-  if (vb_clip_broken)
-    return FALSE;
-  VBClipReqInit(vbox_clip_read,sizeof(VBoxClipRead));
+U0 VBHostClipRead()
+{
+  MemSet(vbox_clip_read+sizeof(VBoxHGCMHdr),0,sizeof(VBoxClipRead)-sizeof(VBoxHGCMHdr));
   vbox_clip_read->client_id = vbox_clip->client_id;
   vbox_clip_read->func_code = VBOX_SHARED_CLIPBOARD_FN_READ_DATA;
   vbox_clip_read->param_cnt = 3;
-  vbox_clip_read->fmt.type = VBOX_HGCM_PARM_32BIT;
+  vbox_clip_read->fmt.type = 1;
   vbox_clip_read->fmt.value = VBOX_SHARED_CLIPBOARD_FMT_UNICODETEXT;
-  vbox_clip_read->ptr.type = VBOX_HGCM_PARM_LINADDR;
-  vbox_clip_read->ptr.size = (HOST_CLIP_READ_MAX+1)*2; //bytes, not chars
-  vbox_clip_read->ptr.ptr = utf16_host_read_clipboard(I64);
-  vbox_clip_read->size.type = VBOX_HGCM_PARM_32BIT;
-  return VBHGCMCall(&vbox_clip_read->hdr,HGCM_CALL_MS);
+  vbox_clip_read->ptr.type = 4;
+  vbox_clip_read->ptr.size = HOST_CLIP_READ_MAX;
+  vbox_clip_read->ptr.ptr = utf16_host_read_clipboard;
+  vbox_clip_read->size.type = 1;
+  VBSendMsg(vbox_clip_read);
 }
 
-Bool VBHostClipFmts()
-{//Announce that the guest now owns text.  The host answers later with
-//HOST_MSG_READ_DATA if anything actually pastes.
-  if (vb_clip_broken)
-    return FALSE;
-  VBClipReqInit(vbox_clip_fmts,sizeof(VBoxClipFmts));
+U0 VBHostClipFmts()
+{
+  MemSet(vbox_clip_fmts+sizeof(VBoxHGCMHdr),0,sizeof(VBoxClipFmts)-sizeof(VBoxHGCMHdr));
   vbox_clip_fmts->client_id = vbox_clip->client_id;
   vbox_clip_fmts->func_code = VBOX_SHARED_CLIPBOARD_FN_FMTS;
   vbox_clip_fmts->param_cnt = 1;
-  vbox_clip_fmts->fmts.type = VBOX_HGCM_PARM_32BIT;
+  vbox_clip_fmts->fmts.type = 1;
   vbox_clip_fmts->fmts.value = VBOX_SHARED_CLIPBOARD_FMT_UNICODETEXT;
-  return VBHGCMCall(&vbox_clip_fmts->hdr,HGCM_CALL_MS);
+  VBSendMsg(vbox_clip_fmts);
 }
 
-Bool VBHostClipWrite()
-{//Answer a host HOST_MSG_READ_DATA with whatever Ctrl-C last staged.
-//Owned by the service task: sending WRITE_DATA unsolicited, as the old
-//CopyTextToHost did, only landed when a host read happened to be pending.
-  I64 bytes;
-
-  if (vb_clip_broken)
-    return FALSE;
-
-  while (LBts(&vb_clip_data_lock,0))
-    Yield;
-  bytes=ToUTF16(utf16_host_write_clipboard,guest_clip_utf8,HOST_CLIP_WRITE_MAX);
-  LBtr(&vb_clip_data_lock,0);
-
-  VBClipReqInit(vbox_clip_write,sizeof(VBoxClipWrite));
+U0 VBHostClipWrite(U8 *str)
+{
+  MemSet(vbox_clip_write+sizeof(VBoxHGCMHdr),0,sizeof(VBoxClipWrite)-sizeof(VBoxHGCMHdr));
+  ToUTF16(str);
   vbox_clip_write->client_id = vbox_clip->client_id;
   vbox_clip_write->func_code = VBOX_SHARED_CLIPBOARD_FN_WRITE_DATA;
   vbox_clip_write->param_cnt = 2;
-  vbox_clip_write->fmt.type = VBOX_HGCM_PARM_32BIT;
+  vbox_clip_write->fmt.type = 1;
   vbox_clip_write->fmt.value = VBOX_SHARED_CLIPBOARD_FMT_UNICODETEXT;
-  vbox_clip_write->ptr.type = VBOX_HGCM_PARM_LINADDR;
-  //Announce what we actually wrote.  Claiming the whole 32K buffer made
-  //hosts that honour the length paste a wall of padding.
-  vbox_clip_write->ptr.size = bytes;
-  vbox_clip_write->ptr.ptr = utf16_host_write_clipboard(I64);
-  return VBHGCMCall(&vbox_clip_write->hdr,HGCM_CALL_MS);
-}
-
-U0 VBClipSrvTask()
-{//The shared clipboard protocol is host-driven: the host tells us when it
-//wants our data and when it has data of its own.  This task parks in
-//FN_GET_HOST_MSG waiting to be told, and owns vbox_clip_msg and
-//vbox_clip_write outright so nothing else can rebuild them mid-flight.
-  I64 msg,fmts;
-
-  while (vb_clip_run)
-  {
-    if (!VBHostClipMsgReq(HGCM_HOST_MSG_MS))
-    {
-      //Nothing to report inside the window, or the link is gone.
-      if (vb_clip_broken)
-        vb_clip_run=FALSE;
-      Sleep(1);
-    }
-    else
-    {
-      msg=VBParm32(&vbox_clip_msg->msg);
-      fmts=VBParm32(&vbox_clip_msg->fmts);
-
-      if (msg==VBOX_SHARED_CLIPBOARD_HOST_MSG_READ_DATA)
-      {
-        if (fmts & VBOX_SHARED_CLIPBOARD_FMT_UNICODETEXT)
-          VBHostClipWrite;
-      }
-      else if (msg==VBOX_SHARED_CLIPBOARD_HOST_MSG_FMTS)
-        vb_host_fmts=fmts;
-      else if (msg==VBOX_SHARED_CLIPBOARD_HOST_MSG_QUIT)
-        vb_clip_run=FALSE;
-    }
-  }
-  vb_clip_task=NULL;
-}
-
-U0 VBClipSrvStart()
-{
-  if (vb_clip_task)
-    return;
-  vb_clip_run=TRUE;
-  vb_clip_task=Spawn(&VBClipSrvTask,,"VBClipTask",VBHelperCPU());
-}
-
-U0 VBClipSrvStop()
-{
-  I64 deadline;
-
-  if (!vb_clip_task)
-    return;
-  vb_clip_run=FALSE;
-  //The task is parked inside FN_GET_HOST_MSG; cancelling is the only way to
-  //get it back without waiting out the whole window.
-  VBHGCMCancel(&vbox_clip_msg->hdr);
-  deadline=cnts.jiffies+HGCM_CALL_MS*JIFFY_FREQ/1000;
-  while (vb_clip_task && cnts.jiffies < deadline)
-    Sleep(1);
-  if (vb_clip_task)
-  {
-    Kill(vb_clip_task);
-    vb_clip_task=NULL;
-  }
+  vbox_clip_write->ptr.type = 4;
+  vbox_clip_write->ptr.size = HOST_CLIP_WRITE_MAX;
+  vbox_clip_write->ptr.ptr = utf16_host_write_clipboard;
+  VBSendMsg(vbox_clip_write);
 }
 
 Bool VBGuestInit()
 {
   CPCIDev *vb_dev;
-  VBGuestInfo *guest_info;
-  Bool res;
 
   if (!IsHypervisorPresent)
     return FALSE;
 
   vb_dev = PCIDevFind(,,0x80ee,0xcafe);
-  if (!vb_dev)
-    return FALSE;
   if (vb_dev->base_code != 8 || vb_dev->sub_code != 128)
     return FALSE;
 
@@ -544,254 +328,151 @@ Bool VBGuestInit()
   vb_guest.vmmdev = PCIReadU32(vb_dev->bus,vb_dev->dev,vb_dev->fun, 0x14) & 0xFFFFFFF0;
   vb_guest.irq = PCIReadU8(vb_dev->bus,vb_dev->dev,vb_dev->fun, 0x3C);
 
-  guest_info = CAllocAligned(sizeof(VBGuestInfo), 16, Fs->code_heap);
-  if (!VBAddrOk(guest_info))
-  {
-    AdamLog("VirtualBox: request buffer above 4Gb, giving up.\n");
-    Free(guest_info);
-    return FALSE;
-  }
+  VBGuestInfo *guest_info =
+      CAllocAligned(sizeof(VBGuestInfo), 16, Fs->code_heap);
   guest_info->hdr.size = sizeof(VBGuestInfo);
   guest_info->hdr.ver = VBOX_REQUEST_HEADER_VERSION;
   guest_info->hdr.req_type = VBOX_REQUEST_GUEST_INFO;
   guest_info->ver = VBOX_VMMDEV_VERSION;
   guest_info->ostype=0x00100;
 
-  res=VBSendReq(&guest_info->hdr);
-  if (!res)
-    AdamLog("VirtualBox: guest info report returned %d, continuing.\n",
-        guest_info->hdr.rc);
+  vb_msg_lock=MemPageTable(&vb_msg_lock);
+  *(vb_msg_lock(I64*))|=0x11;
+  vb_msg_lock=0;
+
+  OutU32(vb_guest.port, guest_info);
+  Sleep(20);
   Free(guest_info);
   return TRUE;
 }
 
 U0 VBMouseInit()
 {
-  if (!mouse)
-    mouse = CAllocAligned(sizeof(VBGuestMsAbs), 16, adam_task->code_heap);
-  if (!VBAddrOk(mouse))
-  {
-    AdamLog("VirtualBox mouse: buffer above 4Gb, giving up.\n");
-    Free(mouse);
-    mouse=NULL;
-    return;
-  }
+  mouse =
+      CAllocAligned(sizeof(VBGuestMsAbs), 16, Fs->code_heap);
   mouse->hdr.size = sizeof(VBGuestMsAbs);
   mouse->hdr.ver = VBOX_REQUEST_HEADER_VERSION;
   mouse->hdr.req_type = VBOX_REQUEST_SET_MOUSE;
   mouse->features = (1 << 0) | (1 << 4);
-  VBSendReq(&mouse->hdr);
+  OutU32(vb_guest.port, mouse);
+  Sleep(20);
   mouse->hdr.req_type = VBOX_REQUEST_GET_MOUSE;
   AdamLog("Enabling VirtualBox mouse integration!\n");
   ms_hard.scale.x=0.25;
   ms_hard.scale.y=0.25;
-  vb_ms_task=Spawn(&VBMsPollTask,,"VBMsTask",VBHelperCPU());
+  vb_ms_task=Spawn(&VBMsPollTask,,"VBMsTask",-1);
 }
 
 Bool VBClipInit()
 {
-  Bool ok;
+  utf8_host_read_clipboard = CAlloc(HOST_CLIP_READ_MAX);
+  utf16_host_read_clipboard = CAllocAligned(HOST_CLIP_READ_MAX*2, 16, Fs->code_heap);
+  utf16_host_write_clipboard = CAllocAligned(HOST_CLIP_WRITE_MAX*2, 16, Fs->code_heap);
 
-  if (!vbox_clip)
-  {
-    utf8_host_read_clipboard = CAlloc(HOST_CLIP_READ_MAX+1, adam_task);
-    guest_clip_utf8 = CAlloc(HOST_CLIP_WRITE_MAX+1, adam_task);
-    utf16_host_read_clipboard = CAllocAligned((HOST_CLIP_READ_MAX+1)*2, 16,
-            adam_task->code_heap);
-    utf16_host_write_clipboard = CAllocAligned((HOST_CLIP_WRITE_MAX+1)*2, 16,
-            adam_task->code_heap);
+  vbox_clip = CAllocAligned(sizeof(VBoxClipConnect), 16, Fs->code_heap);
+  vbox_clip_msg = CAllocAligned(sizeof(VBoxClipMsg), 16, Fs->code_heap);
+  vbox_clip_read = CAllocAligned(sizeof(VBoxClipRead), 16, Fs->code_heap);
+  vbox_clip_fmts = CAllocAligned(sizeof(VBoxClipFmts), 16, Fs->code_heap);
+  vbox_clip_write = CAllocAligned(sizeof(VBoxClipWrite), 16, Fs->code_heap);
 
-    vbox_clip = CAllocAligned(sizeof(VBoxClipConnect), 16, adam_task->code_heap);
-    vbox_clip_disc = CAllocAligned(sizeof(VBoxClipDisconnect), 16, adam_task->code_heap);
-    vbox_clip_cancel = CAllocAligned(sizeof(VBoxHGCMCancel2), 16, adam_task->code_heap);
-    vbox_clip_msg = CAllocAligned(sizeof(VBoxClipMsg), 16, adam_task->code_heap);
-    vbox_clip_read = CAllocAligned(sizeof(VBoxClipRead), 16, adam_task->code_heap);
-    vbox_clip_fmts = CAllocAligned(sizeof(VBoxClipFmts), 16, adam_task->code_heap);
-    vbox_clip_write = CAllocAligned(sizeof(VBoxClipWrite), 16, adam_task->code_heap);
-  }
+  vbox_clip_write->hdr.size = sizeof(VBoxClipWrite);
+  vbox_clip_write->hdr.ver = VBOX_REQUEST_HEADER_VERSION;
+  vbox_clip_write->hdr.req_type = VBOX_REQUEST_HGCM_CALL;
+  vbox_clip_fmts->hdr.size = sizeof(VBoxClipFmts);
+  vbox_clip_fmts->hdr.ver = VBOX_REQUEST_HEADER_VERSION;
+  vbox_clip_fmts->hdr.req_type = VBOX_REQUEST_HGCM_CALL;
+  vbox_clip_read->hdr.size = sizeof(VBoxClipRead);
+  vbox_clip_read->hdr.ver = VBOX_REQUEST_HEADER_VERSION;
+  vbox_clip_read->hdr.req_type = VBOX_REQUEST_HGCM_CALL;
+  vbox_clip_msg->hdr.size = sizeof(VBoxClipMsg);
+  vbox_clip_msg->hdr.ver = VBOX_REQUEST_HEADER_VERSION;
+  vbox_clip_msg->hdr.req_type = VBOX_REQUEST_HGCM_CALL;
 
-  //Bail loudly rather than silently truncate a pointer into a 32-bit field.
-  if (!VBAddrOk(utf16_host_read_clipboard) ||
-      !VBAddrOk(utf16_host_write_clipboard) ||
-      !VBAddrOk(vbox_clip) || !VBAddrOk(vbox_clip_disc) ||
-      !VBAddrOk(vbox_clip_cancel) || !VBAddrOk(vbox_clip_msg) ||
-      !VBAddrOk(vbox_clip_read) || !VBAddrOk(vbox_clip_fmts) ||
-      !VBAddrOk(vbox_clip_write))
-  {
-    AdamLog("VirtualBox clipboard: buffers above 4Gb, giving up.\n");
-    return FALSE;
-  }
-
-  if (vb_clip_stuck && !(vb_clip_stuck->flags & VBOX_HGCM_REQ_DONE))
-  {
-    AdamLog("VirtualBox clipboard: request still in flight, cannot re-init.\n");
-    return FALSE;
-  }
-  vb_clip_broken=FALSE;
-  vb_clip_stuck=NULL;
-
-  ZeroClass(vbox_clip);
   vbox_clip->hdr.size = sizeof(VBoxClipConnect);
   vbox_clip->hdr.ver = VBOX_REQUEST_HEADER_VERSION;
   vbox_clip->hdr.req_type = VBOX_REQUEST_HGCM_CONNECT;
   vbox_clip->loc_type = 2;
   StrPrint(&vbox_clip->loc, "VBoxSharedClipboard");
-
-  ok=VBHGCMCall(&vbox_clip->hdr,HGCM_CALL_MS);
-  if (!ok || !vbox_clip->client_id)
+  OutU32(vb_guest.port, vbox_clip);
+  Sleep(20);
+  VBHostClipMsgReq;
+  if (vbox_clip_msg->msg.value == 3)
   {
-    AdamLog("VirtualBox shared clipboard NOT enabled! (rc:%d result:%d flags:%X id:%d)\n",
-        vbox_clip->hdr.rc,vbox_clip->hdr.result,
-        vbox_clip->hdr.flags,vbox_clip->client_id);
-    return FALSE;
+    AdamLog("Enabling VirtualBox shared clipboard!\n");
+    return TRUE;
   }
-
-  vb_clip_up=TRUE;
-  VBClipSrvStart;
-  AdamLog("Enabling VirtualBox shared clipboard!\n");
-  return TRUE;
+  AdamLog("VirtualBox shared clipboard NOT enabled!\n");
+  return FALSE;
 }
 
-public U0 VBCBReset(Bool log=TRUE)
-{//Tear the HGCM client down and build a fresh one.
-  if (!vbox_clip)
-    return;
 
-  if (vb_clip_stuck)
-  {
-    //Cannot safely reuse anything while the host still owns a buffer.
-    if (!(vb_clip_stuck->flags & VBOX_HGCM_REQ_DONE))
-    {
-      if (log) AdamLog("VirtualBox clipboard: request still in flight, cannot reset.\n");
-      return;
-    }
-    vb_clip_stuck=NULL;
-    vb_clip_broken=FALSE;
-  }
+U0 VBCBReset(Bool log=TRUE)
+{
+  vbox_clip->hdr.size = sizeof(VBoxClipConnect);
+  vbox_clip->hdr.ver = VBOX_REQUEST_HEADER_VERSION;
+  vbox_clip->hdr.req_type = VBOX_REQUEST_HGCM_DISCONNECT;
+  vbox_clip->loc_type = 2;
+  StrPrint(&vbox_clip->loc, "VBoxSharedClipboard");
+  VBSendMsg(vbox_clip);
 
-  VBClipSrvStop;
-  vb_clip_up=FALSE;
+  VBHostClipMsgReq;
 
-  if (vbox_clip->client_id)
-  {
-    ZeroClass(vbox_clip_disc);
-    vbox_clip_disc->hdr.size = sizeof(VBoxClipDisconnect);
-    vbox_clip_disc->hdr.ver = VBOX_REQUEST_HEADER_VERSION;
-    vbox_clip_disc->hdr.req_type = VBOX_REQUEST_HGCM_DISCONNECT;
-    vbox_clip_disc->client_id = vbox_clip->client_id;
-    VBHGCMCall(&vbox_clip_disc->hdr,HGCM_CALL_MS);
-  }
-
-  ZeroClass(vbox_clip);
+  MemSet(vbox_clip,0,sizeof(VBoxClipConnect));
   vbox_clip->hdr.size = sizeof(VBoxClipConnect);
   vbox_clip->hdr.ver = VBOX_REQUEST_HEADER_VERSION;
   vbox_clip->hdr.req_type = VBOX_REQUEST_HGCM_CONNECT;
   vbox_clip->loc_type = 2;
   StrPrint(&vbox_clip->loc, "VBoxSharedClipboard");
+  VBSendMsg(vbox_clip);
+  VBHostClipMsgReq;
 
-  if (VBHGCMCall(&vbox_clip->hdr,HGCM_CALL_MS) && vbox_clip->client_id)
-  {
-    vb_clip_up=TRUE;
-    VBClipSrvStart;
-    if (log) AdamLog("Reset Virtualbox clipboard!\n");
-  }
-  else
-  {
-    if (log) AdamLog("VirtualBox clipboard reset failed!\n");
-  }
+  if (log) AdamLog("Reset Virtualbox clipboard!\n");
 }
+
+
 
 public U0 CopyTextToHost(U8 *str)
-{//Stage text and tell the host we own the selection.  The host comes back
-//with HOST_MSG_READ_DATA when something actually pastes; the service task
-//answers that, so this never blocks on a data transfer.
-  I64 n;
-
-  if (!vb_clip_up || vb_clip_broken || !str)
-    return;
-
-  while (LBts(&vb_clip_data_lock,0))
-    Yield;
-  n=StrLen(str);
-  if (n > HOST_CLIP_WRITE_MAX)
-    n = HOST_CLIP_WRITE_MAX;
-  MemCpy(guest_clip_utf8,str,n);
-  guest_clip_utf8[n]=0;
-  LBtr(&vb_clip_data_lock,0);
-
-  while (LBts(&vb_clip_op_lock,0))
-    Yield;
+{
   VBHostClipFmts;
-  LBtr(&vb_clip_op_lock,0);
+  VBHostClipWrite(str);
+  VBHostClipMsgReq;
 }
 
 U8 *GetTextFromHost()
-{//Fetch the host clipboard as a fresh MAlloc'd string, or NULL.
-  I64 bytes,n;
-  U8 *res=NULL;
+{
+  I64 timeout=2;
 
-  if (!vb_clip_up || vb_clip_broken)
-    return NULL;
+  vbox_clip_read->size.value = 0;
 
-  while (LBts(&vb_clip_op_lock,0))
-    Yield;
-
-  if (VBHostClipRead)
+  while (timeout>0)
   {
-    bytes=VBParm32(&vbox_clip_read->size);
-    if (bytes)
+    if (vbox_clip_msg->msg.value==VBOX_SHARED_CLIPBOARD_HOST_MSG_FMTS)
     {
-      n=ToUTF8(utf8_host_read_clipboard,utf16_host_read_clipboard,
-              bytes,HOST_CLIP_READ_MAX);
-      if (n)
-        res=StrNew(utf8_host_read_clipboard);
+      VBHostClipRead;
     }
-  }
+    VBHostClipMsgReq;
 
-  LBtr(&vb_clip_op_lock,0);
-  return res;
-}
+    if (timeout==5) VBCBReset(0);
 
-U8 *VBEscapeForDoc(U8 *src)
-{//DocPutS() treats VB_DOLDOC_ESC as the DolDoc command introducer, so host
-//text containing one gets swallowed (or runs away to the end of the string).
-//Doubling it renders a literal one.
-  I64 n=0,i=0,j=0;
-  U8 *res;
 
-  while (src[i])
-  {
-    if (src[i]==VB_DOLDOC_ESC)
-      n++;
-    i++;
-  }
-  res=MAlloc(i+n+1);
-  i=0;
-  while (src[i])
-  {
-    res[j]=src[i];
-    j++;
-    if (src[i]==VB_DOLDOC_ESC)
+    if (vbox_clip_read->size.value)
     {
-      res[j]=VB_DOLDOC_ESC;
-      j++;
+      ToUTF8(utf16_host_read_clipboard, vbox_clip_read->size.value);
+      vbox_clip_read->size.value = 0;
+      return MStrPrint("%s",utf8_host_read_clipboard);
     }
-    i++;
+    Sleep(10);
+    timeout--;
   }
-  res[j]=0;
-  return res;
+  return NULL;
 }
 
 public U0 PasteTextFromHost()
 {
   U8 *str=GetTextFromHost;
-  U8 *esc;
-
   if (str)
   {
-    esc=VBEscapeForDoc(str);
-    "%s\n",esc;
-    Free(esc);
+    "%s\n",str;
     Free(str);
   }
   else
@@ -810,22 +491,12 @@ U0 CopyCBToHost()
 public U0 CopyCBFromHost()
 {
   U8 *host_cb=GetTextFromHost;
-  U8 *esc;
-  Bool unlock;
-
   if (host_cb)
   {
-    esc=VBEscapeForDoc(host_cb);
-    unlock=DocLock(sys_clip_doc);
     ClipDel;
-    //The "%s" matters: the old code passed host text straight in as the
-    //format string, so a stray percent ate garbage varargs.
-    DocPrint(sys_clip_doc,"%s",esc);
-    if (unlock)
-      DocUnlock(sys_clip_doc);
-    Free(esc);
-    Free(host_cb);
+    DocPrint(sys_clip_doc,host_cb);
   }
+  Free(host_cb);
 }
 
 U0 ClipHijackInit()
@@ -835,60 +506,56 @@ U0 ClipHijackInit()
   HijackFunc(&ClipPasteCB,&CopyCBFromHost);
 }
 
+U0 VBLog(U8 *str)
+{
+  while (*str)
+  {
+    PortNop;
+    OutU8(0x504,*str++);
+  }
+}
+
 U0 VBLogInit()
 {
-  VBoxCaps *caps = CAllocAligned(sizeof(VBoxCaps), 16, Fs->code_heap);
-
-  if (!VBAddrOk(caps))
-  {
-    Free(caps);
-    return;
-  }
-  caps->hdr.size = sizeof(VBoxCaps); //was sizeof(VBGuestInfo), a different struct
+  VBoxCaps *caps =
+      CAllocAligned(sizeof(VBoxCaps), 16, Fs->code_heap);
+  caps->hdr.size = sizeof(VBGuestInfo);
   caps->hdr.ver = VBOX_REQUEST_HEADER_VERSION;
   caps->hdr.req_type = VBOX_REQUEST_SET_GUEST_CAPS;
-  caps->caps = 0;
-  VBSendReq(&caps->hdr);
-  Free(caps);
+  OutU32(vb_guest.port, caps);
+  Sleep(20);
 }
 
 U0 VBInitAll()
 {
   CTask *old_ms_task=FindTaskByTitle("VBMsTask");
-  CTask *old_clip_task=FindTaskByTitle("VBClipTask");
-  Bool have_vb;
 
   if (old_ms_task) Kill(old_ms_task);
-  if (old_clip_task) Kill(old_clip_task);
-  vb_clip_task=NULL;
-  vb_clip_run=FALSE;
-  vb_clip_up=FALSE;
 
-  have_vb=VBGuestInit;
+  Bool have_vb=VBGuestInit;
 
   if (have_vb)
   {
     AdamLog("Found VirtualBox!\n");
     VBLogInit;
     VBMouseInit;
-#ifdef VBOX_CLIPBOARD_ENABLE
+    // Uncomment if you want experimental clipboard integration
+    // must be enabled as bidirectional and is WIP might stop
+    // working randomly though I've had luck moving entire
+    // files of text in and out with it.
+    /*
     if (VBClipInit)
       ClipHijackInit;
-#endif
+    */
     VBLog("Initialized TinkerOS guest additions!\n");
   }
 }
 
 U0 DumpCBMsg()
 {
-  if (!vbox_clip_msg)
-  {
-    "VirtualBox clipboard not initialized.\n";
-    return;
-  }
   ClassRep(vbox_clip_msg);
-  "Host fmts:%X up:%d broken:%d\n",vb_host_fmts,vb_clip_up,vb_clip_broken;
 }
 
 VBInitAll;
+
 

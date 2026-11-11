@@ -4,7 +4,7 @@ U0 FileReadCB(U8 *filename)
   no_warn filename;
 }
 
-U8 *FileRead(U8 *filename,I64 *_size=NULL,I64 *_attr=NULL,Bool quiet=FALSE)
+U8 *FileRead(U8 *filename,I64 *_size=NULL,I64 *_attr=NULL)
 {//Read whole file from disk.
   CHashGeneric *tmph;
   U8 *absname,*altname,*curname,*res=NULL;
@@ -82,7 +82,7 @@ U8 *FileRead(U8 *filename,I64 *_size=NULL,I64 *_attr=NULL,Bool quiet=FALSE)
         DirContextDel(dirc);
       }
     }
-    if (!res && !quiet)
+    if (!res)
       PrintErr("File not found: \"%s\".\n",filename);
     if (res && attr & RS_ATTR_RESIDENT)
       HashGenericAdd(curname,HTT_FILE,AMAllocIdent(res),size,0,adam_task);
@@ -107,84 +107,55 @@ U0 FileWriteCB(U8 *filename)
   no_warn filename;
 }
 
-I64 FileWriteAt(U8 *filename,U8 *fbuf,I64 size,CDate cdt=0,I64 attr=0,I64 at_clus=0)
-{//Write whole file to disk.  at_clus>0 forces an exact FAT32 clus
- //placement instead of letting the allocator search for space.
+I64 FileWrite(U8 *filename,U8 *fbuf,I64 size,CDate cdt=0,I64 attr=0)
+{//Write whole file to disk.
   I64 c=0;
   CHashGeneric *tmph;
   CDirContext *dirc;
-  U8 *fbuf2=NULL,*absname=FileNameAbs(filename);
+  U8 *fbuf2,*absname=FileNameAbs(filename);
   if (dirc=DirContextNew(filename,FALSE,TRUE))
-    try
+  {
+    attr=FileAttr(dirc->mask,attr);
+    if (attr&RS_ATTR_COMPRESSED)
     {
-      attr=FileAttr(dirc->mask,attr);
-      if (attr&RS_ATTR_COMPRESSED)
-      {
-        fbuf=CompressBuf(fbuf,size);
-        size=fbuf(CArcCompress *)->compressed_size;
-        fbuf2=fbuf;
-      }
-      if (!cdt) cdt=Now;
-      switch (dirc->dv->fs_type)
-      {
-      case FSt_REDSEA:
-        if (at_clus) throw('Drv');
-        c=RedSeaFileWrite(dirc->dv,Fs->cur_dir,dirc->mask,fbuf,size,cdt,attr);
-        break;
-      case FSt_FAT32:
-        c=FAT32FileWrite(dirc->dv,Fs->cur_dir,dirc->mask,fbuf,size,cdt,attr,at_clus);
-        break;
-      case FSt_ISO9660:
-        PrintErr("Not Writable\n");
-        break;
-      default:
-        PrintErr("File System Not Supported\n");
-      }
-      if (tmph=HashFind(absname,adam_task->hash_table,HTT_FILE))
-      {
-        if (attr & RS_ATTR_RESIDENT)
-        {
-          Free(tmph->user_data0);
-          tmph->user_data0=AMAllocIdent(fbuf);
-          tmph->user_data1=size;
-        }
-        else
-          HashRemDel(tmph,adam_task->hash_table);
-      }
-      else if (attr & RS_ATTR_RESIDENT)
-        HashGenericAdd(absname,HTT_FILE,AMAllocIdent(fbuf),size,0,adam_task);
-      Free(fbuf2);
-      DirContextDel(dirc);
+      fbuf=CompressBuf(fbuf,size);
+      size=fbuf(CArcCompress *)->compressed_size;
+      fbuf2=fbuf;
     }
-    catch
+    else
+      fbuf2=NULL;
+    if (!cdt) cdt=Now;
+    switch (dirc->dv->fs_type)
     {
-      Free(fbuf2);
-      DirContextDel(dirc);
+    case FSt_REDSEA:
+      c=RedSeaFileWrite(dirc->dv,Fs->cur_dir,dirc->mask,fbuf,size,cdt,attr);
+      break;
+    case FSt_FAT32:
+      c=FAT32FileWrite(dirc->dv,Fs->cur_dir,dirc->mask,fbuf,size,cdt,attr);
+      break;
+    case FSt_ISO9660:
+      PrintErr("Not Writable\n");
+      break;
+    default:
+      PrintErr("File System Not Supported\n");
     }
+    if (tmph=HashFind(absname,adam_task->hash_table,HTT_FILE))
+    {
+      if (attr & RS_ATTR_RESIDENT)
+      {
+        Free(tmph->user_data0);
+        tmph->user_data0=AMAllocIdent(fbuf);
+        tmph->user_data1=size;
+      }
+      else
+        HashRemDel(tmph,adam_task->hash_table);
+    }
+    else if (attr & RS_ATTR_RESIDENT)
+      HashGenericAdd(absname,HTT_FILE,AMAllocIdent(fbuf),size,0,adam_task);
+    Free(fbuf2);
+    DirContextDel(dirc);
+  }
   Free(absname);
   FileWriteCB(filename);
-  return c;
-}
-
-I64 FileWrite(U8 *filename,U8 *fbuf,I64 size,CDate cdt=0,I64 attr=0)
-{//Write whole file to disk.
-  return FileWriteAt(filename,fbuf,size,cdt,attr,0);
-}
-
-I64 DirMoveAt(U8 *dirname,I64 at_clus)
-{//Moves an existing directory to an exact FAT32 clus run.
-  I64 c=0;
-  CDirContext *dirc;
-  if (dirc=DirContextNew(dirname,FALSE,FALSE))
-    try
-    {
-      if (dirc->dv->fs_type==FSt_FAT32)
-        c=FAT32DirMove(dirc->dv,Fs->cur_dir,dirc->mask,at_clus);
-      else
-        PrintErr("Not FAT32 Drv\n");
-      DirContextDel(dirc);
-    }
-    catch
-      DirContextDel(dirc);
   return c;
 }

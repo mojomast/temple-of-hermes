@@ -1,26 +1,26 @@
-CTCPSock *tcp = TCPSock(AF_INET);
-CTCPSock *new;
+CTCPSocket *tcp = TCPSocket(AF_INET);
+CTCPSocket *new;
 
 ClassRep(tcp);
 
-CSockAddrIPV4 *addr = CAlloc(sizeof(CSockAddrIPV4));
+CSocketAddressIPV4 *addr = CAlloc(sizeof(CSocketAddressIPV4));
 
 addr->port = EndianU16(0xBEEF);
 addr->family = AF_INET;
-addr->addr.addr = INADDR_ANY;
+addr->address.address = INADDR_ANY;
 
-TCPSockBind(tcp, addr);
-TCPSockLsten(tcp, 32);
+TCPSocketBind(tcp, addr);
+TCPSocketLsten(tcp, 32);
 
-ClassRep(tcp_globals.bound_sock_tree);
+ClassRep(tcp_globals.bound_socket_tree);
 
 tcp->timeout = TCP_TIMEOUT;
 while (TRUE)
 {
-  new = TCPSockAccept(tcp);
+  new = TCPSocketAccept(tcp);
   if (new)
   {
-    "\n\nSock accepted\n\n";
+    "\n\nSocket accepted\n\n";
     ClassRep(new);
     break;
   }
@@ -29,10 +29,10 @@ while (TRUE)
 }
 
 "\nTrying to close the accepted socket:\n";
-TCPSockClose(new);
+TCPSocketClose(new);
 
 "\nTrying to close the original Lstening socket\n";
-TCPSockClose(tcp);
+TCPSocketClose(tcp);
 
 Sleep(10);
 

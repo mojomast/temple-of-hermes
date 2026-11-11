@@ -18,10 +18,6 @@ doc_ed_warn_overwrite=TRUE;
 // to help prevent opening the same file twice.
 doc_ed_warn_already_open=TRUE;
 
-// Uncomment to mount a USB stick on plug-in (first free letter of U-Z) and
-// open a terminal on it.  Otherwise use Mount() and pick a U-Z letter.
-//usb_automount=TRUE;
-
 // Misc helper functions
 
 // Try to auto mount drive C.
@@ -42,104 +38,31 @@ U0 AutoSBC()
   "Failed to mount C or find bootable kernel!\n";
 }
 
-// Experimental FM 801 sound card OPL support. Kept as a plain #include
-// outside AudioInit: FM801.HC defines public FM801SetVol/FM801GetVol
-// (global volume-key hotkey handlers) and, if a card is found,
-// synchronously #defines FM801_OPL_BASE via Adam() -- the #ifdef
-// FM801_OPL_BASE check inside AudioInit below relies on that define
-// already being resolved at compile time, which only holds if this
-// stays a top-level #include compiled before AudioInit's body.
+// Experimental FM 801 sound card OPL support
 #include "/Demo/Snd/FM801"
 
-// Where HDCfgNew.HC's trailing HDCfgAuto call writes the generated codec
-// config. NULL means its default, "~/HDAudioCfg.HC.Z". AudioInit points it
-// at RAM drive B: when the home drive is read-only (ISO boot off T:).
-// HDCfgNew.HC #ifdef's on this name, so it still works standalone.
-U8 *hd_cfg_out_file=NULL;
-
-U0 AudioInit()
-{
-  Bool hda_present,hda_cfg_ok;
-
-  // Intel HD Audio (PCI class 04, subclass 03 -- same 0x040300 probe
-  // HDAudio.HC itself uses). When a controller is present the HDA stack
-  // below takes precedence: the standalone Demo/Snd/OPL2 is skipped
-  // (OPL2EmuHDA pulls in OPL2.HC itself, routed through HDA).
-  hda_present=PCIClassFind(0x040300,0)>=0;
-
-  if (IsHypervisorPresent) {
-    if (!hda_present) {
-      // Try enabling ISA OPL sounds if VM detected
-      AdamFile("/Demo/Snd/OPL2");
-    }
-  }
-  else {
-#ifdef FM801_OPL_BASE
-    if (!hda_present)
-      AdamFile("/Demo/Snd/OPL2");
-#endif
-  }
-
-  // Bring up the whole HDA sound stack -- driver, codec routing config,
-  // mixer, speech (TMS5220/TTS), Wav/Mp3 playback, and the software OPL2
-  // (Adlib) FM synth. Order matters: HDAudio must init first; OPL2EmuHDA
-  // hijacks Snd() last so everything before it still compiles against
-  // plain tones.
-  if (hda_present) {
-    AdamFile("/Demo/Snd/HDAudio");
-    // First boot on this machine? Generate /Home/HDAudioCfg.HC.Z by
-    // running HDCfg.HC, whose trailing HDCfgAuto call probes the codec,
-    // auto-wires Speaker pins and saves the file -- queued after HDAudio
-    // above, so the codec is up when it runs. We are the Adam task here,
-    // so Adam() runs the queue synchronously and the generated file is on
-    // disk by the time AdamFile returns -- hence the IsFile checks below.
-    // On an ISO boot the home drive is read-only, so it goes to B: instead.
-    hda_cfg_ok=IsFile("/Home/HDAudioCfg.HC.Z");
-    if (!hda_cfg_ok) {
-      if (DrvIsWritable)
-	AdamFile("/Demo/Snd/HDCfgNew");
-      else if (blkdev.boot_drv_let=='T' && DrvMounted('B') &&
-	    DrvIsWritable('B')) {
-	// Booted off the ISO, so T: is read-only. Point HDCfgNew's trailing
-	// HDCfgAuto at RAM drive B: so it has somewhere to save.
-	hd_cfg_out_file="B:/HDAudioCfg.HC.Z";
-	AdamFile("/Demo/Snd/HDCfgNew");
-      }
-    }
-    if (IsFile("/Home/HDAudioCfg.HC.Z"))
-      AdamFile("/Home/HDAudioCfg.HC.Z");
-    else if (DrvMounted('B') && IsFile("B:/HDAudioCfg.HC.Z"))
-      AdamFile("B:/HDAudioCfg.HC.Z");
-    AdamFile("/Demo/Snd/HDMixer");
-    AdamFile("/Demo/Snd/TMS5220");
-    AdamFile("/Demo/Snd/TTS");
-    AdamFile("/Demo/Snd/Wav");
-    AdamFile("/Demo/Snd/Mp3");
-    AdamFile("/Demo/Snd/OPL2EmuHDA");
-  }
-}
-
 if (IsHypervisorPresent) {
-  // Enable experimental QEMU/VBox/VMware mouse help
-  if (VBoxPciPresent)
-  {
-    // This pulls in all other VB additions stuff too
-    AdamFile("/Demo/VM/VBoxShare");
-    Cd(__DIR__);;
-    // Init file sharing, share a folder name "tos_share" on the host
-    Adam("VBShareInit;\n");
-  }
-  else AdamFile("/Demo/VM/VMMouse");
+  // AC97 sound support
+  AdamFile("/Demo/VM/AC97");
+  // Enable experimental Virtualbox guest additions if detected
+  // SethFile("/Demo/VM/VBoxAdd",-2);
+  //
+  // Enable VMW mouse if detected
+  // Better mouse performance, but breaks raw mouse mode
+  AdamFile("/Demo/VM/VMMouse");
+  // Try enabling ISA OPL sounds if VM detected
+  AdamFile("/Demo/Snd/OPL2");
 }
-
-AudioInit;
-
-if (DrvIsWritable && !IsFileZorNotZ("::/PersonalMenu.DD"))
-  AdamFile("::/Misc/AppMenu");
+else {
+#ifdef FM801_OPL_BASE
+  AdamFile("/Demo/Snd/OPL2");
+#endif
+}
 
 #include "~/HomeWrappers"
 MapFileLoad("::/Kernel/Kernel");
 MapFileLoad("::/Compiler/Compiler");
 #include "~/HomeKeyPlugIns"
+#include "/Adam/Hermes/Load"
 #include "~/HomeSys"
 Cd("..");;

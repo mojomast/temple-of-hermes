@@ -1,0 +1,288 @@
+{
+  "01-boot-splash": {
+    "ok": true,
+    "file": "01-boot-splash.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 2,
+    "off_palette": 0
+  },
+  "02-home-launcher": {
+    "ok": true,
+    "attempt": 1,
+    "file": "02-home-launcher.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 16,
+    "off_palette": 0
+  },
+  "20-shell": {
+    "ok": true,
+    "file": "20-shell.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 9,
+    "off_palette": 0
+  },
+  "03-app-hermes-chat": {
+    "ok": true,
+    "title": "Hermes Chat",
+    "run": "T:/Hermes/Apps/HermesChat/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "03-app-hermes-chat.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 9,
+    "off_palette": 0
+  },
+  "04-app-worldsim": {
+    "ok": true,
+    "title": "WorldSim",
+    "run": "T:/Hermes/Apps/WorldSim/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "04-app-worldsim.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 13,
+    "off_palette": 0
+  },
+  "05-app-codex": {
+    "ok": true,
+    "title": "Codex",
+    "run": "T:/Hermes/Apps/Codex/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "05-app-codex.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 12,
+    "off_palette": 0
+  },
+  "06-app-psyche": {
+    "ok": true,
+    "title": "Psyche",
+    "run": "T:/Hermes/Apps/Psyche/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "06-app-psyche.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15,
+    "off_palette": 0
+  },
+  "07-app-capybara": {
+    "ok": true,
+    "title": "Capybara",
+    "run": "T:/Hermes/Apps/Capybara/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "07-app-capybara.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 12,
+    "off_palette": 0
+  },
+  "08-app-messenger": {
+    "ok": true,
+    "title": "Messenger",
+    "run": "T:/Hermes/Apps/MessengerRun/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "08-app-messenger.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 13,
+    "off_palette": 0
+  },
+  "09-app-bbs": {
+    "ok": true,
+    "title": "BBS",
+    "run": "T:/Hermes/Apps/HermesBBS/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "09-app-bbs.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 8,
+    "off_palette": 0
+  },
+  "10-app-threshold": {
+    "ok": true,
+    "title": "Threshold",
+    "run": "T:/Hermes/Apps/Threshold/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "10-app-threshold.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 14,
+    "off_palette": 0
+  },
+  "11-app-dojo": {
+    "ok": true,
+    "title": "Dojo",
+    "run": "T:/Hermes/Apps/Dojo/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "11-app-dojo.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 16,
+    "off_palette": 0
+  },
+  "12-app-offerings": {
+    "ok": true,
+    "title": "Offerings",
+    "run": "T:/Hermes/Apps/Offerings/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "12-app-offerings.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15,
+    "off_palette": 0
+  },
+  "13-app-southpaw": {
+    "ok": true,
+    "title": "Southpaw",
+    "run": "T:/Hermes/Apps/Southpaw/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "13-app-southpaw.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 14,
+    "off_palette": 0
+  },
+  "14-app-modem-net": {
+    "ok": true,
+    "title": "Modem / Net",
+    "run": "T:/Hermes/Apps/Net/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "14-app-modem-net.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 9,
+    "off_palette": 0
+  },
+  "15-game-caduceus": {
+    "ok": true,
+    "title": "Caduceus",
+    "run": "T:/Hermes/Apps/Caduceus/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "15-game-caduceus.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 10,
+    "off_palette": 0
+  },
+  "16-game-token-rain": {
+    "ok": true,
+    "title": "Token Rain",
+    "run": "T:/Hermes/Apps/TokenRain/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "16-game-token-rain.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 14,
+    "off_palette": 0
+  },
+  "17-game-spoon": {
+    "ok": true,
+    "title": "Spoon",
+    "run": "T:/Hermes/Apps/Spoon/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "17-game-spoon.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 16,
+    "off_palette": 0
+  },
+  "18-game-dojo-duel": {
+    "ok": true,
+    "title": "Dojo Duel",
+    "run": "T:/Hermes/Apps/DojoDuel/Run.HC",
+    "attempt": 1,
+    "errors": [],
+    "file": "18-game-dojo-duel.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 15,
+    "off_palette": 0
+  },
+  "19-net-echo": {
+    "ok": true,
+    "attempt": 1,
+    "file": "19-net-echo.png",
+    "size": [
+      640,
+      480
+    ],
+    "mode": "P",
+    "colors": 9,
+    "off_palette": 0
+  }
+}

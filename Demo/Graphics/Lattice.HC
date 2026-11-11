@@ -49,7 +49,7 @@ U0 TurtleEnd(CDC *dc,Turtle *t,CColorROPU16 edge,CColorROPU16 middle,F64 é)
   Turtle t2;
   if (r=t->w)
   {
-    ClassCpy(&t2,t);  //Save
+    MemCpy(&t2,t,sizeof(Turtle));  //Save
     x=0;
     while (TRUE)
     {
@@ -65,7 +65,7 @@ U0 TurtleEnd(CDC *dc,Turtle *t,CColorROPU16 edge,CColorROPU16 middle,F64 é)
       else
         break;
     }
-    ClassCpy(t,&t2);
+    MemCpy(t,&t2,sizeof(Turtle));
   }
 }
 
@@ -100,7 +100,7 @@ U0 TurtleInit(Turtle *t)
 U0 DrawIt(CTask *,CDC *dc)
 {
   Turtle t2;
-  ClassCpy(&t2,&tt);
+  MemCpy(&t2,&tt,sizeof(Turtle));
   GrPrint(dc,0,0,"Layer:%f Speed:%f é:%5.1f dé:%5.1f Width:%f",
           tt.z,tt.speed,tt.é*180/ã,angles[tt.dé_idx]*180/ã,tt.w);
   TurtleMove(dc,&t2,RED,LTRED);

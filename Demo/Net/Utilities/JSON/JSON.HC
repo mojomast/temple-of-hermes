@@ -1,5 +1,5 @@
 #define JSONT_INVALID   0
-#define JSONT_STR    1
+#define JSONT_STRING    1
 #define JSONT_INTEGER   2
 #define JSONT_FLOAT     3
 #define JSONT_ARRAY     4
@@ -9,23 +9,23 @@
 
 #define JSON_HASHTABLE_SIZE 1024
 
-#define HTT_JSON    0x00100
+#define HTT_JSON    0x00100 // identical to HTT_DICT_WORD
 
-class CJSONDataEnt:CQue
+class CJSONDataEntry:CQue
 {
   U8                 type;
 
   I64                int_data;
   F64                float_data;
-  U8                *str_data;
+  U8                *string_data;
   Bool           bool_data;
-  CJSONDataEnt    *list_data;
+  CJSONDataEntry    *list_data;
   CHashTable        *hash_table;
 };
 
 class CJSONDataHash:CHash
 {
-  CJSONDataEnt    *data;
+  CJSONDataEntry    *data;
 };
 
 U8 **JSONKeysGet(CHashTable *table)
@@ -34,25 +34,25 @@ U8 **JSONKeysGet(CHashTable *table)
   CHash  *temp_hash;
   U8        **keys;
   I64         key_index = 0;
-  for (i = 0; i <= table->mask; i++)
-    if (temp_hash = table->body[i])
+  for (i = 0; i <= table->mask; i++) // mask is table length 0-based
+    if (temp_hash = table->body[i]) // if temp_hash exists
       cnt++;
-  keys = CAlloc(sizeof(U8*) * cnt);
+  keys = CAlloc(sizeof(U8*) * cnt); // alloc string list
   for (i = 0; i <= table->mask; i++)
     if (temp_hash = table->body[i])
     {
-      keys[key_index] = StrNew(temp_hash->str);
+      keys[key_index] = StrNew(temp_hash->str); // add key string to list
       key_index++;
     }
   return keys;
 }
 
-U0 JSONDataRep(CJSONDataEnt *data, I64 indent=0)
+U0 JSONDataRep(CJSONDataEntry *data, I64 indent=0)
 {
   U8                **keys;
   I64                 index;
   I64                 cnt;
-  CJSONDataEnt     *ent;
+  CJSONDataEntry     *entry;
   CJSONDataHash  *temp_hash;
   "%h*c"
   , indent, '\t';
@@ -62,9 +62,9 @@ U0 JSONDataRep(CJSONDataEnt *data, I64 indent=0)
     "Invalid JSON.\n"
     ;
     break;
-  case JSONT_STR:
+  case JSONT_STRING:
     "%s\n"
-    , data->str_data;
+    , data->string_data;
     break;
   case JSONT_INTEGER:
     "%d\n"
@@ -88,11 +88,11 @@ U0 JSONDataRep(CJSONDataEnt *data, I64 indent=0)
     "%h*c"
     , indent, '\t';
     "[\n";
-    ent = data->list_data->next;
-    while (ent != data->list_data)
+    entry = data->list_data->next; // one after head.
+    while (entry != data->list_data) // head ignored, stop on head.
     {
-      JSONDataRep(ent, indent + 1);
-      ent = ent->next;
+      JSONDataRep(entry, indent + 1); // recursive Rep on the list entry
+      entry = entry->next;
     }
     "%h*c", indent, '\t';
     "]\n";
@@ -119,7 +119,7 @@ U0 JSONDataRep(CJSONDataEnt *data, I64 indent=0)
   }
 }
 
-CJSONDataEnt *JSONKeyValueGet(CJSONDataEnt *data, U8 *key)
+CJSONDataEntry *JSONKeyValueGet(CJSONDataEntry *data, U8 *key)
 {
   U8                **keys;
   I64                 index;
@@ -143,19 +143,19 @@ CJSONDataEnt *JSONKeyValueGet(CJSONDataEnt *data, U8 *key)
   return NULL;
 }
 
-CJSONDataEnt *JSONIndexValueGet(CJSONDataEnt *data, U64 list_index)
+CJSONDataEntry *JSONIndexValueGet(CJSONDataEntry *data, U64 list_index)
 {
-  CJSONDataEnt    *ent;
+  CJSONDataEntry    *entry;
   U64                i = 0;
   switch (data->type)
   {
   case JSONT_ARRAY:
-    ent = data->list_data->next;
-    while (ent != data->list_data)
+    entry = data->list_data->next; // one after head.
+    while (entry != data->list_data) // head ignored, stop on head.
     {
       if (i++ == list_index)
-        return ent;
-      ent = ent->next;
+        return entry;
+      entry = entry->next;
     }
     break;
   default:
@@ -165,12 +165,12 @@ CJSONDataEnt *JSONIndexValueGet(CJSONDataEnt *data, U64 list_index)
 }
 
 
-CJSONDataEnt *JSONPrs(CCmpCtrl *cc)
+CJSONDataEntry *JSONPrs(CCmpCtrl *cc)
 {
-  CJSONDataEnt    *result = CAlloc(sizeof(CJSONDataEnt));
+  CJSONDataEntry    *result = CAlloc(sizeof(CJSONDataEntry));
   I64                tk, last_tk;
   Bool           is_done = FALSE;
-  CJSONDataEnt    *temp_ent;
+  CJSONDataEntry    *temp_entry;
   CJSONDataHash *temp_hash = CAlloc(sizeof(CJSONDataHash));
   while (tk = Lex(cc))
   {
@@ -179,11 +179,11 @@ CJSONDataEnt *JSONPrs(CCmpCtrl *cc)
     case '}':
       LexExcept(cc, "Expected Value, got '}'.");
     case TK_STR:
-      result->type      = JSONT_STR;
-      result->str_data = StrNew(cc->cur_str);
+      result->type      = JSONT_STRING;
+      result->string_data = StrNew(cc->cur_str);
       is_done = TRUE;
       break;
-    case TK_I64:
+    case TK_I64: //todo, LexExcept on 0x or 0b vals.
       result->type   = JSONT_INTEGER;
       result->int_data = cc->cur_i64;
       is_done = TRUE;
@@ -213,7 +213,7 @@ CJSONDataEnt *JSONPrs(CCmpCtrl *cc)
       break;
     case '[':
       result->type    = JSONT_ARRAY;
-      result->list_data = CAlloc(sizeof(CJSONDataEnt));
+      result->list_data = CAlloc(sizeof(CJSONDataEntry));
       QueInit(result->list_data);
 lex_lstitem:
       last_tk = tk;
@@ -226,8 +226,8 @@ lex_lstitem:
       if (tk == ',')
         LexExcept(cc, "Expected Lst Value, got comma.");
       LexPopRestore(cc);
-      temp_ent = JSONPrs(cc);
-      QueIns(temp_ent, result->list_data->last);
+      temp_entry = JSONPrs(cc);
+      QueIns(temp_entry, result->list_data->last);
       tk = Lex(cc);
       if (tk == ',')
         goto lex_lstitem;
@@ -238,6 +238,7 @@ lex_lstdone:
       result->type      = JSONT_OBJ;
       result->hash_table    = HashTableNew(JSON_HASHTABLE_SIZE);
 lex_objkey:
+      // lex next. expect TK_STR. Mk a temp_hash.
       last_tk = tk;
       tk = Lex(cc);
       if (last_tk == ',' && tk == '}')
@@ -247,13 +248,21 @@ lex_objkey:
       if (tk != TK_STR)
         LexExcept(cc, "Expected Key String.");
       temp_hash = CAlloc(sizeof(CJSONDataHash));
+      // set hash type and StrNew with cc->cur_str into hash str.
       temp_hash->type = HTT_JSON;
       temp_hash->str  = StrNew(cc->cur_str);
+      // lex next. expect ':'.
       tk = Lex(cc);
       if (tk != ':')
         LexExcept(cc, "Expected ':' after Key String.");
+      // now expect JSONDataEntry-able value next.
+      // Recursive JSONPrs into hash data member.
       temp_hash->data = JSONPrs(cc);
+      // JSONPrs leaves off on the last token. e.g. int, tk will
+      // still be TK_I64.
+      // add hash to result hash_table.
       HashAdd(temp_hash, result->hash_table);
+      // lex next. expect ',' or '}'.
       tk = Lex(cc);
       if (tk != ',' && tk != '}')
         LexExcept(cc, "Expected ',' or '}' after Object Value.");
@@ -272,9 +281,10 @@ lex_objdone:
 U0 JSONFileRep(U8 *filename)
 {
   CCmpCtrl      *cc     = CmpCtrlNew(MStrPrint("#include \"%s\"", filename));
-  CJSONDataEnt    *data   = JSONPrs(cc);
+  CJSONDataEntry    *data   = JSONPrs(cc);
   JSONDataRep(data);
   ClassRep((data = JSONKeyValueGet(data, "floats")));
+//  ClassRep((data = JSONIndexValueGet(data, 3)));
   CmpCtrlDel(cc);
 }
 
@@ -287,13 +297,13 @@ class CTestClass
   CTestClass    *next, *last;
   U8         field1;
   I64        field2;
-  U8        *buf;
+  U8        *buffer;
 };
 
 CTestClass *head = CAlloc(sizeof(CTestClass));
-QueInit(head);
+QueInit(head); // works since CTestClass has next & last members
 head->field1 = 2;
-head->field2 = 1234567890;
+head->field2 = 1234567890; // DONT DO THIS ONLY DOING FOR DEBUG REASONS
 
 CTestClass *test_class1 = CAlloc(sizeof(CTestClass));
 CTestClass *test_class2 = CAlloc(sizeof(CTestClass));
@@ -304,15 +314,15 @@ QueInsRev(test_class3, head);
 
 test_class1->field1 = 45;
 test_class1->field2 = 123;
-test_class1->buf = MAlloc(1024);
+test_class1->buffer = MAlloc(1024);
 
 test_class2->field1 = 11;
 test_class2->field2 = -456;
-test_class2->buf = MAlloc(1024);
+test_class2->buffer = MAlloc(1024);
 
 test_class3->field1 = 22;
 test_class3->field2 = 999;
-test_class3->buf = MAlloc(1024);
+test_class3->buffer = MAlloc(1024);
 
 
 CTestClass *temp_test_class = head->next;
@@ -328,7 +338,7 @@ ClassRep(head);
 
 
 // WIP, TODO: FIX/REWRITE this method
-U8 *JSONStr(U8 *obj, U8 *class_name=lastclass, Bool is_base=FALSE, Bool is_lst=FALSE,
+U8 *JSONString(U8 *obj, U8 *class_name=lastclass, Bool is_base=FALSE, Bool is_lst=FALSE,
                U8 *head=NULL)
 {// convert some struct in memory to a JSON string. See $LK+PU,"ClassRep",A="MN:ClassRep2"$.
   U8            *ptr, *temp_obj;
@@ -340,7 +350,7 @@ U8 *JSONStr(U8 *obj, U8 *class_name=lastclass, Bool is_base=FALSE, Bool is_lst=F
   if (!CheckPtr(obj) || !CheckPtr(obj(U8 *) + tmpc->size))
     return NULL;
   if (tmpc->base_class)
-    JSONStr(obj, tmpc->base_class->str, TRUE);
+    JSONString(obj, tmpc->base_class->str, TRUE);
   ml = tmpc->member_lst_and_root;
   if (ml && !StrCmp(ml->str, "next") && !is_base)
   {
@@ -356,13 +366,16 @@ U8 *JSONStr(U8 *obj, U8 *class_name=lastclass, Bool is_base=FALSE, Bool is_lst=F
     {
       while (temp_obj != obj && temp_obj != NULL)
       {
-        JSONStr(temp_obj, tmpc2->str, TRUE);
+        JSONString(temp_obj, tmpc2->str, TRUE);
         temp_obj = *(temp_obj + ml->offset)(I64 *);
         if (temp_obj != obj && temp_obj != NULL)
           ", ";
       }
     }
     ml = NULL;
+//      ml = ml->next;
+//      if (ml && !StrCmp(ml->str, "last"))
+//          ml = ml->next;
   }
   else
     "{";
@@ -395,7 +408,7 @@ U8 *JSONStr(U8 *obj, U8 *class_name=lastclass, Bool is_base=FALSE, Bool is_lst=F
       "%d"
       , *ptr(I32 *)++;
       break;
-    case RT_I64:
+    case RT_I64: // RT_PTR
     case RT_U64:
       "%d"
       , *ptr(I64 *)++;
@@ -414,8 +427,8 @@ U8 *JSONStr(U8 *obj, U8 *class_name=lastclass, Bool is_base=FALSE, Bool is_lst=F
   return NULL;
 }
 
-"\n\nRESULT OF JSONStr(head):\n\n";
-JSONStr(head);
+"\n\nRESULT OF JSONString(head):\n\n";
+JSONString(head);
 "\n\n";
 
 

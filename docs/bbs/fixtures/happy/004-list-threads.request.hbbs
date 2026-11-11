@@ -1,0 +1,2 @@
+HBBS/1 REQ r-004 LIST 80
+{"v":1,"command":"LIST","args":{"action":"threads","board":"general","limit":2}}

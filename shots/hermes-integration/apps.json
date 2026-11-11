@@ -1,0 +1,154 @@
+{
+  "apps": {
+    "HermesChat": {
+      "path": "shots/hermes-integration/10-hermes-chat.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 8,
+      "bbox": [
+        0,
+        0,
+        640,
+        480
+      ],
+      "text": " HERMES/user   :11 FPS: 29 CPU99                                           ENTER\n MENU                        6D55D428[X] MENU                       6D4B7228[X]\nT    Public Domain Operating System                  TinkerOS V5.20\ne TempleOS / TinkerOS fork for agent and\nr                human                       Public Domain Operating System\nm                co-use                  TempleOS / TinkerOS fork for agent and\n   Version 0.1.0 - TinkerOS 5.200 base                   human\n                                                         co-use\n Help & Index,                            Version 0.1.0 - TinkerOS 5.200 base\n About THE TEMPLE OF HERMES,\n Quick Start: Cmd line                   Help & Index,\n                                         About THE TEMPLE OF HERMES,\n MENU           "
+    },
+    "WorldSim": {
+      "path": "shots/hermes-integration/11-worldsim.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 13,
+      "bbox": [
+        0,
+        0,
+        640,
+        472
+      ],
+      "text": " HERMES/user   :44 FPS: 31 CPU99                                           ENTER\n\n       V\n                      ,        ,   ,\n\n\n\n\n -  -  -  -  -  -  -     -              -     -  -  -  -  -\n\n\n                -  -  -     -  -  -  -     -  -  -  -  -  -\n\n\n -  -  -  -  -     -     -  -           -           -  -  -\n\n\n -  -  -  -  -  -        -  -  -  -  -  -  -  -        -  -\n\n\n -  -           -  -  -  -  -  -  -  -  -  -  -  -  -  -  -\n\n                                                               '    '\n             -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -\n\n\n -  -  -  -  -        -     -  -  -  -  -              -  -\n\n\n -              -                          -     -     -  -    '\n\n\n -  -  -  -  -  -  -  -  -  -  -  -  -  -     -  -        -\n\n\n          -        -  -  -  -  -  - "
+    },
+    "Codex": {
+      "path": "shots/hermes-integration/12-codex.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 13,
+      "bbox": [
+        0,
+        0,
+        640,
+        472
+      ],
+      "text": " HERMES/user   :19 FPS: 30 CPU99                                           ENTER\n\n       V\n                      ,        ,\n\n\n\n\n                      -  -  -  -  -  -  -  -  -  -  -  -  -\n\n\n -  -  -  -  -  -        -  -  -  -  -  -  -  -     -  -  -\n\n\n -     -  -        -  -  -  -  -  -  -  -  -           -  -\n\n\n -  -        -  -  -  -  -  -                       -  -  -\n\n\n -  -  -  -              -  -           -  -  -  -  -  -  -\n\n                                                               '    '\n -  -  -     -           -     -  -  -  -  -  -  -  -  -  -\n\n\n             -  -  -     -  -  -  -        -  -  -  -  -  -\n\n\n -  -  -  -     -     -  -  -        -  -  -  -  -  -  -       '\n\n\n -  -  -  -  -                 -  -        -  -  -  -     -\n\n\n -  -  -  -  -     -  -  -     -        "
+    },
+    "Psyche": {
+      "path": "shots/hermes-integration/13-psyche.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 15,
+      "bbox": [
+        8,
+        16,
+        632,
+        472
+      ],
+      "text": "\n\n\n\n\n\n\n\n\n\n\n      ___\n\n\n\n\n\n                                                      _\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n           _                                          _"
+    },
+    "Capybara": {
+      "path": "shots/hermes-integration/14-capybara.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 12,
+      "bbox": [
+        8,
+        20,
+        632,
+        472
+      ],
+      "text": "\n\n\n\n\n\n                                                                   _\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                                                ____\n\n                                                            __\n\n\n\n\n\n                                             ____\n\n\n\n\n\n\n\n\n\n\n\n\n                                           __         __"
+    },
+    "MessengerRun": {
+      "path": "shots/hermes-integration/15-messenger-run.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 13,
+      "bbox": [
+        0,
+        0,
+        640,
+        475
+      ],
+      "text": " HERMES/user   :01 FPS: 31 CPU99                                           ENTER\n\n\n\n\n\n\n   '                          '   '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                                                  _\n\n\n\n\n\n\n\n\n                                         _\n\n\n\n\n\n\n\n                                                        ____________________"
+    },
+    "HermesBBS": {
+      "path": "shots/hermes-integration/16-hermes-bbs.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 9,
+      "bbox": [
+        0,
+        0,
+        640,
+        480
+      ],
+      "text": " HERMES/user   :35 FPS: 29 CPU99                                           ENTER\n MENU                        6D55D428[X] MENU                       6D4B7228[X]\nT18.813827s                                          TinkerOS V5.20\neT:/Hermes/Apps/MessengerRun>Cd(\"::/Her\nrmes/Apps/HermesBBS\");                       Public Domain Operating System\nm0.003273s ans=0x00000001=1              TempleOS / TinkerOS fork for agent and\n T:/Hermes/Apps/HermesBBS>#include \"Run                  human\n .HC\";                                                   co-use\n OptPass3 COCCompile PrsFun               Version 0.1.0 - TinkerOS 5.200 base\n PrsGlblVarLst WARNING: Using 64-bit reg\n var.                                    Help & Index,\n                                         About THE TEMPLE OF HERMES,\n FL:T"
+    },
+    "Threshold": {
+      "path": "shots/hermes-integration/17-threshold.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 14,
+      "bbox": [
+        0,
+        8,
+        640,
+        480
+      ],
+      "text": "\n\n\n\n\n\n\n\n\n\n\n    '          '          `  `   '        '\n\n NEW: Agent, the room is yours too.\n\n\n    '    `       ''  `                           '\n\n   '\n        P\n                         ,\n                                       P   P\n\n\n\n\n  Dojo       Dojo practice\n\n\n PINNED: Chat, Codex, BBS, Dojo, Offerings\n              ,\n                                      P\n NEW: Press ESC to return to the shell.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n '      '        '     '    '       '` ' '      '  ` `  '  ''"
+    },
+    "Dojo": {
+      "path": "shots/hermes-integration/18-dojo.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 10,
+      "bbox": [
+        0,
+        0,
+        640,
+        480
+      ],
+      "text": " HERMES/user   :42 FPS: 30 CPU99                                           ENTER\n MENU                        6D55D428[X] MENU                       6D4B7228[X]\nT5.529851s                                           TinkerOS V5.20\ne:/Hermes/Apps/Threshold>Cd(\"::/Hermes/\nrpps/Dojo\");                                 Public Domain Operating System\nm.003143s ans=0x00000001=1               TempleOS / TinkerOS fork for agent and\n :/Hermes/Apps/Dojo>#include \"Run.HC\";                   human\n LexExcept PrsUnaryTerm PrsExpression2                   co-use\n rsExpression ERROR: Missing expression   Version 0.1.0 - TinkerOS 5.200 base\n t \"{\"\n :/Hermes/Apps/Dojo/DojoUtil,HC,0008     Help & Index,\n 8 *st,*roots[4]={\"::/Hermes/Art/\",\"T:/  About THE TEMPLE OF HERMES,\n ermes/Art/\",\"C:/Hermes/Art/\",\"~/Hermes"
+    },
+    "Offerings": {
+      "path": "shots/hermes-integration/19-offerings.png",
+      "size": [
+        640,
+        480
+      ],
+      "unique_colors": 15,
+      "bbox": [
+        0,
+        0,
+        640,
+        476
+      ],
+      "text": "\n            .\n\n\n\n  Spoons only. No real money.\n ____   __  _   __\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n          p\n\n      Wallpapers, palettes and HolyC snippets\n\n\n\n            '                                 '\n\n\n\n\n\n\n\n  __                  __                 __                   _\n\n\n                                                              _\n\n\n                             '                              '\n\n\n\n\n\n\n\n\n\n\n\n\n          ,,\n                          P\n\n Up/Down select   Enter preview+install   L list   G get   I install   Esc quit\n\n               `   '       '      '"
+    }
+  }
+}

@@ -1,0 +1,60 @@
+Tue 11/10 01:59:32 FPS: 30 CPU 9
+ MENU                        6D57B428[X] MENU                       6D56FA28[X]
+T            TinkerOS V5.20                          TinkerOS V5.20
+e
+r    Public Domain Operating System          Public Domain Operating System
+m
+ Help & Index, Quick Start: Cmd line     Help & Index, Quick Start: Cmd line
+
+ Directory of T:/Home                    Directory of T:/Home
+ DATE_ TIME_ SIZE                        DATE_ TIME_ SIZE
+ 06/16 04:54 0200 ,                      06/16 04:54 0200 ,
+ 06/16 04:54 0000 ,,                     06/16 04:54 0000 ,,
+ 06/16 04:54 0200 Staff                  06/16 04: MENU                  6D5[X]
+ 06/16 04:50 049D DoDistro,HC,Z          06/16 04:T AutoComplete is in StandBy
+ 06/16 04:51 01D3 Registry,HC,Z          06/16 04:e
+ T:/Home>Cd;#include "Once";             T:/Home> r  System Keys Quick Guide
+                                                  m     (Works Everywhere)
+ If you answer 'No' you can play with                <SPACE>   Left-Click
+ the live CD without installing.                     <ENTER>   Right-Click
+                                                      <F1>     Help
+ Install onto hard drive (y or n)?                  <CTRL-m>   Personal Menu
+                                                      <ESC>    Save  & Exit
+                                                   <SHIFT-ESC> Abort & Exit
+                                                    <WINDOWS>  Pull-Down Menu
+
+                                                        (Works Everywhere)
+                                                      <F7>     Random Word
+                                                   <SHIFT-F7>  Random Passage
+                                                      <F6>     Random Song
+                                                   <SHIFT-F6>  Random Doodle
+
+                                                                  EOF
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                           TX                                     EOF

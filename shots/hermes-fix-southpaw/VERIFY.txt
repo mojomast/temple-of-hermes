@@ -1,0 +1,41 @@
+Southpaw compile/run verification (TinkerOS 5.20-rc10 live CD)
+
+ISO: TinkerOS_5.20-rc10.ISO
+SHA256: feb5cb570a79fefbefeb7d7a7133e3eac0e3b4ffcd6adf8a0fd29049476a1cc4
+
+QEMU: qemu-system-x86_64 -machine pc,kernel-irqchip=off -accel tcg
+      -display none -nic none -cpu qemu64 -m 512M -smp 1 -vga std
+      -cdrom TinkerOS_5.20-rc10.ISO
+
+Guest transfer: 4 MiB A: RAM drive, app under A:/Hermes/Apps/Southpaw,
+COM1 at 115200 8n1. All waits bounded.
+
+Run 1: Cd("A:/Hermes/Apps/Southpaw");; #include "Run.HC";
+       Southpaw digest window opened; Esc returned to A:\Hermes\Apps\Southpaw<
+Run 2: #include "Run.HC";
+       Southpaw digest window opened again; Esc returned to A:\Hermes\Apps\Southpaw<
+
+PIL checks (no image viewing):
+01-southpaw-digest.png: 640x480 mode P unique_colors=14 unique_indices=14
+  min_index=0 max_index=15 off_palette=0
+02-southpaw-second-run.png: 640x480 mode P unique_colors=14 unique_indices=14
+  min_index=0 max_index=15 off_palette=0
+03-shell-return.png: 640x480 mode P unique_colors=10 unique_indices=10
+  min_index=0 max_index=15 off_palette=0
+
+Before fix (reproduced in the same QEMU TCG guest):
+  PrsExpression ERROR: Char const limited to 8 chars at "T:10B"
+  ...
+  #include "View.HC"
+
+Fix summary:
+- Parse.HC uses numeric ASCII codes for character comparisons. The
+  TinkerOS 5.20-rc10 HolyC lexer reports "Char const limited to 8 chars"
+  after this file when a following include is compiled; numeric codes
+  remove the offending char constants.
+- View.HC and Digest.HC replace unsupported ternary expressions with
+  SouthpawDft() and an explicit if/else.
+- View.HC opens maximized so the digest is the visible window.
+- Post text still passes through SouthpawSafeText before DocPrint; the
+  fixture line with DolDoc/OSInstall text renders as inert text.
+- Official art paths are unchanged. No .GR files were added or replaced.

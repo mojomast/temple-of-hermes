@@ -1,0 +1,5 @@
+17:47:08 plugin QEMU argv built (TCG, -nic none, COM1 unix socket)
+17:47:08 plugin COM1 open; waiting for guest HBEACON through plugin screen/read_text
+17:47:20 beacon via plugin read_text (serial): HBEACON TempleOfHermes/0.1.0
+17:47:21 hrpc reply: HRPL 1 ok 54 {"pong":1,"t": 10.213,"mode":"user","version":"0.1.0"}
+17:47:21 handshake ok=True

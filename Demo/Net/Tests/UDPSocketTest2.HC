@@ -1,18 +1,18 @@
-U0 UDPSockTest()
+U0 UDPSocketTest()
 {
-  CUDPSock            *u = UDPSock(AF_INET);
-  CSockAddrIPV4    *i = CAlloc(sizeof(CSockAddrIPV4));
+  CUDPSocket            *u = UDPSocket(AF_INET);
+  CSocketAddressIPV4    *i = CAlloc(sizeof(CSocketAddressIPV4));
   i->port               = EndianU16(64222);
   i->family         = AF_INET;
-  i->addr.addr    = INADDR_ANY;
-  UDPSockBind(u, i);
+  i->address.address    = INADDR_ANY;
+  UDPSocketBind(u, i);
   "UDP Socket bound at port %d.\n"
   , EndianU16(i->port);
   "Send UDP data to the VM, then run UDPRep to see received message data in report.\n";
   while (!ScanChar)
     Refresh;
-  UDPSockClose(u);
+  UDPSocketClose(u);
   Free(i);
 }
 
-UDPSockTest;
+UDPSocketTest;

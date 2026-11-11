@@ -1,0 +1,15 @@
+[project]
+name = "hbbs"
+version = "1.0.0"
+description = "HBBS/1 bulletin-board server for the Temple of Hermes"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"

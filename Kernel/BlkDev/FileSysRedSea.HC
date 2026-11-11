@@ -124,7 +124,7 @@ U0 RedSeaFmt(U8 drv_let,Bool quick=TRUE)
     br->bitmap_sects=n;
     br->unique_id=GetTSC^Now()(U64);
     br->root_clus=0;
-    tmp=MStrPrint("TinkerOS %C",drv_let);
+    tmp=MStrPrint("TEMPLE %C",drv_let);
     MemCpy(br_fat->vol_name,tmp,StrLen(tmp)+1);
     Free(tmp);
     if (quick)

@@ -1,0 +1,60 @@
+ HERMES/user   :11 FPS: 29 CPU99                                           ENTER
+ MENU                        6D55D428[X] MENU                       6D4B7228[X]
+T    Public Domain Operating System                  TinkerOS V5.20
+e TempleOS / TinkerOS fork for agent and
+r                human                       Public Domain Operating System
+m                co-use                  TempleOS / TinkerOS fork for agent and
+   Version 0.1.0 - TinkerOS 5.200 base                   human
+                                                         co-use
+ Help & Index,                            Version 0.1.0 - TinkerOS 5.200 base
+ About THE TEMPLE OF HERMES,
+ Quick Start: Cmd line                   Help & Index,
+                                         About THE TEMPLE OF HERMES,
+ MENU                                           6D418828                    [X]
+TTHE TEMPLE OF HERMES - Hermes Chat
+eCOM2 modem, destination "hermes"
+rart: hermes-chat 32x32 loaded
+mconnected: CONNECT hermes
+
+ you>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                  EOF
