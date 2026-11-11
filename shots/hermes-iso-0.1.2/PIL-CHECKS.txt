@@ -30,6 +30,8 @@ PASS app-southpaw-click.png size=640x480 mode=P used=14 max_index=15 off_palette
 PASS app-southpaw-key.png size=640x480 mode=P used=14 max_index=15 off_palette=0
 PASS app-spoon-click.png size=640x480 mode=P used=16 max_index=15 off_palette=0
 PASS app-spoon-key.png size=640x480 mode=P used=16 max_index=15 off_palette=0
+PASS app-temple-click.png size=640x480 mode=P used=15 max_index=15 off_palette=0
+PASS app-temple-key.png size=640x480 mode=P used=15 max_index=15 off_palette=0
 PASS app-threshold-click.png size=640x480 mode=P used=14 max_index=15 off_palette=0
 PASS app-threshold-key.png size=640x480 mode=P used=14 max_index=15 off_palette=0
 PASS app-token-rain-click.png size=640x480 mode=P used=15 max_index=15 off_palette=0
@@ -70,4 +72,4 @@ PASS return-token-rain-click.png size=640x480 mode=P used=15 max_index=15 off_pa
 PASS return-token-rain-key.png size=640x480 mode=P used=15 max_index=15 off_palette=0
 PASS return-worldsim-click.png size=640x480 mode=P used=15 max_index=15 off_palette=0
 PASS return-worldsim-key.png size=640x480 mode=P used=15 max_index=15 off_palette=0
-RESULT PASS shots=72
+RESULT PASS shots=74

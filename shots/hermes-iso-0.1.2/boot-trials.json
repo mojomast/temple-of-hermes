@@ -3,7 +3,7 @@
     {
       "trial": 1,
       "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.8,
       "reason": "",
       "windows": [
         {
@@ -35,7 +35,7 @@
       "reason": "",
       "windows": [
         {
-          "addr": "0x6D412028",
+          "addr": "0x6D414228",
           "name": "DocTerm",
           "title": "Hermes Apps",
           "win": [
@@ -59,35 +59,7 @@
     {
       "trial": 3,
       "ok": true,
-      "seconds": 11.6,
-      "reason": "",
-      "windows": [
-        {
-          "addr": "0x6D412028",
-          "name": "DocTerm",
-          "title": "Hermes Apps",
-          "win": [
-            0,
-            1,
-            79,
-            59
-          ],
-          "show": 1,
-          "focus": 1,
-          "z": 2,
-          "cursor": {
-            "x": 0,
-            "y": 0,
-            "line": 1,
-            "col": 0
-          }
-        }
-      ]
-    },
-    {
-      "trial": 4,
-      "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.9,
       "reason": "",
       "windows": [
         {
@@ -113,9 +85,9 @@
       ]
     },
     {
-      "trial": 5,
+      "trial": 4,
       "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.7,
       "reason": "",
       "windows": [
         {
@@ -141,9 +113,37 @@
       ]
     },
     {
+      "trial": 5,
+      "ok": true,
+      "seconds": 11.9,
+      "reason": "",
+      "windows": [
+        {
+          "addr": "0x6D414228",
+          "name": "DocTerm",
+          "title": "Hermes Apps",
+          "win": [
+            0,
+            1,
+            79,
+            59
+          ],
+          "show": 1,
+          "focus": 1,
+          "z": 2,
+          "cursor": {
+            "x": 0,
+            "y": 0,
+            "line": 1,
+            "col": 0
+          }
+        }
+      ]
+    },
+    {
       "trial": 6,
       "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.7,
       "reason": "",
       "windows": [
         {
@@ -171,7 +171,7 @@
     {
       "trial": 7,
       "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.8,
       "reason": "",
       "windows": [
         {
@@ -199,7 +199,7 @@
     {
       "trial": 8,
       "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.7,
       "reason": "",
       "windows": [
         {
@@ -227,11 +227,11 @@
     {
       "trial": 9,
       "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.7,
       "reason": "",
       "windows": [
         {
-          "addr": "0x6D414228",
+          "addr": "0x6D412028",
           "name": "DocTerm",
           "title": "Hermes Apps",
           "win": [
@@ -255,7 +255,7 @@
     {
       "trial": 10,
       "ok": true,
-      "seconds": 11.8,
+      "seconds": 11.7,
       "reason": "",
       "windows": [
         {
@@ -283,11 +283,11 @@
     {
       "trial": 11,
       "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.8,
       "reason": "",
       "windows": [
         {
-          "addr": "0x6D414228",
+          "addr": "0x6D412028",
           "name": "DocTerm",
           "title": "Hermes Apps",
           "win": [
@@ -311,7 +311,7 @@
     {
       "trial": 12,
       "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.8,
       "reason": "",
       "windows": [
         {
@@ -343,7 +343,7 @@
       "reason": "",
       "windows": [
         {
-          "addr": "0x6D412028",
+          "addr": "0x6D414228",
           "name": "DocTerm",
           "title": "Hermes Apps",
           "win": [
@@ -367,7 +367,7 @@
     {
       "trial": 14,
       "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.7,
       "reason": "",
       "windows": [
         {
@@ -395,7 +395,7 @@
     {
       "trial": 15,
       "ok": true,
-      "seconds": 11.7,
+      "seconds": 11.9,
       "reason": "",
       "windows": [
         {
@@ -423,7 +423,7 @@
     {
       "trial": 16,
       "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.8,
       "reason": "",
       "windows": [
         {
@@ -451,11 +451,11 @@
     {
       "trial": 17,
       "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.9,
       "reason": "",
       "windows": [
         {
-          "addr": "0x6D412028",
+          "addr": "0x6D414228",
           "name": "DocTerm",
           "title": "Hermes Apps",
           "win": [
@@ -479,7 +479,7 @@
     {
       "trial": 18,
       "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.8,
       "reason": "",
       "windows": [
         {
@@ -507,7 +507,7 @@
     {
       "trial": 19,
       "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.9,
       "reason": "",
       "windows": [
         {
@@ -535,7 +535,7 @@
     {
       "trial": 20,
       "ok": true,
-      "seconds": 11.6,
+      "seconds": 11.7,
       "reason": "",
       "windows": [
         {

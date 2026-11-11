@@ -1,8 +1,8 @@
 Guest build notes for TempleOfHermes-0.1.2 (transcribed from build logs).
 
 BASE
-  hermes/iso-0.1.1 packed at 2ee750e9205809c405aa5494cdfe8d49b35a07d5
-  Work branch hermes/iso-0.1.2, uncommitted worktree.
+  hermes/iso-0.1.2 packed at 190501f12f13244e5d4cbd259d2cffaac1d74e03
+  Work branch hermes/iso-0.1.2, created from that packed HEAD.
 
 OVERLAY
   D:/RUN.HC copied 254 Fxx.BIN files onto C: and removed .Z twins.
@@ -13,7 +13,7 @@ MAKEDISTRO
   Temple of Hermes ISO written to /Tmp/TempleOfHermes.ISO.C
   Volume id: THE_TEMPLE_OF_HERMES
   Size: 14,030,848 bytes
-  SHA256: 8bcf43c31689e328716ca42f0255f1ede834dd39cd0fa345bc96719d60f74c60
+  SHA256: 9afc98ed2bb15a3ff26ebaca12ea392079292df6667b3c1c527fdd30d80cdb13
 
 COMPILE
   No fatal HolyC compile or link errors in the launcher, boot path,

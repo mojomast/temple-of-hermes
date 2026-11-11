@@ -5,7 +5,7 @@ in-guest `Adam/Hermes/MakeDistro` path (FAT32 overlay + `D:/RUN.HC`), not by a
 host-side ISO remaster.
 
 - size: 14,030,848 bytes
-- sha256: `8bcf43c31689e328716ca42f0255f1ede834dd39cd0fa345bc96719d60f74c60`
+- sha256: `9afc98ed2bb15a3ff26ebaca12ea392079292df6667b3c1c527fdd30d80cdb13`
 - volume id: `THE_TEMPLE_OF_HERMES`
 
 This build adds the full-screen 18-entry Hermes home launcher, keeps
