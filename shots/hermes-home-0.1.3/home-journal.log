@@ -1,2 +1,44 @@
-22:14:25 prerequisites missing: qemu-system-x86_64, PIL, TempleOfHermes-0.1.2.ISO
-22:14:25 run with --static for source/parser checks
+22:38:32 iso TempleOfHermes-0.1.2.ISO sha256=9afc98ed2bb15a3ff26ebaca12ea392079292df6667b3c1c527fdd30d80cdb13
+22:38:33 waiting for HBEACON
+22:38:40 beacon: HBEACON TempleOfHermes/0.1.0
+22:38:40 beacon: PASS HBEACON TempleOfHermes/0.1.0
+22:38:40 boot screenshot checked with PIL
+22:38:41 b_root: PASS {'wrote': 155}
+22:38:41 b_root_pull: PASS b'ok'
+22:38:42 push_home: PASS {'ok': 1, 'text': '', 'error': None}
+22:38:42 push_home_test: PASS {'ok': 1, 'text': '', 'error': None}
+22:38:42 pull_source_home: PASS 4077 bytes
+22:38:42 pull_source_home_test: PASS 3551 bytes
+22:38:43 compile_home: PASS b'ERR not_initialized'
+22:38:43 run_reply: PASS {'ok': 1, 'text': '', 'error': None}
+22:38:43 pull_result: PASS
+22:38:43 pull_journal: PASS
+22:38:43 pull_projects: PASS
+22:38:43 result_pass: PASS HERMES HOME TEST (0.1.3)
+PASS b_init
+PASS journal_add_1
+PASS journal_add_2
+PASS journal_add_long
+PASS journal_tail
+PASS project_set
+PASS project_show
+PASS bad_handle
+PASS no_c_error
+HERMES HOME TEST PASS
+22:38:43 home_src_created: PASS {'wrote': 195}
+22:38:43 home_src_pull: PASS b'ok'
+22:38:43 journal_format: PASS
+22:38:43 journal_session_one: PASS 2026-11-11 22:38 session one
+22:38:43 journal_control_stripped: PASS 2026-11-11 22:38 sessiontwonext
+22:38:43 journal_truncated_200: PASS len=200
+22:38:43 projects_format: PASS
+22:38:43 projects_values: PASS Current: Temple of Hermes
+Next: Write HOME-DIR docs
+22:38:43 journal_tail: PASS 2026-11-11 22:38 session one
+2026-11-11 22:38 sessiontwonext
+2026-11-11 22:38 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+22:38:43 C: present=False
+22:38:43 no_c_error: PASS text='ERR drive_not_writable:C' bad=[]
+22:38:43 daemon_alive: PASS
+22:38:43 run screenshot checked with PIL
+22:38:43 home matrix: 24/24

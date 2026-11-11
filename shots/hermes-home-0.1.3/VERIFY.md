@@ -1,12 +1,13 @@
 # Hermes home directory (slice B) verification
 
-- Base: `hermes/daemon-fix-0.1.3` at `2071daa299419aa125c1a42fc2ba59a4c6b47ca2`
-  (in-guest version 0.1.3).
-- Work branch: `hermes/home-journal`; all changes are uncommitted in the
+- Packed workspace base: `0d6bc0100a4211a9aee09833b9493723423d9959`
+  (WIP on daemon-fix `2071daa`, local squash commit `f035a4f`).
+- Work branch: `hermes/home-journal`; every change is uncommitted in the
   worktree.
-- Assigned changes: `Adam/Hermes/Home.HC`, `Adam/Hermes/HomeTest.HC`, one
-  `#include "Home"` line in `Adam/Hermes/Load.HC`, `scripts/test_home_journal.py`,
-  `docs/HOME-DIR.md`, and this evidence directory.
+- Assigned changes: `Adam/Hermes/Home.HC`, `Adam/Hermes/HomeTest.HC`, the
+  existing one `#include "Home"` line in `Adam/Hermes/Load.HC`,
+  `scripts/test_home_journal.py`, `docs/HOME-DIR.md`, and this evidence
+  directory.
 
 ## Layout under test
 
@@ -17,12 +18,31 @@ C:/Home/<handle>/
   Src/             small programs
 ```
 
-`<handle>` is 1-32 of `A-Z a-z 0-9 . - _`; the default is `hermes`. `HomeInit`
-creates the directories, `JournalAdd` appends and sanitises, `JournalTail`
-reads the newest lines, and `ProjectSet`/`ProjectShow` write and read the two
-project lines. Every helper returns an allocated `OK ...` or `ERR <code>`
-string. `HomeInit` checks `DrvIsWritable`, so a missing or read-only drive is
-an error string, never a debugger.
+`<handle>` is 1-32 of `A-Z a-z 0-9 . - _`; the default is `hermes`.
+`HomeInit` creates the directories, `JournalAdd` appends and sanitises,
+`JournalTail` reads the newest lines, and `ProjectSet`/`ProjectShow` write
+and read the two project lines. Every helper returns an allocated
+`OK ...` or `ERR <code>` string. `HomeInit` checks `DrvIsWritable`, so a
+missing or read-only drive is an error string, never a debugger.
+
+## Environment and guest image
+
+- `qemu-system-x86_64` `1:8.2.2+ds-0ubuntu1.18` and `qemu-img` installed
+  from the Ubuntu archive; Pillow installed (`python3-pil`).
+- ISO downloaded with `curl -L` from the published v0.1.2 release URL and
+  verified before use:
+  `9afc98ed2bb15a3ff26ebaca12ea392079292df6667b3c1c527fdd30d80cdb13`.
+- QEMU TCG, no KVM: `-machine pc,kernel-irqchip=off -accel tcg
+  -display none -nic none -m 2G`, ISO as CD, no writable disk.
+- The official ISO answers `HBEACON TempleOfHermes/0.1.0`; its daemon
+  predates the 0.1.3 file-op work. Two test accommodations, both visible in
+  `scripts/test_home_journal.py`:
+  - its request buffer is about 2 KB (a 2525-byte push killed the daemon
+    task), so sources are pushed in 1800-byte pieces and merged in the
+    guest by `FileRead`/`FileWrite`;
+  - its `eval` does not capture the guest output document, so every
+    assertion reads a file the guest wrote and pulls it over HRPC instead
+    of trusting `eval` text.
 
 ## Static / source matrix (executed)
 
@@ -46,56 +66,98 @@ Result: **30/30 PASS** (exit 0).
 | Host parser rejects a tab and a >200-char line | PASS |
 | Project parser accepts exactly `Current:` + `Next:` | PASS |
 
-Logs:
+Logs: `home-journal-static.log`, `home-journal-static.json`.
 
-- `home-journal-static.log` — static check transcript.
-- `home-journal-static.json` — machine-readable static matrix.
-- `home-journal.log` — the default command's prerequisite result in this
-  sandbox (exit 2, no QEMU/Pillow/ISO).
-
-## QEMU matrix (not executed in this sandbox)
+## QEMU matrix (executed)
 
 Command: `python3 scripts/test_home_journal.py`
 
-The sandbox has no `qemu-system-x86_64`, no Pillow, no v0.1.2 ISO, and no
-network, so the command correctly exits 2 at the prerequisite check instead
-of claiming a boot result. The script is ready for a host with those
-prerequisites; it verifies the ISO's SHA-256
-(`9afc98ed2bb15a3ff26ebaca12ea392079292df6667b3c1c527fdd30d80cdb13`)
-before booting and uses QEMU TCG with `-display none -nic none
--machine pc,kernel-irqchip=off` and no writable disk.
+Result: **24/24 PASS** (exit 0). `home-journal.json` records every check.
 
-| Case | Expected | Result here |
-| --- | --- | --- |
-| Official v0.1.2 ISO digest | matches the published SHA-256 | BLOCKED (ISO absent) |
-| Boot + `HBEACON TempleOfHermes/` | beacon on COM1 | BLOCKED |
-| Create `B:/Home/hermes/Src/` | `HOME DIRS OK` | BLOCKED |
-| Push `Home.HC` and `HomeTest.HC` to B: | both pushes `ok:1` | BLOCKED |
-| Compile `Home.HC` over `eval` | `HOME HC OK`, no compile error | BLOCKED |
-| Run `HomeTest.HC` | `HOME TEST DONE`, result file `PASS` | BLOCKED |
-| `JOURNAL.TXT` | 3 lines, timestamped, no tabs/controls, line 3 exactly 200 chars | BLOCKED |
-| `PROJECTS.TXT` | exactly `Current: Temple of Hermes` + `Next: Write HOME-DIR docs` | BLOCKED |
-| `JournalTail(3)` | returns `session one` and `sessiontwonext` | BLOCKED |
-| No C: | `HomeInit(NULL,'C')` returns `ERR ...`, no debugger text | BLOCKED |
-| Screendumps | 2 PIL-checked 640x480 PNGs | BLOCKED (Pillow absent) |
+The test leaves `B:/Home/hermes/` absent after creating only `B:/Home`, so
+the journal/project paths and `Src/` in the matrix are created by
+`HomeInit` itself.
 
-When run on a host with the prerequisites, the script writes
-`home-journal.json`, `home-journal-com1.log`, the two screenshots, and the
-pulled `JOURNAL.TXT` / `PROJECTS.TXT` / result bodies into this directory
-(plus raw captures under the ignored `shots/_raw/` tree).
+| # | Check | Expected | Result |
+| --- | --- | --- | --- |
+| 1 | `beacon` | `HBEACON TempleOfHermes/` on COM1 | PASS `HBEACON TempleOfHermes/0.1.0` |
+| 2 | `b_root` | push into `B:/Home` succeeds | PASS `{"wrote":155}` |
+| 3 | `b_root_pull` | marker round-trips | PASS `ok` |
+| 4 | `push_home` | chunked push + merge of `Home.HC` | PASS |
+| 5 | `push_home_test` | chunked push + merge of `HomeTest.HC` | PASS |
+| 6 | `pull_source_home` | 4077 bytes back, identical | PASS |
+| 7 | `pull_source_home_test` | 3551 bytes back, identical | PASS |
+| 8 | `compile_home` | `HomeDir()` links before init | PASS `ERR not_initialized` |
+| 9 | `run_reply` | `#include "B:/Home/HomeTest.HC"` accepted | PASS |
+| 10 | `pull_result` | `HOME-TEST.TXT` pulled | PASS |
+| 11 | `pull_journal` | `JOURNAL.TXT` pulled | PASS |
+| 12 | `pull_projects` | `PROJECTS.TXT` pulled | PASS |
+| 13 | `result_pass` | guest result is `HERMES HOME TEST PASS`, no `FAIL` | PASS (9/9 sub-checks) |
+| 14 | `home_src_created` | push into `B:/Home/hermes/Src` succeeds | PASS `{"wrote":195}` |
+| 15 | `home_src_pull` | marker round-trips | PASS `ok` |
+| 16 | `journal_format` | 3 lines, `YYYY-MM-DD HH:MM `, no tabs/controls, <=200 | PASS |
+| 17 | `journal_session_one` | first line ends `session one` | PASS |
+| 18 | `journal_control_stripped` | tab/newline input becomes `sessiontwonext` | PASS |
+| 19 | `journal_truncated_200` | 300-char input becomes a 200-char line | PASS `len=200` |
+| 20 | `projects_format` | exactly `Current:` + `Next:` | PASS |
+| 21 | `projects_values` | `Current: Temple of Hermes` / `Next: Write HOME-DIR docs` | PASS |
+| 22 | `journal_tail` | `JournalTail(3)` returns both session lines | PASS |
+| 23 | `no_c_error` | `HomeInit(NULL,'C')` returns an error string, no debugger | PASS `ERR drive_not_writable:C` |
+| 24 | `daemon_alive` | `ping` still answers after the no-C call | PASS `{"pong":1,...}` |
+
+Pulled journal (line lengths 31, 35, 200):
+
+```text
+2026-11-11 22:38 session one
+2026-11-11 22:38 sessiontwonext
+2026-11-11 22:38 XXXXX… (183 X characters)
+```
+
+Pulled projects file:
+
+```text
+Current: Temple of Hermes
+Next: Write HOME-DIR docs
+```
+
+`B:/Home/hermes/HOME-TEST.TXT` contained `HERMES HOME TEST PASS` with
+`b_init`, `journal_add_1`, `journal_add_2`, `journal_add_long`,
+`journal_tail`, `project_set`, `project_show`, `bad_handle`, and
+`no_c_error` all `PASS`.
+
+C: was absent on the live CD (`DrvIsWritable('C')` returned NULL), so the
+guest took the no-C error path; the script would validate `C:/Home/hermes/`
+instead when C: is writable.
+
+Logs: `home-journal.log` (matrix transcript), `home-journal-com1.log`
+(COM1 transcript), `home-journal.json` (machine-readable result).
 
 ## Shots
 
-0 of the allowed 3 shots were produced because this sandbox has no QEMU or
-Pillow. The script takes two screendumps and checks each with Pillow
-(`640x480`, colour count) before saving; it does not use any non-PIL image
-tool.
+Two of the allowed three, both captured with QMP `screendump` and validated
+with Pillow only (`640x480`, colour count). No PNG was opened or viewed
+in-model.
+
+| Shot | Size | Colours | Check |
+| --- | --- | --- | --- |
+| `01-home-journal-boot.png` | 640x480 | 5 | PASS |
+| `02-home-journal-run.png` | 640x480 | 15 | PASS |
+
+## Persistence notes
+
+- B: is RAM only. Everything in this matrix disappears on power-off; the
+  test never implies otherwise.
+- C: is the persistent target when the TOH-DISK-IMAGE preinstalled disk
+  image provides it. This matrix could not exercise C: because the live CD
+  has no writable C:.
+- The boot CD was never a write target; `HomeInit` rejects a non-writable
+  drive before any `DirMk`/`FileWrite`.
 
 ## Open items for the coordinator
 
-- Run `python3 scripts/test_home_journal.py` on a host with QEMU, Pillow, and
-  `dist/TempleOfHermes-0.1.2.ISO` to fill the QEMU matrix above. No source
-  change is needed.
-- The preinstalled disk image work (TOH-DISK-IMAGE) is expected to provide a
-  persistent C:. Until that image boots, live-CD sessions should use B: and
-  treat the journal as ephemeral.
+- The published v0.1.2 ISO carries the older 0.1.0 daemon. Running this
+  matrix against a CD built from the packed 0.1.3 tree would additionally
+  exercise single-shot pushes and eval-output capture; no source change is
+  needed for that.
+- C: persistence remains owned by TOH-DISK-IMAGE; this slice only defines
+  and tests the layout and helpers.

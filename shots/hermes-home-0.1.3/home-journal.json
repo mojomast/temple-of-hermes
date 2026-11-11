@@ -1,0 +1,161 @@
+{
+  "mode": "qemu",
+  "iso": "dist/TempleOfHermes-0.1.2.ISO",
+  "iso_sha256": "9afc98ed2bb15a3ff26ebaca12ea392079292df6667b3c1c527fdd30d80cdb13",
+  "checks": [
+    {
+      "name": "beacon",
+      "passed": true,
+      "detail": "HBEACON TempleOfHermes/0.1.0"
+    },
+    {
+      "name": "b_root",
+      "passed": true,
+      "detail": "{'wrote': 155}"
+    },
+    {
+      "name": "b_root_pull",
+      "passed": true,
+      "detail": "b'ok'"
+    },
+    {
+      "name": "push_home",
+      "passed": true,
+      "detail": "{'ok': 1, 'text': '', 'error': None}"
+    },
+    {
+      "name": "push_home_test",
+      "passed": true,
+      "detail": "{'ok': 1, 'text': '', 'error': None}"
+    },
+    {
+      "name": "pull_source_home",
+      "passed": true,
+      "detail": "4077 bytes"
+    },
+    {
+      "name": "pull_source_home_test",
+      "passed": true,
+      "detail": "3551 bytes"
+    },
+    {
+      "name": "compile_home",
+      "passed": true,
+      "detail": "b'ERR not_initialized'"
+    },
+    {
+      "name": "run_reply",
+      "passed": true,
+      "detail": "{'ok': 1, 'text': '', 'error': None}"
+    },
+    {
+      "name": "pull_result",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "pull_journal",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "pull_projects",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "result_pass",
+      "passed": true,
+      "detail": "HERMES HOME TEST (0.1.3)\nPASS b_init\nPASS journal_add_1\nPASS journal_add_2\nPASS journal_add_long\nPASS journal_tail\nPASS project_set\nPASS project_show\nPASS bad_handle\nPASS no_c_error\nHERMES HOME TEST PASS\n"
+    },
+    {
+      "name": "home_src_created",
+      "passed": true,
+      "detail": "{'wrote': 195}"
+    },
+    {
+      "name": "home_src_pull",
+      "passed": true,
+      "detail": "b'ok'"
+    },
+    {
+      "name": "journal_format",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "journal_session_one",
+      "passed": true,
+      "detail": "2026-11-11 22:38 session one"
+    },
+    {
+      "name": "journal_control_stripped",
+      "passed": true,
+      "detail": "2026-11-11 22:38 sessiontwonext"
+    },
+    {
+      "name": "journal_truncated_200",
+      "passed": true,
+      "detail": "len=200"
+    },
+    {
+      "name": "projects_format",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "projects_values",
+      "passed": true,
+      "detail": "Current: Temple of Hermes\nNext: Write HOME-DIR docs\n"
+    },
+    {
+      "name": "journal_tail",
+      "passed": true,
+      "detail": "2026-11-11 22:38 session one\n2026-11-11 22:38 sessiontwonext\n2026-11-11 22:38 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"
+    },
+    {
+      "name": "no_c_error",
+      "passed": true,
+      "detail": "text='ERR drive_not_writable:C' bad=[]"
+    },
+    {
+      "name": "daemon_alive",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "shots": [
+    {
+      "size": [
+        640,
+        480
+      ],
+      "colors": 5,
+      "png": "01-home-journal-boot.png"
+    },
+    {
+      "size": [
+        640,
+        480
+      ],
+      "colors": 15,
+      "png": "02-home-journal-run.png"
+    }
+  ],
+  "beacon": "HBEACON TempleOfHermes/0.1.0",
+  "run_body": {
+    "ok": 1,
+    "text": "",
+    "error": null
+  },
+  "result_text": "HERMES HOME TEST (0.1.3)\nPASS b_init\nPASS journal_add_1\nPASS journal_add_2\nPASS journal_add_long\nPASS journal_tail\nPASS project_set\nPASS project_show\nPASS bad_handle\nPASS no_c_error\nHERMES HOME TEST PASS\n",
+  "journal_text": "2026-11-11 22:38 session one\n2026-11-11 22:38 sessiontwonext\n2026-11-11 22:38 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n",
+  "projects_text": "Current: Temple of Hermes\nNext: Write HOME-DIR docs\n",
+  "tail_text": "2026-11-11 22:38 session one\n2026-11-11 22:38 sessiontwonext\n2026-11-11 22:38 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n",
+  "c_present": false,
+  "noc_text": "ERR drive_not_writable:C",
+  "passed": 24,
+  "total": 24,
+  "ok": true,
+  "finished": 1794436723.4615722
+}

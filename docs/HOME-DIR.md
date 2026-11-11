@@ -107,8 +107,12 @@ host, open a network connection, or start a service.
   no-C: error path against B:, then writes
   `B:/Home/hermes/HOME-TEST.TXT`.
 - Host test: `scripts/test_home_journal.py` boots the official v0.1.2 ISO
-  live (sha256 verified), creates the B: directories, pushes `Home.HC` and
-  `HomeTest.HC`, runs them over HRPC `eval`, pulls `HOME-TEST.TXT`,
-  `JOURNAL.TXT`, and `PROJECTS.TXT`, and asserts the contract above.
-  `--static` runs the source/contract checks without QEMU.
+  live (sha256 verified), creates only `B:/Home`, pushes `Home.HC` and
+  `HomeTest.HC` in 1800-byte pieces (the ISO's daemon has a ~2 KB request
+  buffer), merges them in the guest, and runs them over HRPC `eval`. It
+  leaves `B:/Home/hermes/` absent so `HomeInit` must create it. Because
+  that daemon does not return `eval` text, every assertion pulls a file the
+  guest wrote: `HOME-TEST.TXT`, `JOURNAL.TXT`, `PROJECTS.TXT`, the
+  `JournalTail(3)` output, and the no-C error string. `--static` runs the
+  source/contract checks without QEMU.
 - Evidence and the result matrix are in `shots/hermes-home-0.1.3/`.

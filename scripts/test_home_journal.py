@@ -39,6 +39,7 @@ PROJECTS = f"{HOME}/PROJECTS.TXT"
 RESULT = f"{HOME}/HOME-TEST.TXT"
 LINE_RE = re.compile(r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2} .+$")
 MAX_LINE = 200
+CHUNK = 1800
 BAD_TEXT = ("Unhandled Exception", "DEBUGGER", "Debugger", "RedSea",
             "DirContextNew")
 
@@ -222,8 +223,37 @@ class Guest:
         st, raw = self.cli.request(
             "push", path.encode("utf-8") + b"\0" + data, timeout=timeout)
         body = decode(raw)
-        ok = st == "ok" and isinstance(body, dict) and body.get("ok") == 1
+        ok = (st == "ok" and isinstance(body, dict) and
+              (body.get("ok") == 1 or "wrote" in body))
         return {"status": st, "body": body, "ok": bool(ok)}
+
+    def push_blob(self, dest: str, data: bytes, tag: str,
+                  part_dir: str = HOME) -> dict:
+        """Push in CHUNK pieces, then merge in the guest.
+
+        The official 0.1.2 ISO exposes a 0.1.0 daemon whose request buffer
+        is about 2 KB, so larger single pushes kill the daemon task.
+        """
+        parts = []
+        for i in range(0, len(data), CHUNK):
+            part = f"{part_dir}/{tag}.p{i // CHUNK}"
+            parts.append(part)
+            r = self.push(part, data[i:i + CHUNK])
+            if not r["ok"]:
+                return r
+        return self.merge(parts, dest)
+
+    def merge(self, parts: list[str], dest: str, timeout: float = 90.0) -> dict:
+        names = ",".join(f'"{p}"' for p in parts)
+        n = len(parts)
+        src = (
+            f"U8 *ps[{n}]={{{names}}};I64 sz[{n}],i,t=0;U8 *b[{n}],*o;"
+            f"for(i=0;i<{n};i++){{b[i]=FileRead(ps[i],&sz[i]);t+=sz[i];}}"
+            f"o=MAlloc(t+1);t=0;"
+            f"for(i=0;i<{n};i++){{MemCpy(o+t,b[i],sz[i]);t+=sz[i];}}"
+            f'FileWrite("{dest}",o,t);'
+            f"for(i=0;i<{n};i++)Free(b[i]);Free(o);\n")
+        return self.eval(src, timeout=timeout)
 
     def pull(self, path: str, timeout: float = 60.0) -> dict:
         st, data = self.cli.request("pull", path.encode("utf-8"),
@@ -287,46 +317,52 @@ def run_vm(iso: Path) -> dict:
             'try\n'
             '{\n'
             '  DirMk("B:/Home");\n'
-            '  DirMk("B:/Home/hermes");\n'
-            '  DirMk("B:/Home/hermes/Src");\n'
-            '  if (FileFind("B:/Home/hermes/JOURNAL.TXT"))\n'
-            '    Del("B:/Home/hermes/JOURNAL.TXT");\n'
-            '  if (FileFind("B:/Home/hermes/PROJECTS.TXT"))\n'
-            '    Del("B:/Home/hermes/PROJECTS.TXT");\n'
-            '  if (FileFind("B:/Home/hermes/HOME-TEST.TXT"))\n'
-            '    Del("B:/Home/hermes/HOME-TEST.TXT");\n'
-            '  "HOME DIRS OK";\n'
             '}\n'
             'catch\n'
             '{\n'
             '  Fs->catch_except=TRUE;\n'
-            '  "HOME DIRS FAILED";\n'
             '}\n'
         )
-        r = g.eval(setup)
-        check("b_dirs", r["ok"] and "HOME DIRS OK" in r["text"],
-              r["text"][-200:])
+        g.eval(setup)
+        # The 0.1.0 daemon on the official ISO does not return eval output.
+        # Leave B:/Home/hermes absent: HomeInit must create it, including Src/.
+        r = g.push("B:/Home/.probe", b"ok", timeout=30)
+        check("b_root", r["ok"], str(r["body"])[:120])
+        r = g.pull("B:/Home/.probe")
+        check("b_root_pull", r["ok"] and r["data"] == b"ok",
+              repr(r["data"][:40]) if r["ok"] else r["status"])
 
         home_src = (ROOT / "Adam/Hermes/Home.HC").read_bytes()
         test_src = (ROOT / "Adam/Hermes/HomeTest.HC").read_bytes()
-        r = g.push(f"{HOME}/Home.HC", home_src)
+        r = g.push_blob("B:/Home/Home.HC", home_src, "Home",
+                        part_dir="B:/Home")
         check("push_home", r["ok"], str(r["body"])[:200])
-        r = g.push(f"{HOME}/HomeTest.HC", test_src)
+        r = g.push_blob("B:/Home/HomeTest.HC", test_src, "HomeTest",
+                        part_dir="B:/Home")
         check("push_home_test", r["ok"], str(r["body"])[:200])
+        for key, path, want in (("home", "B:/Home/Home.HC", home_src),
+                                ("home_test", "B:/Home/HomeTest.HC",
+                                 test_src)):
+            rec = g.pull(path, timeout=60)
+            check(f"pull_source_{key}",
+                  rec["ok"] and rec["data"] == want,
+                  f"{len(rec.get('data') or b'')} bytes" if rec["ok"]
+                  else rec["status"])
 
-        r = g.eval(
-            '#include "B:/Home/hermes/Home.HC";\n'
-            '"HOME HC OK";\n', timeout=180)
-        check("compile_home", r["ok"] and "HOME HC OK" in r["text"],
-              r["text"][-300:])
+        # Linking HomeDir proves Home.HC compiled into the guest symbol table.
+        g.eval('#include "B:/Home/Home.HC";\n', timeout=180)
+        g.eval(
+            'U8 *d;d=HomeDir();'
+            'FileWrite("B:/Home/HOMEDIR.TXT",d,StrLen(d));Free(d);\n',
+            timeout=90)
+        rec = g.pull("B:/Home/HOMEDIR.TXT")
+        check("compile_home",
+              rec["ok"] and rec["data"].startswith(b"ERR not_initialized"),
+              repr(rec["data"][:80]) if rec["ok"] else rec["status"])
 
-        run = g.eval('#include "B:/Home/hermes/HomeTest.HC";\n', timeout=300)
-        results["run_text"] = run["text"]
+        run = g.eval('#include "B:/Home/HomeTest.HC";\n', timeout=300)
         results["run_body"] = run["body"]
-        bad = [w for w in BAD_TEXT if w.lower() in run["text"].lower()]
-        check("run_home_test", run["ok"] and "HOME TEST DONE" in run["text"],
-              f"bad={bad} tail={run['text'][-300:]}")
-        check("no_debugger", not bad, str(bad))
+        check("run_reply", run["ok"], str(run["body"])[:200])
 
         pulled = {k: g.pull(v) for k, v in
                   (("result", RESULT), ("journal", JOURNAL),
@@ -346,6 +382,12 @@ def run_vm(iso: Path) -> dict:
 
         check("result_pass", "HERMES HOME TEST PASS" in result_text
               and "FAIL" not in result_text, result_text[-300:])
+        # HomeInit was the only thing that could have made this path.
+        r = g.push(f"{HOME}/Src/.probe", b"ok", timeout=30)
+        check("home_src_created", r["ok"], str(r["body"])[:120])
+        r = g.pull(f"{HOME}/Src/.probe")
+        check("home_src_pull", r["ok"] and r["data"] == b"ok",
+              repr(r["data"][:40]) if r["ok"] else r["status"])
 
         jerrors = validate_journal(journal_text, 3)
         check("journal_format", not jerrors, "; ".join(jerrors))
@@ -368,34 +410,58 @@ def run_vm(iso: Path) -> dict:
               "Current: Temple of Hermes\nNext: Write HOME-DIR docs\n",
               projects_text[-200:])
 
-        tail = g.eval('"%s",JournalTail(3);\n')
-        check("journal_tail", tail["ok"] and "session one" in tail["text"]
-              and "sessiontwonext" in tail["text"], tail["text"][-300:])
+        g.eval(
+            'U8 *r,*t;r=HomeInit("hermes",\'B\');Free(r);t=JournalTail(3);'
+            f'FileWrite("{HOME}/TAIL.TXT",t,StrLen(t));Free(t);\n',
+            timeout=90)
+        rec = g.pull(f"{HOME}/TAIL.TXT")
+        tail_text = rec["data"].decode("utf-8", "replace") if rec["ok"] else ""
+        results["tail_text"] = tail_text
+        check("journal_tail", rec["ok"] and "session one" in tail_text
+              and "sessiontwonext" in tail_text, tail_text[-300:])
 
-        cprobe = g.eval(
-            'try\n'
-            '{\n'
-            "  if (Let2Drv('C',FALSE))\n"
-            '    "C-PRESENT";\n'
-            '  else\n'
-            '    "C-ABSENT";\n'
-            '}\n'
-            'catch\n'
-            '{\n'
-            '  Fs->catch_except=TRUE;\n'
-            '  "C-ABSENT";\n'
-            '}\n')
-        c_absent = "C-ABSENT" in cprobe["text"]
-        results["c_absent"] = c_absent
-        log(f"C: present={not c_absent}")
-        if c_absent:
-            no_c = g.eval('"%s",HomeInit(NULL,\'C\');\n')
-            ntext = no_c["text"]
+        g.eval(
+            'try{if(DrvIsWritable(\'C\',FALSE))'
+            f'FileWrite("{HOME}/CPRES.TXT","1",1);'
+            'else '
+            f'FileWrite("{HOME}/CPRES.TXT","0",1);'
+            '}catch{Fs->catch_except=TRUE;'
+            f'FileWrite("{HOME}/CPRES.TXT","0",1);}}\n',
+            timeout=60)
+        rec = g.pull(f"{HOME}/CPRES.TXT")
+        c_present = rec["ok"] and rec["data"] == b"1"
+        results["c_present"] = c_present
+        log(f"C: present={c_present}")
+
+        if not c_present:
+            g.eval(
+                'U8 *r;r=HomeInit(NULL,\'C\');'
+                f'FileWrite("{HOME}/NOC.TXT",r,StrLen(r));Free(r);\n',
+                timeout=90)
+            rec = g.pull(f"{HOME}/NOC.TXT")
+            ntext = rec["data"].decode("utf-8", "replace") if rec["ok"] else ""
+            results["noc_text"] = ntext
             cbad = [w for w in BAD_TEXT if w.lower() in ntext.lower()]
-            check("no_c_error", no_c["ok"] and ntext.strip().startswith("ERR ")
+            check("no_c_error", rec["ok"] and ntext.strip().startswith("ERR ")
                   and not cbad, f"text={ntext[-200:]!r} bad={cbad}")
         else:
-            check("no_c_error", True, "skipped: C: is present on this boot")
+            cj = g.pull("C:/Home/hermes/JOURNAL.TXT")
+            cp = g.pull("C:/Home/hermes/PROJECTS.TXT")
+            cjt = cj["data"].decode("utf-8", "replace") if cj["ok"] else ""
+            cpt = cp["data"].decode("utf-8", "replace") if cp["ok"] else ""
+            check("c_journal", cj["ok"] and not validate_journal(cjt, 1),
+                  cjt[-200:])
+            check("c_projects", cp["ok"] and cpt ==
+                  "Current: C project\nNext: C next\n", cpt[-200:])
+
+        # A dead daemon (debugger) would stop answering here.
+        ok_ping = False
+        try:
+            st, body = cli.request("ping", b"", timeout=30)
+            ok_ping = st == "ok" and b'"pong":1' in body
+        except Exception as exc:
+            results["ping_error"] = str(exc)[:200]
+        check("daemon_alive", ok_ping, results.get("ping_error", ""))
 
         shot = RAW / "02-home-journal-run.png"
         qmp.screendump(shot)

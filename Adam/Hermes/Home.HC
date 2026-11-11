@@ -23,7 +23,8 @@ U8 *HomeInit(U8 *handle=NULL,U8 drv='C')
  l=StrLen(handle);
  if(l<1||l>32)return StrNew("ERR bad_handle");
  for(i=0;i<l;i++){c=handle[i];
-  if(!(('A'<=c<='Z')||('a'<=c<='z')||('0'<=c<='9')||c=='.'||c=='-'||c=='_'))
+  if(!((c>='A'&&c<='Z')||(c>='a'&&c<='z')||(c>='0'&&c<='9')||
+       c=='.'||c=='-'||c=='_'))
    return StrNew("ERR bad_handle");}
  hermes_home_ready=FALSE;
  if(!HMDrv(drv))return MStrPrint("ERR drive_not_writable:%c",drv);
