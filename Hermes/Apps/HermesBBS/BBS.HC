@@ -500,6 +500,39 @@ Bool HbbsJsonBool(U8 *json,U8 *key,Bool def=FALSE)
   return def;
 }
 
+U8 *HbbsErrorCode(U8 *resp,U8 *out,I64 max)
+{//Copy only the HBBS/1 error.code token.  The value is untrusted, so keep a
+//short identifier charset and never surface any other reply field (tokens).
+  U8 *err,*p;
+  I64 n=0;
+  if (!out || max<=0)
+    return NULL;
+  out[0]=0;
+  if (!resp)
+    return NULL;
+  err=HbbsJsonValue(resp,"error");
+  if (err && *err=='{')
+    HbbsJsonStr(err,"code",out,max);
+  if (!out[0])
+    HbbsJsonStr(resp,"code",out,max);
+  if (!out[0])
+    return NULL;
+  p=out;
+  while (*p)
+  {
+    if ((*p>='A' && *p<='Z') || (*p>='a' && *p<='z') ||
+        (*p>='0' && *p<='9') || *p=='_' || *p=='-' || *p=='.' || *p==':')
+      out[n++]=*p;
+    p++;
+    if (n>=max-1)
+      break;
+  }
+  out[n]=0;
+  if (out[0])
+    return out;
+  return NULL;
+}
+
 U8 *HbbsJsonArray(U8 *json,U8 *key)
 {
   U8 *p=HbbsJsonValue(json,key);
@@ -861,8 +894,12 @@ Bool HbbsSessionBegin()
       return FALSE;
     if (!HbbsJsonBool(resp,"ok"))
     {
+      U8 code[64];
+      if (HbbsErrorCode(resp,code,64))
+        HbbsSetError(code);
+      else
+        HbbsSetError("auth_failed");
       Free(resp);
-      HbbsSetError("auth_failed");
       return FALSE;
     }
     Free(resp);
@@ -961,7 +998,13 @@ Bool HbbsResultFromCall(U8 *op,U8 *cmd,U8 *body)
     return HbbsWriteResult(op,cmd,NULL,FALSE,hbbs_error);
   ok=HbbsJsonBool(body,"ok",FALSE);
   if (!ok && !hbbs_error[0])
-    HbbsSetError("server_error");
+  {
+    U8 code[64];
+    if (HbbsErrorCode(body,code,64))
+      HbbsSetError(code);
+    else
+      HbbsSetError("server_error");
+  }
   return HbbsWriteResult(op,cmd,body,ok,hbbs_error);
 }
 
@@ -1067,7 +1110,13 @@ Bool HbbsFinish(U8 *op,U8 *cmd,U8 *body)
     return HbbsWriteResult(op,cmd,NULL,FALSE,hbbs_error);
   ok=HbbsJsonBool(body,"ok",FALSE);
   if (!ok)
-    HbbsSetError("server_error");
+  {
+    U8 code[64];
+    if (HbbsErrorCode(body,code,64))
+      HbbsSetError(code);
+    else
+      HbbsSetError("server_error");
+  }
   HbbsWriteResult(op,cmd,body,ok,hbbs_error);
   Free(body);
   HbbsSessionEnd;
@@ -1527,7 +1576,13 @@ U0 HbbsUiRefresh()
   HbbsUiSetStatus("Connecting...");
   if (!HbbsSessionBegin())
   {
-    HbbsUiSetStatus("OFFLINE: no token or dial failed");
+    U8 *st;
+    if (hbbs_error[0])
+      st=MStrPrint("OFFLINE: %s",hbbs_error);
+    else
+      st=StrNew("OFFLINE: no token or dial failed");
+    HbbsUiSetStatus(st);
+    Free(st);
     if (!hbbs_ui_board_cnt)
       HbbsUiFallbackBoards;
     return;

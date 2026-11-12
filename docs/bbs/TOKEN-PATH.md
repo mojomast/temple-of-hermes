@@ -102,16 +102,41 @@ The host protocol and payload framing are documented in
 
 ## Failure behavior
 
-If no token file is found, `HbbsLoadToken()` returns false and the UI shows:
+If no token file is found, `HbbsLoadToken()` returns false and the UI shows the
+local failure code:
 
 ```
-OFFLINE: no token or dial failed
+OFFLINE: no_token
 ```
 
-It still draws the board/thread panel with the fallback board catalogue.  If a
-token is found but the modem has no carrier, the same offline status is shown;
-the token is not consumed or deleted.  A future connect retries the same search
-order.
+If a token is found but the modem has no carrier, the UI shows `OFFLINE:
+dial_failed`.  It still draws the board/thread panel with the fallback board
+catalogue.  The token is not consumed or deleted; a future connect retries the
+same search order.
+
+When the server answers `AUTH` with `ok:false`, the status line shows the
+HBBS/1 `error.code` from that reply rather than a generic message:
+
+```
+OFFLINE: token_expired
+```
+
+The code is copied as a short identifier and painted with the same safe-line
+filter as other status text.  No token value, refresh credential, or other
+reply field is written to the screen or to the result file (`HbbsRedact()`
+still covers the AUTH result body).  Older local failures such as
+`bad_response_header`, `auth_failed`, and `server_error` are shown the same
+way when the server did not supply a code.
+
+## Access-token freshness
+
+HBBS/1 access tokens live about 15 minutes; refresh credentials live about 30
+days.  The guest sends `AUTH` with `action=login` and the access token in the
+`token` field.  The host must therefore refresh immediately before injecting a
+token, and must not prefer an old `token.txt` over the current agent credential
+JSON.  Pushing the refresh credential is allowed by HBBS/1 but is not the
+default because refresh rotates and invalidates the previous credential, which
+a live-CD RAM volume cannot persist back to the host store.
 
 ## Disk-boot note
 
