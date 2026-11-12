@@ -2,7 +2,7 @@ $WW+H,1$$FG,5$$TX+CX,"THE TEMPLE OF HERMES",D="DD_OS_NAME_VERSION"$$FG$
 
 $TX+CX,"Public Domain Operating System"$ 
 $TX+CX,"A TempleOS / TinkerOS fork for agent and human co-use"$
-$TX+CX,"Version 0.1.4-test - TinkerOS 5.200 base"$
+$TX+CX,"Version 0.1.4 - TinkerOS 5.200 base"$
 
 $LK,"Help & Index",A="FI:::/Doc/HelpIndex.DD"$, $LK,"About THE TEMPLE OF HERMES",A="FI:::/Doc/AboutHermes.DD"$, $LK,"Quick Start: Cmd line",A="FI:::/Doc/CmdLineOverview.DD"$
 
