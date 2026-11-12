@@ -1,0 +1,4 @@
+14:23:41 LISTEN loopback tls port=41527
+14:23:43 AUTH:login bytes=80
+14:23:43 LIST:boards bytes=51
+14:23:43 LIST:threads bytes=81

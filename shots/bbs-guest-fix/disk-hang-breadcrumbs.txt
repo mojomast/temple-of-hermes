@@ -1,0 +1,26 @@
+Instrumented HbbsUiTask/HbbsLoadToken breadcrumb evidence (disk boot, pre-fix)
+
+Root-directory crumb files present after pressing S:
+  bc-01 bc-02 bc-03 bc-04 bc-05 bc-06 bc-07 bc-08 bc-09 bc-10
+  bc-11 bc-12 bc-13 bc-20 bc-21 bc-30 bc-31
+  bc-40 bc-41 bc-42 bc-43 bc-50 bc-51 bc-52
+  bc-LB bc-LC bc-LT
+Absent:
+  bc-53
+
+Interpretation:
+  bc-01..13  UI setup and entry to HbbsUiRefresh completed
+  bc-20..21  refresh started
+  bc-30..31  HbbsSessionBegin started, about to call HbbsLoadToken
+  bc-40..43  state-directory token check completed
+  bc-50..52  ::/ and ~/ token checks completed
+  bc-LB/LC/LT  the all-drive loop reached B:, C:, T:
+  bc-53      never written: IsFile() on T:/Hermes/... blocked
+
+At the same time:
+  task title = HermesBBSUI;.
+  focused window text = ""
+  COM2 bytes observed = 0
+
+T: was the read-only content ISO attached at IDE index 3 by the host wrapper, not
+the boot volume.  The loop had already checked the boot volume through ::/.

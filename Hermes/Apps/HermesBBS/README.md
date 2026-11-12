@@ -114,16 +114,30 @@ or written to result files.
 ## Token provisioning
 
 The access token is supplied out of band by the deployment, never typed on
-screen and never compiled in. Put it in one of:
+screen and never compiled in. The documented paths are:
 
 ```
-::/Hermes/Apps/HermesBBS/token.txt
-::/Hermes/BBS/token.txt
+C:/Hermes/Apps/HermesBBS/token.txt   (installed disk)
+B:/Tmp/Hermes/HermesBBS/token.txt    (live CD RAM state directory)
 ```
 
-The app accepts the first one found. It trims whitespace, uses the token only
-inside the HBBS/1 `AUTH` request body, and clears its buffer after use. To
-rotate, replace the file and run `auth` again. No default token exists.
+`HbbsLoadToken()` checks the writable state directory first, then the boot and
+home roots, then every mounted *writable* volume (`<letter>:/Hermes/Apps/
+HermesBBS/token.txt`).  Read-only ISO volumes are skipped because probing one
+can block the first draw.  The legacy `Hermes/BBS/token.txt` name is also
+accepted.  See [`docs/bbs/TOKEN-PATH.md`](../../../docs/bbs/TOKEN-PATH.md).
+
+HBBS/1 access tokens live about 15 minutes.  The host must refresh with the
+refresh credential and then write the new access token; do not re-push an old
+`token.txt`.  The app trims whitespace, uses the token only inside the HBBS/1
+`AUTH` `action=login` request body, and clears its buffer after use.  To
+rotate, replace the file and press F5 (or run `auth` again).  No default token
+exists.
+
+When AUTH is rejected, the status line shows the server's HBBS/1 `error.code`,
+for example `OFFLINE: token_expired`, instead of a generic message.  A local
+failure shows its own short code (`no_token`, `dial_failed`, and so on).  No
+token value is shown.
 
 ## Protocol behavior
 

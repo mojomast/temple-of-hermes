@@ -140,3 +140,25 @@ CLI inputs.  The installer prompt table at the top of
 `scripts/build_disk_image.py` is the only place that would need editing if a
 future ISO changes the installer wording.  The resulting `.qcow2` and
 `<output-stem>.SHA256SUMS` can be verified with the same commands above.
+
+## BBS token and COM1 on the installed disk
+
+The installed disk is writable, so the normal HermesBBS token location is:
+
+```
+C:/Hermes/Apps/HermesBBS/token.txt
+```
+
+The app also checks `C:/Hermes/Apps/HermesBBS/token.txt` through the shared
+Hermes state directory and then scans every mounted FAT/ISO drive letter (see
+[`docs/bbs/TOKEN-PATH.md`](bbs/TOKEN-PATH.md)).  A host can therefore push the
+token over COM1, put it on a scratch FAT volume, or write it directly to `C:`
+on a copy-on-write overlay; remastering the disk is not required.
+
+The installed disk runs the Hermes daemon on COM1.  `Hermes/Net/Modem.HC`
+configures only COM2 and deliberately does not call the global `CommInit()`
+once a port is live.  Resetting the whole serial table would clear the
+daemon's COM1 state and its next `HEVT` write would fault, which is the old
+dead black "Hermes App" window seen when the BBS tile was launched from disk.
+`Adam/Hermes/Protocol.HC` also drops a COM1 frame if the host is not reading,
+so a disconnected serial client cannot stop the guest.

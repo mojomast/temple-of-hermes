@@ -8,6 +8,7 @@
 #define HBBS_RESULT_DIR "::/Hermes/Apps/HermesBBS/Results"
 #define HBBS_TOKEN_REL "Apps/HermesBBS/token.txt"
 #define HBBS_TOKEN_ALT "BBS/token.txt"
+#define HBBS_TOKEN_UP  "Apps/HermesBBS/TOKEN.TXT"
 
 U8 *hbbs_roots[4]={"::/Hermes/","T:/Hermes/","C:/Hermes/","~/Hermes/"};
 U8 hbbs_error[160];
@@ -57,20 +58,39 @@ U0 HbbsClearError()
 }
 
 U8 *HbbsFindRel(U8 *rel)
-{
-  U8 *st;
-  st=MStrPrint("C:/Hermes/%s",rel);
-  if (IsFile(st))
-    return st;
-  Free(st);
+{//Search the boot/home roots and *every* mounted FAT/ISO drive letter.
+//The live CD's content volume is not guaranteed to be C: or T:; the same
+//helper also finds a host-provided token on a scratch FAT disk or RAM drive.
+  U8 *st,*dletters;
+  U8 dletter;
+  I64 i;
+  if (!rel || !*rel)
+    return NULL;
+  dletters="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   st=MStrPrint("::/Hermes/%s",rel);
   if (IsFile(st))
     return st;
   Free(st);
-  st=MStrPrint("T:/Hermes/%s",rel);
+  st=MStrPrint("~/Hermes/%s",rel);
   if (IsFile(st))
     return st;
   Free(st);
+  for (i=0;i<26;i++)
+  {
+    //Only writable volumes.  A read-only ISO or an unready ATAPI volume can
+    //block ISO9660 directory lookup; on a disk boot the host also attaches a
+    //content CD at IDE index 3 as T:, and scanning it left the BBS window
+    //black before the first draw.  The boot volume is already covered by the
+    //::/ and ~/ checks above, so skip read-only drives here.
+    if (Let2Drv(dletters[i],FALSE) && DrvIsWritable(dletters[i],FALSE))
+    {
+      dletter=dletters[i];
+      st=MStrPrint("%c:/Hermes/%s",dletter,rel);
+      if (IsFile(st))
+        return st;
+      Free(st);
+    }
+  }
   return NULL;
 }
 
@@ -82,10 +102,49 @@ U8 *HbbsFindAny(U8 *rel1,U8 *rel2)
   return st;
 }
 
+Bool HbbsTokenValue(U8 *p,U8 *out,I64 max)
+{//Copy one token value: JSON string, bare word, or the tail of KEY=VALUE.
+  U8 *d;
+  I64 n=0;
+  if (!p || !out || max<=0)
+    return FALSE;
+  out[0]=0;
+  while (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n')
+    p++;
+  if (*p=='"')
+  {
+    p++;
+    while (*p && *p!='"')
+    {
+      if (*p=='\\' && p[1])
+        p++;
+      if (n<max-1)
+        out[n++]=*p;
+      p++;
+    }
+  }
+  else
+  {
+    d=p;
+    while (*d && *d!='\r' && *d!='\n' && *d!=' ' && *d!='\t' &&
+           *d!=',' && *d!='}')
+      d++;
+    n=d-p;
+    if (n>=max)
+      n=max-1;
+    if (n>0)
+      MemCpy(out,p,n);
+  }
+  out[n]=0;
+  return out[0]!=0;
+}
+
 Bool HbbsLoadToken()
-{
-  U8 *st,*dir,*data,*p,*d;
-  I64 size,n;
+{//State dir first (B: RAM or C:), then every documented volume.
+  U8 *st,*dir,*data,*p,*d,*q,*eq;
+  U8 *keys[4];
+  I64 size,n,i;
+  Bool got=FALSE;
   hbbs_token[0]=0;
   st=NULL;
   dir=HermesStateDirFor("HermesBBS","::/Hermes/Apps/HermesBBS");
@@ -95,13 +154,20 @@ Bool HbbsLoadToken()
     if (!IsFile(st))
     {
       Free(st);
-      st=NULL;
+      st=MStrPrint("%s/TOKEN.TXT",dir);
+      if (!IsFile(st))
+      {
+        Free(st);
+        st=NULL;
+      }
     }
   }
   if (dir)
     Free(dir);
   if (!st)
     st=HbbsFindAny(HBBS_TOKEN_REL,HBBS_TOKEN_ALT);
+  if (!st)
+    st=HbbsFindRel(HBBS_TOKEN_UP);
   if (!st)
     return FALSE;
   data=FileRead(st,&size);
@@ -114,17 +180,55 @@ Bool HbbsLoadToken()
   p=data;
   while (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n')
     p++;
-  d=p;
-  while (*d && *d!='\r' && *d!='\n')
-    d++;
-  n=d-p;
-  if (n>=HBBS_TOKEN_MAX)
-    n=HBBS_TOKEN_MAX-1;
-  MemCpy(hbbs_token,p,n);
-  hbbs_token[n]=0;
+  if (*p=='{')
+  {
+    keys[0]="\"access_token\"";
+    keys[1]="\"token\"";
+    keys[2]="\"claim_token\"";
+    keys[3]="\"refresh_token\"";
+    for (i=0;i<4 && !got;i++)
+    {
+      q=StrFind(keys[i],p);
+      if (q)
+      {
+        q+=StrLen(keys[i]);
+        while (*q==' ' || *q=='\t' || *q=='\r' || *q=='\n')
+          q++;
+        if (*q==':')
+        {
+          q++;
+          got=HbbsTokenValue(q,hbbs_token,HBBS_TOKEN_MAX);
+        }
+      }
+    }
+  }
+  if (!got)
+  {
+    d=p;
+    while (*d && *d!='\r' && *d!='\n')
+      d++;
+    eq=NULL;
+    for (q=p;q<d;q++)
+      if (*q=='=')
+      {
+        eq=q;
+        break;
+      }
+    if (eq)
+      got=HbbsTokenValue(eq+1,hbbs_token,HBBS_TOKEN_MAX);
+    if (!got)
+    {
+      n=d-p;
+      if (n>=HBBS_TOKEN_MAX)
+        n=HBBS_TOKEN_MAX-1;
+      MemCpy(hbbs_token,p,n);
+      hbbs_token[n]=0;
+      got=hbbs_token[0]!=0;
+    }
+  }
   MemSet(data,0,size);
   Free(data);
-  return hbbs_token[0]!=0;
+  return got;
 }
 
 Bool HbbsSaveToken(U8 *tok)
@@ -394,6 +498,39 @@ Bool HbbsJsonBool(U8 *json,U8 *key,Bool def=FALSE)
   if (!StrNCmp(p,"false",5))
     return FALSE;
   return def;
+}
+
+U8 *HbbsErrorCode(U8 *resp,U8 *out,I64 max)
+{//Copy only the HBBS/1 error.code token.  The value is untrusted, so keep a
+//short identifier charset and never surface any other reply field (tokens).
+  U8 *err,*p;
+  I64 n=0;
+  if (!out || max<=0)
+    return NULL;
+  out[0]=0;
+  if (!resp)
+    return NULL;
+  err=HbbsJsonValue(resp,"error");
+  if (err && *err=='{')
+    HbbsJsonStr(err,"code",out,max);
+  if (!out[0])
+    HbbsJsonStr(resp,"code",out,max);
+  if (!out[0])
+    return NULL;
+  p=out;
+  while (*p)
+  {
+    if ((*p>='A' && *p<='Z') || (*p>='a' && *p<='z') ||
+        (*p>='0' && *p<='9') || *p=='_' || *p=='-' || *p=='.' || *p==':')
+      out[n++]=*p;
+    p++;
+    if (n>=max-1)
+      break;
+  }
+  out[n]=0;
+  if (out[0])
+    return out;
+  return NULL;
 }
 
 U8 *HbbsJsonArray(U8 *json,U8 *key)
@@ -757,8 +894,12 @@ Bool HbbsSessionBegin()
       return FALSE;
     if (!HbbsJsonBool(resp,"ok"))
     {
+      U8 code[64];
+      if (HbbsErrorCode(resp,code,64))
+        HbbsSetError(code);
+      else
+        HbbsSetError("auth_failed");
       Free(resp);
-      HbbsSetError("auth_failed");
       return FALSE;
     }
     Free(resp);
@@ -857,7 +998,13 @@ Bool HbbsResultFromCall(U8 *op,U8 *cmd,U8 *body)
     return HbbsWriteResult(op,cmd,NULL,FALSE,hbbs_error);
   ok=HbbsJsonBool(body,"ok",FALSE);
   if (!ok && !hbbs_error[0])
-    HbbsSetError("server_error");
+  {
+    U8 code[64];
+    if (HbbsErrorCode(body,code,64))
+      HbbsSetError(code);
+    else
+      HbbsSetError("server_error");
+  }
   return HbbsWriteResult(op,cmd,body,ok,hbbs_error);
 }
 
@@ -963,7 +1110,13 @@ Bool HbbsFinish(U8 *op,U8 *cmd,U8 *body)
     return HbbsWriteResult(op,cmd,NULL,FALSE,hbbs_error);
   ok=HbbsJsonBool(body,"ok",FALSE);
   if (!ok)
-    HbbsSetError("server_error");
+  {
+    U8 code[64];
+    if (HbbsErrorCode(body,code,64))
+      HbbsSetError(code);
+    else
+      HbbsSetError("server_error");
+  }
   HbbsWriteResult(op,cmd,body,ok,hbbs_error);
   Free(body);
   HbbsSessionEnd;
@@ -1423,7 +1576,13 @@ U0 HbbsUiRefresh()
   HbbsUiSetStatus("Connecting...");
   if (!HbbsSessionBegin())
   {
-    HbbsUiSetStatus("OFFLINE: no token or dial failed");
+    U8 *st;
+    if (hbbs_error[0])
+      st=MStrPrint("OFFLINE: %s",hbbs_error);
+    else
+      st=StrNew("OFFLINE: no token or dial failed");
+    HbbsUiSetStatus(st);
+    Free(st);
     if (!hbbs_ui_board_cnt)
       HbbsUiFallbackBoards;
     return;
@@ -1516,6 +1675,11 @@ U0 HbbsUiTask(U8 *unused)
   HbbsUiInit;
   HbbsUiFallbackBoards;
   HbbsUiSetStatus("Connecting...");
+  //Draw the panel before any token search or modem call.  Even if a volume
+  //probe or the dial is slow, the window is never an empty black terminal.
+  DocClear;
+  HbbsUiDraw(DocPut);
+  Refresh;
   try
   {
     HbbsUiRefresh;

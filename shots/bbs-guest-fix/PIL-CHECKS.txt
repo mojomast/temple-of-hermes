@@ -1,0 +1,2 @@
+01-disk-s-connected.png: size=(640, 480) mode=P unique=7 max_index=6 off_palette=0 indices=[0, 1, 2, 3, 4, 5, 6]
+02-cd-s-connected.png: size=(640, 480) mode=P unique=8 max_index=7 off_palette=0 indices=[0, 1, 2, 3, 4, 5, 6, 7]

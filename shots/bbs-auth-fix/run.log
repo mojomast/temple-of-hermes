@@ -1,0 +1,41 @@
+15:03:43 launcher visible
+15:03:43 push BBS.HC via=None ok=False
+15:04:13 launcher visible
+15:04:16 push BBS.HC via=None ok=False
+15:05:40 launcher visible
+15:05:41 push expired fake token via=hrpc ok=True
+15:05:41 pressed S for BBS
+15:16:00 launcher visible
+15:16:01 push expired fake token via=hrpc ok=True
+15:16:01 pressed S for BBS
+15:17:22 launcher visible
+15:17:22 push expired fake token via=hrpc ok=True
+15:17:22 pressed S for BBS
+15:18:42 launcher visible
+15:18:43 push expired fake token via=hrpc ok=True
+15:18:43 pressed S for BBS
+15:18:46 host refresh+push ok=True path=C:/Hermes/Apps/HermesBBS/token.txt
+15:18:46 pressed F5
+15:18:49 disk evidence complete
+15:19:46 live launcher visible
+15:21:08 live launcher visible
+15:21:08 MountAuto(TRUE) ok
+15:21:08 wrapper drive C:
+15:21:08 B: setup ok b'{"ok":1,"text":"","error":null}'
+15:21:08 launch eval ok b'{"ok":1,"text":"","error":null}'
+15:21:09 push expired fake token via=hrpc ok=True
+15:23:23 live launcher visible
+15:23:23 MountAuto(TRUE) ok
+15:23:23 wrapper drive C:
+15:23:23 B: setup ok b'{"ok":1,"text":"","error":null}'
+15:23:24 push expired fake token via=hrpc ok=True
+15:24:20 live launcher visible
+15:24:20 MountAuto(TRUE) ok
+15:24:20 wrapper drive C:
+15:24:20 B: setup ok b'{"ok":1,"text":"","error":null}'
+15:24:20 launch eval ok b'{"ok":1,"text":"","error":null}'
+15:24:20 push expired fake token via=hrpc ok=True
+15:24:20 pressed F5 after expired token push
+15:24:24 host refresh+push ok=True path=B:/Tmp/Hermes/HermesBBS/token.txt
+15:24:24 pressed F5
+15:24:27 live evidence complete

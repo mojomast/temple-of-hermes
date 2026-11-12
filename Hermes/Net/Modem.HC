@@ -4,12 +4,21 @@
 // off there by default; Dial() succeeds only for destinations on the host
 // allow-list (for example "hermes").  See docs/NETWORKING.md.
 
-// Bring up COM2.  CommInit is only called when the port table is still empty,
-// so loading this after the COM1 Hermes daemon does not disturb COM1.
+// Bring up COM2 without disturbing COM1.
+//
+// CommInit() is a *global* reset: it clears every comm_ports[] slot, including
+// the COM1 state owned by the Hermes daemon.  Calling it from an app that
+// merely wants the modem made the daemon's next HEVT write throw ComErr and
+// stop the whole guest (the dead black "Hermes App" window).  Only call the
+// global initializer when no port has been brought up yet; otherwise fill in
+// just the COM2 base and configure that UART.
 Bool HermesNetInit()
 {
-  if (!comm_ports[HERMES_NET_COM].base)
+  CComm *c=&comm_ports[HERMES_NET_COM];
+  if (!comm_ports[1].base && !comm_ports[HERMES_NET_COM].base)
     CommInit;
+  if (!c->base)
+    c->base=0x2F8;
   CommInit8n1(HERMES_NET_COM,HERMES_NET_BAUD);
   CommFlush(HERMES_NET_COM);
   return TRUE;

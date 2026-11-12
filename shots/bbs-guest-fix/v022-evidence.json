@@ -1,0 +1,18 @@
+{
+  "stat_before": "{\"path\":\"C:/Hermes/Apps/HermesBBS/token.txt\",\"exists\":0}",
+  "list_seconds": 8.05,
+  "list": {
+    "ok": false,
+    "error": "timed out waiting for a serial file-transfer frame",
+    "code": "timeout",
+    "fix": "Raise the timeout or check that Xfer.HC is running."
+  },
+  "push_seconds": 8.05,
+  "push": {
+    "ok": false,
+    "error": "timed out waiting for a serial file-transfer frame",
+    "code": "timeout",
+    "fix": null
+  },
+  "stat_after": "TimeoutError: no HRPL stat id=1, buf=b''"
+}

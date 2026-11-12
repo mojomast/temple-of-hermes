@@ -1,0 +1,4 @@
+01-disk-token-expired.png: size=(640, 480) mode=P unique=7 max_index=6 off_palette=0 sha256=3f41d5c7b9a019e7ee94971df87bbcd197c20cf72d3cf75c41b2323b68c8ab0d
+02-disk-connected.png: size=(640, 480) mode=P unique=7 max_index=6 off_palette=0 sha256=cce542f665b36f88cde20befbba6b9767dd77d71fa43ed9eee96884df969113e
+03-live-token-expired.png: size=(640, 480) mode=P unique=7 max_index=6 off_palette=0 sha256=1aa52c328df5dbfaf1c696bdde04a4092d67c5c182ab1838ad0c1300f8a15e0c
+04-live-connected.png: size=(640, 480) mode=P unique=7 max_index=6 off_palette=0 sha256=8d2c13c00c1ae2d6a6c3ab16575a4cea46a3d2b873ff32d1256e88849f6e88b3

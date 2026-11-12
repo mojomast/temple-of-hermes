@@ -1,0 +1,3 @@
+14:23:41 relay up: modem.sock -> tls dest=bbs
+14:23:43 TLS connect dest=bbs
+14:23:43 TLS disconnect
