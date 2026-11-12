@@ -119,12 +119,33 @@ Bool HermesAppsLauncherSelect(CHermesLauncherState *s,I64 idx)
   s->selected=idx;
   if (s->status)
     Free(s->status);
-  if (app->run && IsFile(app->run))
+  if (app->run)
   {
-    s->status=MStrPrint("Launching %s...",app->title);
-    hermes_apps_launcher_task=Fs;
-    Spawn(&HermesAppsRunFile,StrNew(app->run),app->title);
-    return TRUE;
+    U8 *run=HermesAppsFind(app->run);
+    if (run)
+    {//Use a user terminal task, the same context as Ctrl-Alt-T.  ExeFile()
+     //from a freshly Spawn()ed launcher task can spin before drawing on a
+     //writable disk; a user task compiles the same sources reliably.
+      U8 *dir;
+      I64 n=StrLen(run);
+      while (n>0 && run[n-1]!='/')
+        n--;
+      dir=MAlloc(n+1);
+      MemCpy(dir,run,n);
+      dir[n]=0;
+      CTask *ut;
+      s->status=MStrPrint("Launching %s...",app->title);
+      ut=User("Cd(\"%s\");;\nExeFile(\"%s\");\n",dir,run);
+      if (ut)
+      {
+        WinToTop(ut);
+        WinFocus(ut);
+        WinZBufUpdate;
+      }
+      Free(dir);
+      Free(run);
+      return TRUE;
+    }
   }
   if (!StrCmp(app->id,"home-temple"))
     s->status=StrNew("Home.  Choose any icon above.");

@@ -8,6 +8,7 @@
 #define HBBS_RESULT_DIR "::/Hermes/Apps/HermesBBS/Results"
 #define HBBS_TOKEN_REL "Apps/HermesBBS/token.txt"
 #define HBBS_TOKEN_ALT "BBS/token.txt"
+#define HBBS_TOKEN_UP  "Apps/HermesBBS/TOKEN.TXT"
 
 U8 *hbbs_roots[4]={"::/Hermes/","T:/Hermes/","C:/Hermes/","~/Hermes/"};
 U8 hbbs_error[160];
@@ -57,20 +58,34 @@ U0 HbbsClearError()
 }
 
 U8 *HbbsFindRel(U8 *rel)
-{
-  U8 *st;
-  st=MStrPrint("C:/Hermes/%s",rel);
-  if (IsFile(st))
-    return st;
-  Free(st);
+{//Search the boot/home roots and *every* mounted FAT/ISO drive letter.
+//The live CD's content volume is not guaranteed to be C: or T:; the same
+//helper also finds a host-provided token on a scratch FAT disk or RAM drive.
+  U8 *st,*dletters;
+  U8 dletter;
+  I64 i;
+  if (!rel || !*rel)
+    return NULL;
+  dletters="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   st=MStrPrint("::/Hermes/%s",rel);
   if (IsFile(st))
     return st;
   Free(st);
-  st=MStrPrint("T:/Hermes/%s",rel);
+  st=MStrPrint("~/Hermes/%s",rel);
   if (IsFile(st))
     return st;
   Free(st);
+  for (i=0;i<26;i++)
+  {
+    if (Let2Drv(dletters[i],FALSE))
+    {
+      dletter=dletters[i];
+      st=MStrPrint("%c:/Hermes/%s",dletter,rel);
+      if (IsFile(st))
+        return st;
+      Free(st);
+    }
+  }
   return NULL;
 }
 
@@ -82,10 +97,49 @@ U8 *HbbsFindAny(U8 *rel1,U8 *rel2)
   return st;
 }
 
+Bool HbbsTokenValue(U8 *p,U8 *out,I64 max)
+{//Copy one token value: JSON string, bare word, or the tail of KEY=VALUE.
+  U8 *d;
+  I64 n=0;
+  if (!p || !out || max<=0)
+    return FALSE;
+  out[0]=0;
+  while (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n')
+    p++;
+  if (*p=='"')
+  {
+    p++;
+    while (*p && *p!='"')
+    {
+      if (*p=='\\' && p[1])
+        p++;
+      if (n<max-1)
+        out[n++]=*p;
+      p++;
+    }
+  }
+  else
+  {
+    d=p;
+    while (*d && *d!='\r' && *d!='\n' && *d!=' ' && *d!='\t' &&
+           *d!=',' && *d!='}')
+      d++;
+    n=d-p;
+    if (n>=max)
+      n=max-1;
+    if (n>0)
+      MemCpy(out,p,n);
+  }
+  out[n]=0;
+  return out[0]!=0;
+}
+
 Bool HbbsLoadToken()
-{
-  U8 *st,*dir,*data,*p,*d;
-  I64 size,n;
+{//State dir first (B: RAM or C:), then every documented volume.
+  U8 *st,*dir,*data,*p,*d,*q,*eq;
+  U8 *keys[4];
+  I64 size,n,i;
+  Bool got=FALSE;
   hbbs_token[0]=0;
   st=NULL;
   dir=HermesStateDirFor("HermesBBS","::/Hermes/Apps/HermesBBS");
@@ -95,13 +149,20 @@ Bool HbbsLoadToken()
     if (!IsFile(st))
     {
       Free(st);
-      st=NULL;
+      st=MStrPrint("%s/TOKEN.TXT",dir);
+      if (!IsFile(st))
+      {
+        Free(st);
+        st=NULL;
+      }
     }
   }
   if (dir)
     Free(dir);
   if (!st)
     st=HbbsFindAny(HBBS_TOKEN_REL,HBBS_TOKEN_ALT);
+  if (!st)
+    st=HbbsFindRel(HBBS_TOKEN_UP);
   if (!st)
     return FALSE;
   data=FileRead(st,&size);
@@ -114,17 +175,55 @@ Bool HbbsLoadToken()
   p=data;
   while (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n')
     p++;
-  d=p;
-  while (*d && *d!='\r' && *d!='\n')
-    d++;
-  n=d-p;
-  if (n>=HBBS_TOKEN_MAX)
-    n=HBBS_TOKEN_MAX-1;
-  MemCpy(hbbs_token,p,n);
-  hbbs_token[n]=0;
+  if (*p=='{')
+  {
+    keys[0]="\"access_token\"";
+    keys[1]="\"token\"";
+    keys[2]="\"claim_token\"";
+    keys[3]="\"refresh_token\"";
+    for (i=0;i<4 && !got;i++)
+    {
+      q=StrFind(keys[i],p);
+      if (q)
+      {
+        q+=StrLen(keys[i]);
+        while (*q==' ' || *q=='\t' || *q=='\r' || *q=='\n')
+          q++;
+        if (*q==':')
+        {
+          q++;
+          got=HbbsTokenValue(q,hbbs_token,HBBS_TOKEN_MAX);
+        }
+      }
+    }
+  }
+  if (!got)
+  {
+    d=p;
+    while (*d && *d!='\r' && *d!='\n')
+      d++;
+    eq=NULL;
+    for (q=p;q<d;q++)
+      if (*q=='=')
+      {
+        eq=q;
+        break;
+      }
+    if (eq)
+      got=HbbsTokenValue(eq+1,hbbs_token,HBBS_TOKEN_MAX);
+    if (!got)
+    {
+      n=d-p;
+      if (n>=HBBS_TOKEN_MAX)
+        n=HBBS_TOKEN_MAX-1;
+      MemCpy(hbbs_token,p,n);
+      hbbs_token[n]=0;
+      got=hbbs_token[0]!=0;
+    }
+  }
   MemSet(data,0,size);
   Free(data);
-  return hbbs_token[0]!=0;
+  return got;
 }
 
 Bool HbbsSaveToken(U8 *tok)

@@ -21,13 +21,18 @@ U0 HermesPutBlk(U8 *buf,I64 len)
 }
 
 U0 HermesSendRaw(U8 *kind,I64 id,U8 *stat,U8 *payload,I64 len)
-{
+{//A blocked or unplugged COM1 must never panic the daemon.  Drop the frame.
   U8 hdr[160];
   if (len<0) len=0;
   if (!payload) len=0;
-  StrPrint(hdr,"%s %d %s %d\n",kind,id,stat,len);
-  HermesPutS(hdr);
-  HermesPutBlk(payload,len);
+  try
+  {
+    StrPrint(hdr,"%s %d %s %d\n",kind,id,stat,len);
+    HermesPutS(hdr);
+    HermesPutBlk(payload,len);
+  }
+  catch
+    Fs->catch_except=TRUE;
 }
 
 U0 HermesReply(I64 id,U8 *payload)
@@ -52,8 +57,13 @@ U0 HermesReplyLen(I64 id,U8 *payload,I64 len)
 U0 HermesBeacon()
 {
   U8 line[128];
-  StrPrint(line,"HBEACON %s/%s\n",HERMES_NAME,HERMES_VERSION);
-  HermesPutS(line);
+  try
+  {
+    StrPrint(line,"HBEACON %s/%s\n",HERMES_NAME,HERMES_VERSION);
+    HermesPutS(line);
+  }
+  catch
+    Fs->catch_except=TRUE;
 }
 
 Bool HermesGetCharNoWait(U8 *ch)

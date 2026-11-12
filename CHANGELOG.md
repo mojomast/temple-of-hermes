@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.1.4 — BBS token path and disk launch
+
+### Guest
+- `Hermes/Apps/HermesBBS/BBS.HC`: token discovery now scans every mounted
+  FAT/ISO drive letter, not only `C:`, `T:`, `::`, and `~`.  The parser accepts
+  a bare token line, `KEY=VALUE`, or a JSON object with `access_token`,
+  `token`, `claim_token`, or `refresh_token`.  The writable state directory
+  (including the `B:` RAM disk on the live CD) is checked first, so a host can
+  inject the token over COM1 without remastering the ISO.
+- `Hermes/Net/Modem.HC`: bringing up COM2 no longer calls the global
+  `CommInit()`.  That call reset COM1 and the Hermes daemon's serial state,
+  which panicked the guest when the BBS tile was launched from an installed
+  disk and left a dead black window.  Only the COM2 base and UART are set.
+- `Adam/Hermes/Protocol.HC`: a blocked or unplugged COM1 drops a frame instead
+  of throwing `ComErr` out of the daemon loop.
+- Launcher: run paths resolve through the shared Hermes finder (legacy roots
+  plus every mounted drive), and a missing app file no longer leaves an empty
+  window behind.
+- `Hermes/Apps/HermesBBS/Run.HC` uses the relative `../Net/Load` include so the
+  app can run from an overlay or scratch volume, not just the boot drive.
+- Token path contract: [`docs/bbs/TOKEN-PATH.md`](docs/bbs/TOKEN-PATH.md).
+
 ## 0.1.3 — Temple of Hermes
 
 ### Guest
