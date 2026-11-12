@@ -77,7 +77,12 @@ U8 *HbbsFindRel(U8 *rel)
   Free(st);
   for (i=0;i<26;i++)
   {
-    if (Let2Drv(dletters[i],FALSE))
+    //Only writable volumes.  A read-only ISO or an unready ATAPI volume can
+    //block ISO9660 directory lookup; on a disk boot the host also attaches a
+    //content CD at IDE index 3 as T:, and scanning it left the BBS window
+    //black before the first draw.  The boot volume is already covered by the
+    //::/ and ~/ checks above, so skip read-only drives here.
+    if (Let2Drv(dletters[i],FALSE) && DrvIsWritable(dletters[i],FALSE))
     {
       dletter=dletters[i];
       st=MStrPrint("%c:/Hermes/%s",dletter,rel);
@@ -1615,6 +1620,11 @@ U0 HbbsUiTask(U8 *unused)
   HbbsUiInit;
   HbbsUiFallbackBoards;
   HbbsUiSetStatus("Connecting...");
+  //Draw the panel before any token search or modem call.  Even if a volume
+  //probe or the dial is slow, the window is never an empty black terminal.
+  DocClear;
+  HbbsUiDraw(DocPut);
+  Refresh;
   try
   {
     HbbsUiRefresh;

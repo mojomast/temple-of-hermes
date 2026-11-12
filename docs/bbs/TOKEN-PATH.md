@@ -77,17 +77,22 @@ token, a token-shaped test fixture, or a token file to this repository.
 
 The host can provide the token without remastering the ISO:
 
-- **Preferred (plugin v0.2.1+):** use the existing `templeos_files push`
-  operation (or the equivalent COM1 `push` daemon op) to write
-  `B:/Tmp/Hermes/HermesBBS/token.txt` on a live CD, or
+- **Preferred (plugin v0.2.2+):** use the daemon's COM1 HRPC `push`
+  operation to write `B:/Tmp/Hermes/HermesBBS/token.txt` on a live CD, or
   `C:/Hermes/Apps/HermesBBS/token.txt` on a preinstalled disk.  The parent
   directory is created by the daemon when it is missing.  The token is read on
   the next BBS connect/refresh; no ISO edit is needed.
+- **Do not load `Xfer.HC` while the daemon is running.**  The daemon's HRPC
+  reader and the TXFR helper both own COM1; the daemon consumes the TXFR
+  frame and the host then reports
+  `timed out waiting for a serial file-transfer frame`.  The host file tool
+  must use HRPC on a Hermes guest and reserve TXFR for a stock TinkerOS guest
+  with no daemon.
 - **Scratch FAT volume:** attach a writable FAT volume (for example the
   plugin's scratch qcow2 at IDE index 1) and write
   `<letter>:/Hermes/Apps/HermesBBS/token.txt`.  The app scans every mounted
-  FAT/ISO letter, so the scratch volume does not need a particular drive
-  letter.
+  *writable* FAT volume, so the scratch volume does not need a particular
+  drive letter.
 - **Installed disk:** the same path is writable and survives reboot; this is
   the normal preinstalled-disk path.
 
@@ -113,5 +118,12 @@ order.
 On an installed disk the Hermes daemon owns COM1.  `HermesNetInit()` must not
 call the global `CommInit()` once any serial port is live, because that resets
 COM1 and the daemon's next event write fails.  The modem layer therefore fills
-in only the COM2 base and configures that UART.  This is what keeps the BBS tile
-from turning into a dead black window when the disk has a token.
+in only the COM2 base and configures that UART.
+
+The all-drive fallback in `HbbsFindRel()` checks only writable volumes.  A
+disk boot can also attach a read-only content CD at IDE index 3 (assigned a
+drive letter such as `T:` by the host wrapper).  Probing an ISO9660 directory
+on that non-boot ATAPI device can block inside `IsFile()`, before the BBS draws
+its first frame; that was the empty black `.HermesBBSUI` window with no COM2
+traffic.  The boot volume is still covered by the direct `::/` and `~/` checks,
+so skipping read-only drives here costs nothing for the documented token path.
