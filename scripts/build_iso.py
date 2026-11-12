@@ -41,6 +41,8 @@ OVERLAY_PATHS = [
     "Adam/Hermes/Events.HC",
     "Adam/Hermes/Presence.HC",
     "Adam/Hermes/Guards.HC",
+    "Adam/Hermes/Home.HC",
+    "Adam/Hermes/FileGuard.HC",
     "Adam/Hermes/Files.HC",
     "Adam/Hermes/Daemon.HC",
     "Adam/Hermes/Load.HC",

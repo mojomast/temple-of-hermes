@@ -13,7 +13,7 @@
 U0 Tmp()
 {
   OnceExe;
-  "\n$$BG,PURPLE$$$$FG,YELLOW$$  THE TEMPLE OF HERMES  v0.1.3  $$FG$$$$BG$$\n";
+  "\n$$BG,PURPLE$$$$FG,YELLOW$$  THE TEMPLE OF HERMES  v0.1.4-test  $$FG$$$$BG$$\n";
   "  (TinkerOS 5.200 base)\n\n";
   "A TempleOS / TinkerOS fork for an AI agent and a human\n";
   "sharing one machine. The Hermes daemon is already on COM1\n";
